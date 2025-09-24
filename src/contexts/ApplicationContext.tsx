@@ -1,5 +1,18 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
-import { ApplicationState, FormStep, PersonalInfo, FamilyFinancial, SituationDescriptions } from '../types/form';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useRef,
+  ReactNode,
+} from "react";
+import {
+  ApplicationState,
+  FormStep,
+  PersonalInfo,
+  FamilyFinancial,
+  SituationDescriptions,
+} from "../types/form";
 
 // Context State
 interface ApplicationContextState extends ApplicationState {
@@ -16,19 +29,22 @@ interface ApplicationContextState extends ApplicationState {
 
 // Action Types
 type ApplicationAction =
-  | { type: 'UPDATE_PERSONAL_INFO'; payload: Partial<PersonalInfo> }
-  | { type: 'UPDATE_FAMILY_FINANCIAL'; payload: Partial<FamilyFinancial> }
-  | { type: 'UPDATE_SITUATION_DESCRIPTIONS'; payload: Partial<SituationDescriptions> }
-  | { type: 'SET_CURRENT_STEP'; payload: FormStep }
-  | { type: 'SET_SUBMITTING'; payload: boolean }
-  | { type: 'SET_REFERENCE_NUMBER'; payload: string }
-  | { type: 'LOAD_STATE'; payload: ApplicationState }
-  | { type: 'RESET_APPLICATION' }
-  | { type: 'UPDATE_LAST_SAVED' };
+  | { type: "UPDATE_PERSONAL_INFO"; payload: Partial<PersonalInfo> }
+  | { type: "UPDATE_FAMILY_FINANCIAL"; payload: Partial<FamilyFinancial> }
+  | {
+      type: "UPDATE_SITUATION_DESCRIPTIONS";
+      payload: Partial<SituationDescriptions>;
+    }
+  | { type: "SET_CURRENT_STEP"; payload: FormStep }
+  | { type: "SET_SUBMITTING"; payload: boolean }
+  | { type: "SET_REFERENCE_NUMBER"; payload: string }
+  | { type: "LOAD_STATE"; payload: ApplicationState }
+  | { type: "RESET_APPLICATION" }
+  | { type: "UPDATE_LAST_SAVED" };
 
 // Initial State
 const initialState: ApplicationState = {
-  currentStep: 'personal',
+  currentStep: "personal",
   personalInfo: {},
   familyFinancial: {},
   situationDescriptions: {},
@@ -37,59 +53,65 @@ const initialState: ApplicationState = {
 };
 
 // Local Storage Key
-const STORAGE_KEY = 'social-support-application';
+const STORAGE_KEY = "social-support-application";
 
 // Reducer
-function applicationReducer(state: ApplicationState, action: ApplicationAction): ApplicationState {
+function applicationReducer(
+  state: ApplicationState,
+  action: ApplicationAction
+): ApplicationState {
   switch (action.type) {
-    case 'UPDATE_PERSONAL_INFO':
+    case "UPDATE_PERSONAL_INFO":
       return {
         ...state,
         personalInfo: { ...state.personalInfo, ...action.payload },
       };
-      
-    case 'UPDATE_FAMILY_FINANCIAL':
+
+    case "UPDATE_FAMILY_FINANCIAL":
       return {
         ...state,
         familyFinancial: { ...state.familyFinancial, ...action.payload },
       };
-      
-    case 'UPDATE_SITUATION_DESCRIPTIONS':
+
+    case "UPDATE_SITUATION_DESCRIPTIONS":
       return {
         ...state,
-        situationDescriptions: { ...state.situationDescriptions, ...action.payload },
+        situationDescriptions: {
+          ...state.situationDescriptions,
+          ...action.payload,
+        },
       };
-      
-    case 'SET_CURRENT_STEP':
+
+    case "SET_CURRENT_STEP":
       return {
         ...state,
         currentStep: action.payload,
       };
-      
-    case 'SET_SUBMITTING':
+
+    case "SET_SUBMITTING":
       return {
         ...state,
         isSubmitting: action.payload,
       };
-      
-    case 'SET_REFERENCE_NUMBER':
+
+    case "SET_REFERENCE_NUMBER":
       return {
         ...state,
         referenceNumber: action.payload,
       };
-      
-    case 'LOAD_STATE':
+
+    case "LOAD_STATE":
       return action.payload;
-      
-    case 'RESET_APPLICATION':
+
+    case "RESET_APPLICATION":
       return { ...initialState };
-      
-    case 'UPDATE_LAST_SAVED':
+
+    case "UPDATE_LAST_SAVED":
       return {
         ...state,
         lastSaved: new Date(),
       };
-      
+
     default:
       return state;
   }
@@ -103,85 +125,125 @@ interface ApplicationProviderProps {
   children: ReactNode;
 }
 
-export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({ children }) => {
+export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(applicationReducer, initialState);
+  const shouldSaveRef = useRef(false);
 
-  // Load data from localStorage on mount
-  useEffect(() => {
-    loadProgress();
-  }, []);
-
-  // Auto-save to localStorage when state changes
-  useEffect(() => {
-    if (state.lastSaved !== null) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch (error) {
-        console.warn('Failed to save application progress:', error);
-      }
-    }
-  }, [state]);
-
-  // Actions
-  const updatePersonalInfo = (data: Partial<PersonalInfo>) => {
-    dispatch({ type: 'UPDATE_PERSONAL_INFO', payload: data });
-    dispatch({ type: 'UPDATE_LAST_SAVED' });
-  };
-
-  const updateFamilyFinancial = (data: Partial<FamilyFinancial>) => {
-    dispatch({ type: 'UPDATE_FAMILY_FINANCIAL', payload: data });
-    dispatch({ type: 'UPDATE_LAST_SAVED' });
-  };
-
-  const updateSituationDescriptions = (data: Partial<SituationDescriptions>) => {
-    dispatch({ type: 'UPDATE_SITUATION_DESCRIPTIONS', payload: data });
-    dispatch({ type: 'UPDATE_LAST_SAVED' });
-  };
-
-  const setCurrentStep = (step: FormStep) => {
-    dispatch({ type: 'SET_CURRENT_STEP', payload: step });
-  };
-
-  const setSubmitting = (submitting: boolean) => {
-    dispatch({ type: 'SET_SUBMITTING', payload: submitting });
-  };
-
-  const setReferenceNumber = (referenceNumber: string) => {
-    dispatch({ type: 'SET_REFERENCE_NUMBER', payload: referenceNumber });
-  };
-
-  const saveProgress = () => {
-    dispatch({ type: 'UPDATE_LAST_SAVED' });
-  };
-
+  // Define loadProgress function
   const loadProgress = () => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsedState = JSON.parse(saved);
         // Ensure the loaded state has a valid structure
-        if (parsedState && typeof parsedState === 'object') {
-          dispatch({ 
-            type: 'LOAD_STATE', 
+        if (parsedState && typeof parsedState === "object") {
+          dispatch({
+            type: "LOAD_STATE",
             payload: {
               ...initialState,
               ...parsedState,
-              lastSaved: parsedState.lastSaved ? new Date(parsedState.lastSaved) : null
-            }
+              lastSaved: parsedState.lastSaved
+                ? new Date(parsedState.lastSaved)
+                : null,
+            },
           });
         }
       }
     } catch (error) {
-      console.warn('Failed to load application progress:', error);
+      console.warn("Failed to load application progress:", error);
     }
   };
 
+  // Load data from localStorage on mount
+  useEffect(() => {
+    loadProgress();
+  }, []);
+
+  // Auto-save to localStorage when state changes and we should save
+  useEffect(() => {
+    if (shouldSaveRef.current && state.lastSaved !== null) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        shouldSaveRef.current = false;
+      } catch (error) {
+        console.warn("Failed to save application progress:", error);
+      }
+    }
+  }, [state]);
+
+  // Actions
+  const updatePersonalInfo = (data: Partial<PersonalInfo>) => {
+    // Only update if there's actual change
+    const hasChanges = Object.keys(data).some(
+      (key) =>
+        state.personalInfo[key as keyof PersonalInfo] !==
+        data[key as keyof PersonalInfo]
+    );
+
+    if (hasChanges) {
+      shouldSaveRef.current = true;
+      dispatch({ type: "UPDATE_PERSONAL_INFO", payload: data });
+      dispatch({ type: "UPDATE_LAST_SAVED" });
+    }
+  };
+
+  const updateFamilyFinancial = (data: Partial<FamilyFinancial>) => {
+    // Only update if there's actual change
+    const hasChanges = Object.keys(data).some(
+      (key) =>
+        state.familyFinancial[key as keyof FamilyFinancial] !==
+        data[key as keyof FamilyFinancial]
+    );
+
+    if (hasChanges) {
+      shouldSaveRef.current = true;
+      dispatch({ type: "UPDATE_FAMILY_FINANCIAL", payload: data });
+      dispatch({ type: "UPDATE_LAST_SAVED" });
+    }
+  };
+
+  const updateSituationDescriptions = (
+    data: Partial<SituationDescriptions>
+  ) => {
+    // Only update if there's actual change
+    const hasChanges = Object.keys(data).some(
+      (key) =>
+        state.situationDescriptions[key as keyof SituationDescriptions] !==
+        data[key as keyof SituationDescriptions]
+    );
+
+    if (hasChanges) {
+      shouldSaveRef.current = true;
+      dispatch({ type: "UPDATE_SITUATION_DESCRIPTIONS", payload: data });
+      dispatch({ type: "UPDATE_LAST_SAVED" });
+    }
+  };
+
+  const setCurrentStep = (step: FormStep) => {
+    dispatch({ type: "SET_CURRENT_STEP", payload: step });
+  };
+
+  const setSubmitting = (submitting: boolean) => {
+    dispatch({ type: "SET_SUBMITTING", payload: submitting });
+  };
+
+  const setReferenceNumber = (referenceNumber: string) => {
+    dispatch({ type: "SET_REFERENCE_NUMBER", payload: referenceNumber });
+  };
+
+  const saveProgress = () => {
+    shouldSaveRef.current = true;
+    dispatch({ type: "UPDATE_LAST_SAVED" });
+  };
+
   const resetApplication = () => {
-    dispatch({ type: 'RESET_APPLICATION' });
+    dispatch({ type: "RESET_APPLICATION" });
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch (error) {
-      console.warn('Failed to clear application progress:', error);
+      console.warn("Failed to clear application progress:", error);
     }
   };
 
@@ -209,7 +271,9 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({ childr
 export const useApplication = (): ApplicationContextState => {
   const context = useContext(ApplicationContext);
   if (!context) {
-    throw new Error('useApplication must be used within an ApplicationProvider');
+    throw new Error(
+      "useApplication must be used within an ApplicationProvider"
+    );
   }
   return context;
 };

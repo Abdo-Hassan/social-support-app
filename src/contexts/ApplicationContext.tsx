@@ -118,7 +118,9 @@ function applicationReducer(
 }
 
 // Context
-const ApplicationContext = createContext<ApplicationContextState | null>(null);
+export const ApplicationContext = createContext<ApplicationContextState | null>(
+  null
+);
 
 // Provider Component
 interface ApplicationProviderProps {

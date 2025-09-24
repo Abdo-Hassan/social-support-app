@@ -1,5 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  Box,
+  CircularProgress,
+  Alert,
+  IconButton,
+  Paper,
+} from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
 import { AIAssistanceRequest, AIAssistanceResponse } from "../../types/form";
 import {
   generateAIAssistance,
@@ -25,71 +39,9 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [suggestion, setSuggestion] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const modalRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Focus management for accessibility
-  useEffect(() => {
-    if (isOpen && closeButtonRef.current) {
-      closeButtonRef.current.focus();
-    }
-  }, [isOpen]);
-
-  // Generate AI assistance when modal opens
-  useEffect(() => {
-    if (isOpen && !suggestion && !error) {
-      generateAssistance();
-    }
-  }, [isOpen]);
-
-  // Handle escape key
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && isOpen) {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
-
-  // Focus trap for accessibility
-  useEffect(() => {
-    if (isOpen) {
-      const focusableElements = modalRef.current?.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-
-      if (focusableElements && focusableElements.length > 0) {
-        const firstFocusable = focusableElements[0] as HTMLElement;
-        const lastFocusable = focusableElements[
-          focusableElements.length - 1
-        ] as HTMLElement;
-
-        const handleTabKey = (event: KeyboardEvent) => {
-          if (event.key === "Tab") {
-            if (event.shiftKey) {
-              if (document.activeElement === firstFocusable) {
-                lastFocusable.focus();
-                event.preventDefault();
-              }
-            } else {
-              if (document.activeElement === lastFocusable) {
-                firstFocusable.focus();
-                event.preventDefault();
-              }
-            }
-          }
-        };
-
-        document.addEventListener("keydown", handleTabKey);
-        return () => document.removeEventListener("keydown", handleTabKey);
-      }
-    }
-  }, [isOpen, suggestion, error]);
-
-  const generateAssistance = async () => {
+  // Define generateAssistance first before using it in useEffect
+  const generateAssistance = useCallback(async () => {
     setIsLoading(true);
     setError("");
     setSuggestion("");
@@ -114,7 +66,14 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [request, t]);
+
+  // Generate AI assistance when modal opens
+  useEffect(() => {
+    if (isOpen && !suggestion && !error) {
+      generateAssistance();
+    }
+  }, [isOpen, suggestion, error, generateAssistance]);
 
   const handleAccept = () => {
     onAccept(suggestion);
@@ -132,103 +91,108 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
     generateAssistance();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div
-      className="ai-modal"
-      role="dialog"
-      aria-modal="true"
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
       aria-labelledby="ai-modal-title"
       aria-describedby="ai-modal-description">
-      <div
-        ref={modalRef}
-        className="ai-modal-content"
-        onClick={(e) => e.stopPropagation()}>
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3
-                id="ai-modal-title"
-                className="text-lg font-semibold text-foreground">
-                {t("situation.aiModal.title")}
-              </h3>
-              <p
-                id="ai-modal-description"
-                className="text-sm text-muted-foreground mt-1">
-                {t("situation.aiModal.subtitle")}
-              </p>
-            </div>
-            <button
-              ref={closeButtonRef}
-              onClick={onClose}
-              className="btn-ghost p-2 -mr-2"
-              aria-label="Close AI assistance modal">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+      <DialogTitle
+        id="ai-modal-title"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          pb: 1,
+        }}>
+        <Box>
+          <Typography variant="h6" component="h2" fontWeight={600}>
+            {t("situation.aiModal.title")}
+          </Typography>
+          <Typography
+            id="ai-modal-description"
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: 0.5 }}>
+            {t("situation.aiModal.subtitle")}
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onClose}
+          aria-label="Close AI assistance modal"
+          sx={{ ml: 2 }}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-          <div className="min-h-48">
-            {isLoading && (
-              <div className="flex flex-col items-center justify-center py-12">
-                <div className="loading-spinner w-8 h-8 mb-4"></div>
-                <p className="text-muted-foreground">
-                  {t("situation.aiModal.generating")}
-                </p>
-              </div>
-            )}
+      <DialogContent sx={{ minHeight: 300 }}>
+        {isLoading && (
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            py={8}>
+            <CircularProgress size={32} sx={{ mb: 2 }} />
+            <Typography color="text.secondary">
+              {t("situation.aiModal.generating")}
+            </Typography>
+          </Box>
+        )}
 
-            {error && (
-              <div className="text-center py-12">
-                <div className="bg-error/10 border border-error/20 rounded-md p-4 mb-4">
-                  <p className="text-error font-medium">{error}</p>
-                </div>
-                <button onClick={handleRetry} className="btn-primary">
-                  {t("situation.aiModal.retry")}
-                </button>
-              </div>
-            )}
+        {error && (
+          <Box textAlign="center" py={8}>
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+            <Button variant="contained" onClick={handleRetry}>
+              {t("situation.aiModal.retry")}
+            </Button>
+          </Box>
+        )}
 
-            {suggestion && (
-              <div>
-                <h4 className="font-medium text-foreground mb-3">
-                  {t("situation.aiModal.suggestion")}
-                </h4>
-                <div className="bg-muted/50 border border-border rounded-md p-4 mb-6">
-                  <p className="text-foreground leading-relaxed whitespace-pre-wrap">
-                    {suggestion}
-                  </p>
-                </div>
+        {suggestion && (
+          <Box>
+            <Typography variant="subtitle1" fontWeight={500} sx={{ mb: 2 }}>
+              {t("situation.aiModal.suggestion")}
+            </Typography>
+            <Paper
+              variant="outlined"
+              sx={{
+                p: 3,
+                mb: 3,
+                backgroundColor: "grey.50",
+                border: 1,
+                borderColor: "grey.200",
+              }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  whiteSpace: "pre-wrap",
+                  lineHeight: 1.6,
+                }}>
+                {suggestion}
+              </Typography>
+            </Paper>
+          </Box>
+        )}
+      </DialogContent>
 
-                <div className="flex flex-col sm:flex-row gap-3 justify-end">
-                  <button
-                    onClick={onClose}
-                    className="btn-outline order-1 sm:order-none">
-                    {t("situation.aiModal.discard")}
-                  </button>
-                  <button onClick={handleEdit} className="btn-secondary">
-                    {t("situation.aiModal.edit")}
-                  </button>
-                  <button onClick={handleAccept} className="btn-primary">
-                    {t("situation.aiModal.accept")}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+      {suggestion && (
+        <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
+          <Button variant="outlined" onClick={onClose}>
+            {t("situation.aiModal.discard")}
+          </Button>
+          <Button variant="outlined" onClick={handleEdit}>
+            {t("situation.aiModal.edit")}
+          </Button>
+          <Button variant="contained" onClick={handleAccept}>
+            {t("situation.aiModal.accept")}
+          </Button>
+        </DialogActions>
+      )}
+    </Dialog>
   );
 };

@@ -1,34 +1,55 @@
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ThemeProvider, CssBaseline, Box } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { enUS, ar } from 'date-fns/locale';
-import { ApplicationProvider } from './contexts/ApplicationContext';
-import { Header } from './components/Layout/Header';
-import { ProgressBar } from './components/Layout/ProgressBar';
-import { Footer } from './components/Layout/Footer';
-import { PersonalInfoStep } from './components/Steps/PersonalInfoStep';
-import { FamilyFinancialStep } from './components/Steps/FamilyFinancialStep';
-import { SituationDescriptionsStep } from './components/Steps/SituationDescriptionsStep';
-import { SuccessStep } from './components/Steps/SuccessStep';
-import { useApplication } from './contexts/ApplicationContext';
-import { theme } from './theme/theme';
-import './i18n/config';
+import React, { useEffect, Suspense, lazy } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  ThemeProvider,
+  CssBaseline,
+  Box,
+  CircularProgress,
+} from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { enUS, ar } from "date-fns/locale";
+import { ApplicationProvider } from "./contexts/ApplicationContext";
+import { Header } from "./components/Layout/Header";
+import { ProgressBar } from "./components/Layout/ProgressBar";
+import { createAppTheme } from "./theme";
+import "./i18n/config";
+import { useApplication } from "./hooks/use-application";
 
+// Lazy load step components for better code splitting
+const PersonalInfoStep = lazy(() =>
+  import("./components/Steps/PersonalInfoStep").then((module) => ({
+    default: module.PersonalInfoStep,
+  }))
+);
+const FamilyFinancialStep = lazy(() =>
+  import("./components/Steps/FamilyFinancialStep").then((module) => ({
+    default: module.FamilyFinancialStep,
+  }))
+);
+const SituationDescriptionsStep = lazy(() =>
+  import("./components/Steps/SituationDescriptionsStep").then((module) => ({
+    default: module.SituationDescriptionsStep,
+  }))
+);
+const SuccessStep = lazy(() =>
+  import("./components/Steps/SuccessStep").then((module) => ({
+    default: module.SuccessStep,
+  }))
+);
 
 const AppContent: React.FC = () => {
   const { currentStep } = useApplication();
-  
+
   const renderStep = () => {
     switch (currentStep) {
-      case 'personal':
+      case "personal":
         return <PersonalInfoStep />;
-      case 'family':
+      case "family":
         return <FamilyFinancialStep />;
-      case 'situation':
+      case "situation":
         return <SituationDescriptionsStep />;
-      case 'success':
+      case "success":
         return <SuccessStep />;
       default:
         return <PersonalInfoStep />;
@@ -38,42 +59,56 @@ const AppContent: React.FC = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        bgcolor: 'background.default',
-      }}
-    >
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        bgcolor: "background.default",
+      }}>
       <Header />
       <ProgressBar />
       <Box
         component="main"
         sx={{
           flex: 1,
-          py: { xs: 2, md: 4 },
-        }}
-      >
-        {renderStep()}
+          py: { xs: 2, md: 2 },
+        }}>
+        <Suspense
+          fallback={
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="400px">
+              <CircularProgress />
+            </Box>
+          }>
+          {renderStep()}
+        </Suspense>
       </Box>
-      <Footer />
     </Box>
   );
 };
 
 const App: React.FC = () => {
   const { i18n } = useTranslation();
-  const isRtl = i18n.language === 'ar';
+  const isRtl = i18n.language === "ar";
   const dateLocale = isRtl ? ar : enUS;
+  const theme = React.useMemo(
+    () => createAppTheme(i18n.language),
+    [i18n.language]
+  );
 
   useEffect(() => {
     // Set document direction and language
-    document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
-    document.documentElement.setAttribute('lang', i18n.language);
+    document.documentElement.setAttribute("dir", isRtl ? "rtl" : "ltr");
+    document.documentElement.setAttribute("lang", i18n.language);
   }, [i18n.language, isRtl]);
 
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={dateLocale}>
+      <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        adapterLocale={dateLocale}>
         <CssBaseline />
         <ApplicationProvider>
           <AppContent />

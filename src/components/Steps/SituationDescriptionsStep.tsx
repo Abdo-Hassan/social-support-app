@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslation } from 'react-i18next';
+import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
 import {
   Box,
   Typography,
@@ -14,49 +14,53 @@ import {
   useMediaQuery,
   Divider,
   CircularProgress,
-} from '@mui/material';
+} from "@mui/material";
 import {
   ArrowBack,
   AutoAwesome as AIIcon,
   Info as InfoIcon,
   Send as SendIcon,
-} from '@mui/icons-material';
-import { 
-  situationDescriptionsSchema, 
-  SituationDescriptions, 
-  AIAssistanceRequest 
-} from '../../types/form';
-import { useApplication } from '../../contexts/ApplicationContext';
-import { AIAssistanceModal } from '../AI/AIAssistanceModal';
+} from "@mui/icons-material";
+import {
+  situationDescriptionsSchema,
+  SituationDescriptions,
+  AIAssistanceRequest,
+} from "../../types/form";
+import { useApplication } from "../../hooks/use-application";
+import { AIAssistanceModal } from "../AI/AIAssistanceModal";
+import { NavigationButtons } from "../UI/NavigationButtons";
 
 export const SituationDescriptionsStep: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { 
-    situationDescriptions, 
-    updateSituationDescriptions, 
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const {
+    situationDescriptions,
+    updateSituationDescriptions,
     setCurrentStep,
-    submitting,
+    isSubmitting,
     setSubmitting,
     familyFinancial,
   } = useApplication();
 
   const [aiModalOpen, setAiModalOpen] = useState(false);
-  const [currentAIRequest, setCurrentAIRequest] = useState<AIAssistanceRequest | null>(null);
-  const [activeField, setActiveField] = useState<keyof SituationDescriptions | null>(null);
+  const [currentAIRequest, setCurrentAIRequest] =
+    useState<AIAssistanceRequest | null>(null);
+  const [activeField, setActiveField] = useState<
+    keyof SituationDescriptions | null
+  >(null);
 
-  const { 
-    control, 
-    handleSubmit, 
-    formState: { errors, isValid }, 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
     watch,
     setValue,
-    getValues
+    getValues,
   } = useForm<SituationDescriptions>({
     resolver: zodResolver(situationDescriptionsSchema),
     defaultValues: situationDescriptions as SituationDescriptions,
-    mode: 'onChange'
+    mode: "onChange",
   });
 
   // Auto-save on form changes
@@ -70,14 +74,14 @@ export const SituationDescriptionsStep: React.FC = () => {
 
   const openAIAssistance = (field: keyof SituationDescriptions) => {
     const request: AIAssistanceRequest = {
-      field: field as AIAssistanceRequest['field'],
+      field: field as AIAssistanceRequest["field"],
       context: {
         employmentStatus: familyFinancial?.employmentStatus,
         monthlyIncome: familyFinancial?.monthlyIncome,
         maritalStatus: familyFinancial?.maritalStatus,
         dependents: familyFinancial?.dependents,
-        existingText: getValues(field)
-      }
+        existingText: getValues(field),
+      },
     };
 
     setCurrentAIRequest(request);
@@ -102,7 +106,10 @@ export const SituationDescriptionsStep: React.FC = () => {
         if (textarea) {
           textarea.focus();
           // Place cursor at the end
-          (textarea as HTMLTextAreaElement).setSelectionRange(text.length, text.length);
+          (textarea as HTMLTextAreaElement).setSelectionRange(
+            text.length,
+            text.length
+          );
         }
       }, 100);
     }
@@ -113,15 +120,15 @@ export const SituationDescriptionsStep: React.FC = () => {
   const onSubmit = async (data: SituationDescriptions) => {
     setSubmitting(true);
     updateSituationDescriptions(data);
-    
+
     // Simulate API submission
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // Navigate to success page
-      setCurrentStep('success');
+      setCurrentStep("success");
     } catch (error) {
-      console.error('Submission error:', error);
+      console.error("Submission error:", error);
       // Handle error - show toast or error message
     } finally {
       setSubmitting(false);
@@ -129,46 +136,45 @@ export const SituationDescriptionsStep: React.FC = () => {
   };
 
   const handlePrevious = () => {
-    setCurrentStep('family');
+    setCurrentStep("family");
   };
 
   const fieldConfigs = [
     {
-      name: 'financialSituation' as const,
-      label: t('situation.financialSituation'),
-      placeholder: t('situation.financialPlaceholder')
+      name: "financialSituation" as const,
+      label: t("situation.financialSituation"),
+      placeholder: t("situation.financialPlaceholder"),
     },
     {
-      name: 'employmentCircumstances' as const,
-      label: t('situation.employmentCircumstances'),
-      placeholder: t('situation.employmentPlaceholder')
+      name: "employmentCircumstances" as const,
+      label: t("situation.employmentCircumstances"),
+      placeholder: t("situation.employmentPlaceholder"),
     },
     {
-      name: 'reasonForApplying' as const,
-      label: t('situation.reasonForApplying'),
-      placeholder: t('situation.reasonPlaceholder')
-    }
+      name: "reasonForApplying" as const,
+      label: t("situation.reasonForApplying"),
+      placeholder: t("situation.reasonPlaceholder"),
+    },
   ];
 
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto', p: { xs: 2, md: 3 } }}>
+    <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, md: 3 } }}>
       <Card elevation={2}>
         <CardContent sx={{ p: { xs: 3, md: 4 } }}>
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{ mb: 2 }}>
             <Typography
               variant="h4"
               component="h2"
               sx={{
                 fontWeight: 600,
-                color: 'text.primary',
+                color: "text.primary",
                 mb: 1,
-                fontSize: { xs: '1.5rem', md: '2rem' },
-              }}
-            >
-              {t('situation.title')}
+                fontSize: { xs: "1.5rem", md: "2rem" },
+              }}>
+              {t("situation.title")}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              {t('situation.subtitle')}
+              {t("situation.subtitle")}
             </Typography>
           </Box>
 
@@ -177,45 +183,43 @@ export const SituationDescriptionsStep: React.FC = () => {
               <Box key={config.name} sx={{ mb: 4 }}>
                 <Box
                   sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                     mb: 2,
-                    flexDirection: { xs: 'column', sm: 'row' },
+                    flexDirection: { xs: "column", sm: "row" },
                     gap: { xs: 1, sm: 0 },
-                  }}
-                >
+                  }}>
                   <Typography
                     variant="subtitle1"
                     component="label"
                     htmlFor={config.name}
                     sx={{
                       fontWeight: 600,
-                      color: 'text.primary',
-                      alignSelf: { xs: 'flex-start', sm: 'center' },
-                    }}
-                  >
-                    {config.label} <span style={{ color: theme.palette.error.main }}>*</span>
+                      color: "text.primary",
+                      alignSelf: { xs: "flex-start", sm: "center" },
+                    }}>
+                    {config.label}{" "}
+                    <span style={{ color: theme.palette.error.main }}>*</span>
                   </Typography>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     size="small"
                     onClick={() => openAIAssistance(config.name)}
                     startIcon={<AIIcon />}
                     sx={{
-                      borderColor: 'secondary.main',
-                      color: 'secondary.main',
-                      '&:hover': {
-                        borderColor: 'secondary.dark',
-                        bgcolor: 'secondary.50',
+                      borderColor: "success.main",
+                      color: "primary.contrastText",
+                      "&:hover": {
+                        borderColor: "success.dark",
+                        bgcolor: "primary.dark",
                       },
-                      alignSelf: { xs: 'flex-end', sm: 'center' },
-                    }}
-                  >
-                    {t('situation.helpMeWrite')}
+                      alignSelf: { xs: "flex-end", sm: "center" },
+                    }}>
+                    {t("situation.helpMeWrite")}
                   </Button>
                 </Box>
-                
+
                 <Controller
                   name={config.name}
                   control={control}
@@ -235,18 +239,16 @@ export const SituationDescriptionsStep: React.FC = () => {
                       fullWidth
                       variant="outlined"
                       sx={{
-                        '& .MuiOutlinedInput-root': {
-                          fontSize: '1rem',
+                        "& .MuiOutlinedInput-root": {
+                          fontSize: "1rem",
                           lineHeight: 1.5,
                         },
                       }}
                     />
                   )}
                 />
-                
-                {index < fieldConfigs.length - 1 && (
-                  <Divider sx={{ mt: 4 }} />
-                )}
+
+                {index < fieldConfigs.length - 1 && <Divider sx={{ mt: 4 }} />}
               </Box>
             ))}
 
@@ -255,61 +257,31 @@ export const SituationDescriptionsStep: React.FC = () => {
               icon={<InfoIcon />}
               sx={{
                 mb: 4,
-                '& .MuiAlert-message': {
-                  width: '100%',
+                "& .MuiAlert-message": {
+                  width: "100%",
                 },
-              }}
-            >
+              }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-                {t('situation.aiAssistance')}
+                {t("situation.aiAssistance")}
               </Typography>
               <Typography variant="body2">
-                Click "Help Me Write" next to any field to get AI-powered suggestions 
-                tailored to your specific situation. You can accept, edit, or discard 
-                the suggestions as needed.
+                Click "Help Me Write" next to any field to get AI-powered
+                suggestions tailored to your specific situation. You can accept,
+                edit, or discard the suggestions as needed.
               </Typography>
             </Alert>
 
             {/* Navigation */}
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: { xs: 'column-reverse', sm: 'row' },
-                gap: 2,
-                pt: 3,
-                borderTop: 1,
-                borderColor: 'divider',
-              }}
-            >
-              <Button
-                variant="outlined"
-                onClick={handlePrevious}
-                startIcon={<ArrowBack />}
-                disabled={submitting}
-                size="large"
-                sx={{
-                  minWidth: { xs: '100%', sm: 150 },
-                  py: 1.5,
-                }}
-              >
-                {t('form.previous')}
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={!isValid || submitting}
-                startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
-                size="large"
-                sx={{
-                  minWidth: { xs: '100%', sm: 180 },
-                  py: 1.5,
-                  fontWeight: 600,
-                }}
-              >
-                {submitting ? t('form.loading') : t('form.submit')}
-              </Button>
-            </Box>
+            <NavigationButtons
+              onPrevious={handlePrevious}
+              onNext={handleSubmit(onSubmit)}
+              nextText={isSubmitting ? t("form.loading") : t("form.submit")}
+              nextIcon={<SendIcon />}
+              nextType="submit"
+              isLoading={isSubmitting}
+              isNextDisabled={!isValid || isSubmitting}
+              previousDisabled={isSubmitting}
+            />
           </Box>
         </CardContent>
       </Card>

@@ -15,7 +15,7 @@ import {
 } from "../types/form";
 
 // Context State
-interface ApplicationContextState extends ApplicationState {
+export interface ApplicationContextState extends ApplicationState {
   updatePersonalInfo: (data: Partial<PersonalInfo>) => void;
   updateFamilyFinancial: (data: Partial<FamilyFinancial>) => void;
   updateSituationDescriptions: (data: Partial<SituationDescriptions>) => void;
@@ -267,15 +267,4 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
       {children}
     </ApplicationContext.Provider>
   );
-};
-
-// Hook to use the context
-export const useApplication = (): ApplicationContextState => {
-  const context = useContext(ApplicationContext);
-  if (!context) {
-    throw new Error(
-      "useApplication must be used within an ApplicationProvider"
-    );
-  }
-  return context;
 };

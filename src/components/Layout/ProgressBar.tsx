@@ -1,59 +1,86 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Box,
-  Stepper,
-  Step,
-  StepLabel,
   Container,
   useTheme,
   useMediaQuery,
-  MobileStepper,
-} from '@mui/material';
-import { useApplication } from '../../contexts/ApplicationContext';
+  Typography,
+} from "@mui/material";
+import { Check } from "@mui/icons-material";
+import { useApplication } from "../../hooks/use-application";
 
-const steps = ['personal', 'family', 'situation'] as const;
+const steps = [
+  { key: "personal", label: "Personal Information" },
+  { key: "family", label: "Family & Financial" },
+  { key: "situation", label: "Situation Descriptions" },
+] as const;
 
 export const ProgressBar: React.FC = () => {
   const { t } = useTranslation();
   const { currentStep } = useApplication();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  const currentStepIndex = steps.indexOf(currentStep as typeof steps[number]);
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const currentStepIndex = steps.findIndex((step) => step.key === currentStep);
   const activeStep = currentStepIndex >= 0 ? currentStepIndex : 0;
 
-  if (currentStep === 'success') {
+  if (currentStep === "success") {
     return null;
   }
 
   if (isMobile) {
     return (
-      <Box sx={{ bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderBottom: 1,
+          borderColor: "divider",
+          py: 3,
+        }}>
         <Container maxWidth="lg">
-          <MobileStepper
-            variant="progress"
-            steps={steps.length}
-            position="static"
-            activeStep={activeStep}
-            sx={{
-              bgcolor: 'transparent',
-              '& .MuiMobileStepper-progress': {
-                width: '100%',
-                height: 8,
-                borderRadius: 4,
-              },
-            }}
-            nextButton={<div />}
-            backButton={<div />}
-          />
-          <Box sx={{ textAlign: 'center', pb: 2 }}>
-            <Box sx={{ typography: 'body2', color: 'text.secondary', mb: 0.5 }}>
+          {/* Mobile Progress Dots */}
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+            {steps.map((_, index) => (
+              <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    bgcolor:
+                      index < activeStep
+                        ? "#10B981" // Green for completed
+                        : index === activeStep
+                        ? "primary.main" // Blue for active
+                        : "#E5E7EB", // Gray for pending
+                    mx: 0.5,
+                  }}
+                />
+                {index < steps.length - 1 && (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 2,
+                      bgcolor: index < activeStep ? "#10B981" : "#E5E7EB",
+                      mx: 0.5,
+                    }}
+                  />
+                )}
+              </Box>
+            ))}
+          </Box>
+
+          {/* Current Step Info */}
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
               Step {activeStep + 1} of {steps.length}
-            </Box>
-            <Box sx={{ typography: 'subtitle1', fontWeight: 500, color: 'text.primary' }}>
-              {t(`steps.${steps[activeStep]}`)}
-            </Box>
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 500, color: "text.primary" }}>
+              {steps[activeStep].label}
+            </Typography>
           </Box>
         </Container>
       </Box>
@@ -61,53 +88,89 @@ export const ProgressBar: React.FC = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
+    <Box
+      sx={{
+        py: 2,
+      }}>
       <Container maxWidth="lg">
-        <Stepper
-          activeStep={activeStep}
-          alternativeLabel
-          sx={{
-            py: 3,
-            '& .MuiStepConnector-root': {
-              top: 22,
-            },
-            '& .MuiStepConnector-line': {
-              borderColor: 'divider',
-              borderTopWidth: 2,
-            },
-            '& .MuiStepConnector-root.Mui-active .MuiStepConnector-line': {
-              borderColor: 'primary.main',
-            },
-            '& .MuiStepConnector-root.Mui-completed .MuiStepConnector-line': {
-              borderColor: 'primary.main',
-            },
-          }}
-        >
-          {steps.map((step, index) => (
-            <Step key={step}>
-              <StepLabel
-                sx={{
-                  '& .MuiStepLabel-label': {
-                    typography: 'body2',
-                    fontWeight: index === activeStep ? 600 : 400,
-                    color: index === activeStep ? 'primary.main' : 'text.secondary',
-                    mt: 1,
-                  },
-                  '& .MuiStepIcon-root': {
-                    fontSize: '1.8rem',
-                    color: index <= activeStep ? 'primary.main' : 'action.disabled',
-                  },
-                  '& .MuiStepIcon-text': {
-                    fill: 'white',
-                    fontWeight: 600,
-                  },
-                }}
-              >
-                {t(`steps.${step}`)}
-              </StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center", maxWidth: 800 }}>
+            {steps.map((step, index) => (
+              <Box
+                key={step.key}
+                sx={{ display: "flex", alignItems: "center" }}>
+                {/* Step Circle and Content */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}>
+                  {/* Step Circle */}
+                  <Box
+                    sx={{
+                      width: 35,
+                      height: 35,
+                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      bgcolor:
+                        index < activeStep
+                          ? "#29A366" // Green for completed
+                          : index === activeStep
+                          ? "primary.main" // Blue for active
+                          : "#E5E7EB", // Gray for pending
+                      color:
+                        index < activeStep
+                          ? "white" // White checkmark on green
+                          : index === activeStep
+                          ? "white" // White number on blue
+                          : "#9CA3AF", // Gray number on gray
+                      fontWeight: 600,
+                      fontSize: "1rem",
+                      mb: 1,
+                    }}>
+                    {index < activeStep ? (
+                      <Check sx={{ fontSize: "1.2rem" }} />
+                    ) : (
+                      index + 1
+                    )}
+                  </Box>
+
+                  {/* Step Label */}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 600,
+                      color:
+                        index === activeStep
+                          ? "primary.main"
+                          : "text.secondary",
+                      textAlign: "center",
+                      maxWidth: 140,
+                      lineHeight: 1.3,
+                    }}>
+                    {step.label}
+                  </Typography>
+                </Box>
+
+                {/* Connector Line */}
+                {index < steps.length - 1 && (
+                  <Box
+                    sx={{
+                      width: 120,
+                      height: 2,
+                      bgcolor: index < activeStep ? "#10B981" : "#E5E7EB",
+                      mx: 2,
+                      mb: 3,
+                    }}
+                  />
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Box>
       </Container>
     </Box>
   );

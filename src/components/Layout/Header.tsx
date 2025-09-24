@@ -1,96 +1,105 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   AppBar,
+  Box,
+  Button,
+  Container,
   Toolbar,
   Typography,
-  Button,
-  Box,
-  Container,
-  Avatar,
-  useTheme,
   useMediaQuery,
-} from '@mui/material';
-import { Language as LanguageIcon } from '@mui/icons-material';
+  useTheme,
+} from "@mui/material";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const toggleLanguage = () => {
     const currentLang = i18n.language;
-    const newLang = currentLang === 'en' ? 'ar' : 'en';
+    const newLang = currentLang === "en" ? "ar" : "en";
     i18n.changeLanguage(newLang);
-    document.documentElement.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-    document.documentElement.setAttribute('lang', newLang);
+    document.documentElement.setAttribute(
+      "dir",
+      newLang === "ar" ? "rtl" : "ltr"
+    );
+    document.documentElement.setAttribute("lang", newLang);
   };
 
   return (
-    <AppBar position="static" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
-      <Container maxWidth="lg">
-        <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Avatar
+    <AppBar
+      position="static"
+      elevation={0}
+      sx={{
+        bgcolor: "background.paper",
+        color: "text.primary",
+      }}>
+      <Container maxWidth="xl">
+        <Toolbar sx={{ justifyContent: "space-between", py: 2, minHeight: 56 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box
               sx={{
-                bgcolor: 'primary.main',
-                color: 'primary.contrastText',
-                width: 40,
-                height: 40,
-                fontSize: '1rem',
-                fontWeight: 'bold',
-              }}
-            >
+                bgcolor: "primary.main",
+                color: "white",
+                width: 36,
+                height: 36,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 1.5,
+                fontSize: "0.875rem",
+                fontWeight: "bold",
+              }}>
               SSP
-            </Avatar>
+            </Box>
             <Box>
               <Typography
-                variant={isMobile ? 'h6' : 'h5'}
+                variant="h6"
                 component="h1"
                 sx={{
-                  fontWeight: 600,
-                  color: 'text.primary',
+                  fontWeight: "bold",
+                  color: "text.primary",
                   lineHeight: 1.2,
-                }}
-              >
+                  fontSize: { xs: "1.1rem", md: "1.25rem" },
+                }}>
                 Social Support Portal
               </Typography>
               <Typography
                 variant="body2"
                 sx={{
-                  color: 'text.secondary',
-                  display: { xs: 'none', sm: 'block' },
-                }}
-              >
+                  color: "text.secondary",
+                  display: { xs: "none", sm: "block" },
+                  fontSize: "0.8rem",
+                  mt: 0.25,
+                }}>
                 Government Financial Assistance Application
               </Typography>
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <Button
               variant="outlined"
-              startIcon={<LanguageIcon />}
               onClick={toggleLanguage}
-              size={isMobile ? 'small' : 'medium'}
+              size="small"
               sx={{
-                borderColor: 'divider',
-                color: 'text.primary',
-                '&:hover': {
-                  borderColor: 'primary.main',
-                  bgcolor: 'primary.50',
+                borderColor: "grey.300",
+                color: "text.primary",
+                borderRadius: 1.5,
+                px: 2.5,
+                py: 0.75,
+                fontSize: "0.8rem",
+                fontWeight: 500,
+                textTransform: "none",
+                minHeight: 32,
+                "&:hover": {
+                  borderColor: "primary.main",
+                  bgcolor: "primary.50",
+                  color: "primary.main",
                 },
-              }}
-            >
-              {t('navigation.language')}
-            </Button>
-            <Button
-              variant="text"
-              color="primary"
-              size={isMobile ? 'small' : 'medium'}
-              sx={{ ml: 1 }}
-            >
-              {t('navigation.help')}
+              }}>
+              {i18n.language === "en" ? "العربية" : "English"}
             </Button>
           </Box>
         </Toolbar>

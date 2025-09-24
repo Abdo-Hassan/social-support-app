@@ -1,23 +1,21 @@
-import React from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslation } from "react-i18next";
 import {
   Box,
-  Typography,
-  Button,
   Card,
   CardContent,
   Grid,
-  useTheme,
+  Typography,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
-import { familyFinancialSchema, FamilyFinancial } from "../../types/form";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useApplication } from "../../hooks/use-application";
-import { SelectController } from "../UI/SelectController";
+import { FamilyFinancial, familyFinancialSchema } from "../../types/form";
 import { InputController } from "../UI/InputController";
 import { NavigationButtons } from "../UI/NavigationButtons";
+import { SelectController } from "../UI/SelectController";
 
 export const FamilyFinancialStep: React.FC = () => {
   const { t } = useTranslation();
@@ -84,7 +82,7 @@ export const FamilyFinancialStep: React.FC = () => {
   return (
     <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, md: 3 } }}>
       <Card elevation={2}>
-        <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+        <CardContent sx={{ p: { xs: 3, md: 2 } }}>
           <Box sx={{ mb: 4 }}>
             <Typography
               variant="h4"

@@ -163,7 +163,7 @@ export const ProgressBar: React.FC = () => {
                       height: 2,
                       bgcolor: index < activeStep ? "#10B981" : "#E5E7EB",
                       mx: 2,
-                      mb: 3,
+                      mb: 0,
                     }}
                   />
                 )}

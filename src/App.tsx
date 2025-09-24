@@ -1,11 +1,6 @@
-import React, { useEffect, Suspense, lazy } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  ThemeProvider,
-  CssBaseline,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { enUS, ar } from "date-fns/locale";
@@ -15,28 +10,10 @@ import { ProgressBar } from "./components/Layout/ProgressBar";
 import { createAppTheme } from "./theme";
 import "./i18n/config";
 import { useApplication } from "./hooks/use-application";
-
-// Lazy load step components for better code splitting
-const PersonalInfoStep = lazy(() =>
-  import("./components/Steps/PersonalInfoStep").then((module) => ({
-    default: module.PersonalInfoStep,
-  }))
-);
-const FamilyFinancialStep = lazy(() =>
-  import("./components/Steps/FamilyFinancialStep").then((module) => ({
-    default: module.FamilyFinancialStep,
-  }))
-);
-const SituationDescriptionsStep = lazy(() =>
-  import("./components/Steps/SituationDescriptionsStep").then((module) => ({
-    default: module.SituationDescriptionsStep,
-  }))
-);
-const SuccessStep = lazy(() =>
-  import("./components/Steps/SuccessStep").then((module) => ({
-    default: module.SuccessStep,
-  }))
-);
+import { PersonalInfoStep } from "@/components/Steps/PersonalInfoStep";
+import { FamilyFinancialStep } from "@/components/Steps/FamilyFinancialStep";
+import { SituationDescriptionsStep } from "@/components/Steps/SituationDescriptionsStep";
+import { SuccessStep } from "@/components/Steps/SuccessStep";
 
 const AppContent: React.FC = () => {
   const { currentStep } = useApplication();
@@ -72,18 +49,7 @@ const AppContent: React.FC = () => {
           flex: 1,
           py: { xs: 2, md: 2 },
         }}>
-        <Suspense
-          fallback={
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              minHeight="400px">
-              <CircularProgress />
-            </Box>
-          }>
-          {renderStep()}
-        </Suspense>
+        {renderStep()}
       </Box>
     </Box>
   );

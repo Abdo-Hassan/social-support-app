@@ -2,6 +2,25 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Alert,
+  useTheme,
+  useMediaQuery,
+  Divider,
+  CircularProgress,
+} from '@mui/material';
+import {
+  ArrowBack,
+  AutoAwesome as AIIcon,
+  Info as InfoIcon,
+  Send as SendIcon,
+} from '@mui/icons-material';
 import { 
   situationDescriptionsSchema, 
   SituationDescriptions, 
@@ -12,13 +31,15 @@ import { AIAssistanceModal } from '../AI/AIAssistanceModal';
 
 export const SituationDescriptionsStep: React.FC = () => {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { 
     situationDescriptions, 
     updateSituationDescriptions, 
     setCurrentStep,
+    submitting,
     setSubmitting,
     familyFinancial,
-    personalInfo
   } = useApplication();
 
   const [aiModalOpen, setAiModalOpen] = useState(false);
@@ -97,9 +118,6 @@ export const SituationDescriptionsStep: React.FC = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Generate mock reference number
-      const referenceNumber = `SSP-${Date.now().toString().slice(-8)}`;
-      
       // Navigate to success page
       setCurrentStep('success');
     } catch (error) {
@@ -133,132 +151,168 @@ export const SituationDescriptionsStep: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="form-section">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground mb-2">
-            {t('situation.title')}
-          </h2>
-          <p className="text-muted-foreground">
-            {t('situation.subtitle')}
-          </p>
-        </div>
+    <Box sx={{ maxWidth: 800, mx: 'auto', p: { xs: 2, md: 3 } }}>
+      <Card elevation={2}>
+        <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+          <Box sx={{ mb: 4 }}>
+            <Typography
+              variant="h4"
+              component="h2"
+              sx={{
+                fontWeight: 600,
+                color: 'text.primary',
+                mb: 1,
+                fontSize: { xs: '1.5rem', md: '2rem' },
+              }}
+            >
+              {t('situation.title')}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {t('situation.subtitle')}
+            </Typography>
+          </Box>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-          {fieldConfigs.map((config) => (
-            <div key={config.name} className="form-field">
-              <div className="flex items-center justify-between mb-2">
-                <label htmlFor={config.name} className="form-label">
-                  {config.label} <span className="text-error">*</span>
-                </label>
-                <button
-                  type="button"
-                  onClick={() => openAIAssistance(config.name)}
-                  className="btn-secondary text-sm px-4 py-2"
-                  aria-label={`${t('situation.helpMeWrite')} for ${config.label}`}
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            {fieldConfigs.map((config, index) => (
+              <Box key={config.name} sx={{ mb: 4 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    mb: 2,
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    gap: { xs: 1, sm: 0 },
+                  }}
                 >
-                  <svg 
-                    className="w-4 h-4 mr-2 inline" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
+                  <Typography
+                    variant="subtitle1"
+                    component="label"
+                    htmlFor={config.name}
+                    sx={{
+                      fontWeight: 600,
+                      color: 'text.primary',
+                      alignSelf: { xs: 'flex-start', sm: 'center' },
+                    }}
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M13 10V3L4 14h7v7l9-11h-7z" 
+                    {config.label} <span style={{ color: theme.palette.error.main }}>*</span>
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => openAIAssistance(config.name)}
+                    startIcon={<AIIcon />}
+                    sx={{
+                      borderColor: 'secondary.main',
+                      color: 'secondary.main',
+                      '&:hover': {
+                        borderColor: 'secondary.dark',
+                        bgcolor: 'secondary.50',
+                      },
+                      alignSelf: { xs: 'flex-end', sm: 'center' },
+                    }}
+                  >
+                    {t('situation.helpMeWrite')}
+                  </Button>
+                </Box>
+                
+                <Controller
+                  name={config.name}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id={config.name}
+                      multiline
+                      rows={6}
+                      placeholder={config.placeholder}
+                      error={!!errors[config.name]}
+                      helperText={
+                        errors[config.name]?.message
+                          ? t(errors[config.name]?.message as string)
+                          : 'Minimum 50 characters. Use the "Help Me Write" button for AI assistance.'
+                      }
+                      fullWidth
+                      variant="outlined"
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          fontSize: '1rem',
+                          lineHeight: 1.5,
+                        },
+                      }}
                     />
-                  </svg>
-                  {t('situation.helpMeWrite')}
-                </button>
-              </div>
-              
-              <Controller
-                name={config.name}
-                control={control}
-                render={({ field }) => (
-                  <textarea
-                    {...field}
-                    id={config.name}
-                    className="form-textarea"
-                    rows={6}
-                    placeholder={config.placeholder}
-                    aria-describedby={
-                      errors[config.name] ? `${config.name}-error` : `${config.name}-help`
-                    }
-                    aria-invalid={!!errors[config.name]}
-                  />
-                )}
-              />
-              
-              {errors[config.name] && (
-                <p id={`${config.name}-error`} className="form-error" role="alert">
-                  {t(errors[config.name]?.message as string)}
-                </p>
-              )}
-              
-              <p id={`${config.name}-help`} className="form-helper">
-                Minimum 50 characters. Use the "Help Me Write" button for AI assistance.
-              </p>
-            </div>
-          ))}
-
-          <div className="bg-muted/30 border border-border rounded-md p-4">
-            <div className="flex items-start">
-              <svg 
-                className="w-5 h-5 text-primary mr-3 mt-0.5 flex-shrink-0" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                  )}
                 />
-              </svg>
-              <div>
-                <h4 className="font-medium text-foreground mb-1">
-                  {t('situation.aiAssistance')}
-                </h4>
-                <p className="text-sm text-muted-foreground">
-                  Click "Help Me Write" next to any field to get AI-powered suggestions 
-                  tailored to your specific situation. You can accept, edit, or discard 
-                  the suggestions as needed.
-                </p>
-              </div>
-            </div>
-          </div>
+                
+                {index < fieldConfigs.length - 1 && (
+                  <Divider sx={{ mt: 4 }} />
+                )}
+              </Box>
+            ))}
 
-          {/* Navigation */}
-          <div className="flex justify-between pt-6">
-            <button
-              type="button"
-              onClick={handlePrevious}
-              className="btn-outline"
+            <Alert
+              severity="info"
+              icon={<InfoIcon />}
+              sx={{
+                mb: 4,
+                '& .MuiAlert-message': {
+                  width: '100%',
+                },
+              }}
             >
-              {t('form.previous')}
-            </button>
-            <button
-              type="submit"
-              disabled={!isValid}
-              className="btn-primary"
-              aria-describedby={!isValid ? 'form-invalid' : undefined}
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                {t('situation.aiAssistance')}
+              </Typography>
+              <Typography variant="body2">
+                Click "Help Me Write" next to any field to get AI-powered suggestions 
+                tailored to your specific situation. You can accept, edit, or discard 
+                the suggestions as needed.
+              </Typography>
+            </Alert>
+
+            {/* Navigation */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: { xs: 'column-reverse', sm: 'row' },
+                gap: 2,
+                pt: 3,
+                borderTop: 1,
+                borderColor: 'divider',
+              }}
             >
-              {t('form.submit')}
-            </button>
-            {!isValid && (
-              <p id="form-invalid" className="sr-only">
-                Please complete all required fields before submitting
-              </p>
-            )}
-          </div>
-        </form>
-      </div>
+              <Button
+                variant="outlined"
+                onClick={handlePrevious}
+                startIcon={<ArrowBack />}
+                disabled={submitting}
+                size="large"
+                sx={{
+                  minWidth: { xs: '100%', sm: 150 },
+                  py: 1.5,
+                }}
+              >
+                {t('form.previous')}
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={!isValid || submitting}
+                startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
+                size="large"
+                sx={{
+                  minWidth: { xs: '100%', sm: 180 },
+                  py: 1.5,
+                  fontWeight: 600,
+                }}
+              >
+                {submitting ? t('form.loading') : t('form.submit')}
+              </Button>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
 
       {/* AI Assistance Modal */}
       {aiModalOpen && currentAIRequest && (
@@ -273,6 +327,6 @@ export const SituationDescriptionsStep: React.FC = () => {
           request={currentAIRequest}
         />
       )}
-    </div>
+    </Box>
   );
 };

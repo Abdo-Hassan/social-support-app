@@ -1,262 +1,38 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Government Social Support Portal Design System
-   Professional, trustworthy, accessible design with excellent contrast
-   All colors MUST be HSL for proper theming
-*/
-
-@layer base {
-  :root {
-    /* Core Background & Text */
-    --background: 210 20% 98%;
-    --foreground: 220 15% 25%;
-    
-    /* Government Brand Colors - Professional Blue/Green Palette */
-    --primary: 220 85% 35%;
-    --primary-foreground: 0 0% 100%;
-    --primary-hover: 220 85% 30%;
-    --primary-light: 220 85% 45%;
-    
-    /* Secondary - Trustworthy Green */
-    --secondary: 150 60% 35%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-hover: 150 60% 30%;
-    
-    /* Accent - Civic Orange for CTAs */
-    --accent: 25 85% 55%;
-    --accent-foreground: 0 0% 100%;
-    --accent-hover: 25 85% 50%;
-    
-    /* Card & Surfaces */
-    --card: 0 0% 100%;
-    --card-foreground: 220 15% 25%;
-    --card-border: 210 20% 90%;
-    
-    /* Form Elements */
-    --input: 0 0% 100%;
-    --input-border: 210 15% 85%;
-    --input-focus: 220 85% 35%;
-    --input-error: 0 65% 50%;
-    
-    /* Status Colors */
-    --success: 150 60% 40%;
-    --success-foreground: 0 0% 100%;
-    --warning: 45 95% 50%;
-    --warning-foreground: 220 15% 25%;
-    --error: 0 65% 50%;
-    --error-foreground: 0 0% 100%;
-    
-    /* Neutral Tones */
-    --muted: 210 15% 95%;
-    --muted-foreground: 215 20% 55%;
-    --border: 210 15% 88%;
-    
-    /* Interactive States */
-    --ring: 220 85% 35%;
-    --disabled: 210 10% 85%;
-    --disabled-foreground: 215 10% 60%;
-    
-    /* Design System Spacing & Radius */
-    --radius: 8px;
-    --radius-sm: 6px;
-    --radius-lg: 12px;
-
-    
-    /* Gradients for Visual Interest */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(210 25% 99%) 100%);
-    
-    /* Shadows for Depth */
-    --shadow-sm: 0 1px 3px hsl(var(--primary) / 0.1);
-    --shadow-md: 0 4px 12px hsl(var(--primary) / 0.15);
-    --shadow-lg: 0 8px 24px hsl(var(--primary) / 0.2);
-    
-    /* Animation Timing */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-fast: all 0.15s ease-out;
-  }
-
-  .dark {
-    /* Dark mode optimized for accessibility */
-    --background: 220 15% 12%;
-    --foreground: 210 20% 95%;
-    
-    --primary: 220 85% 65%;
-    --primary-foreground: 220 15% 12%;
-    --primary-hover: 220 85% 70%;
-    
-    --secondary: 150 60% 55%;
-    --secondary-foreground: 220 15% 12%;
-    
-    --card: 220 15% 16%;
-    --card-foreground: 210 20% 95%;
-    --card-border: 220 15% 25%;
-    
-    --input: 220 15% 20%;
-    --input-border: 220 15% 30%;
-    
-    --muted: 220 15% 20%;
-    --muted-foreground: 215 15% 65%;
-    --border: 220 15% 25%;
-  }
+/* CSS Reset and Base Styles */
+* {
+  box-sizing: border-box;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    @apply bg-background text-foreground font-sans;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* RTL Support */
-  [dir="rtl"] {
-    text-align: right;
-  }
-
-  [dir="rtl"] .ltr-only {
-    direction: ltr;
-    text-align: left;
-  }
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
-@layer components {
-  /* Government Form Styles */
-  .form-section {
-    @apply bg-card border border-card-border rounded-lg p-6 shadow-sm;
-    background: hsl(var(--gradient-card));
-  }
-
-  .form-field {
-    @apply space-y-2;
-  }
-
-  .form-label {
-    @apply text-sm font-medium text-foreground block;
-  }
-
-  .form-input {
-    @apply w-full px-3 py-2 border border-input-border rounded-md bg-input text-foreground;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
-    @apply disabled:bg-disabled disabled:text-disabled-foreground disabled:cursor-not-allowed;
-    transition: var(--transition-smooth);
-  }
-
-  .form-textarea {
-    @apply form-input min-h-24 resize-y;
-  }
-
-  .form-error {
-    @apply text-sm text-error font-medium;
-  }
-
-  .form-helper {
-    @apply text-sm text-muted-foreground;
-  }
-
-  /* Button Variants */
-  .btn-primary {
-    @apply px-6 py-3 bg-primary text-primary-foreground font-medium rounded-md;
-    @apply hover:bg-primary-hover focus:ring-2 focus:ring-primary focus:ring-offset-2;
-    @apply disabled:bg-disabled disabled:text-disabled-foreground disabled:cursor-not-allowed;
-    background: hsl(var(--gradient-primary));
-    transition: var(--transition-smooth);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .btn-secondary {
-    @apply px-6 py-3 bg-secondary text-secondary-foreground font-medium rounded-md;
-    @apply hover:bg-secondary-hover focus:ring-2 focus:ring-secondary focus:ring-offset-2;
-    transition: var(--transition-smooth);
-  }
-
-  .btn-outline {
-    @apply px-6 py-3 border-2 border-primary text-primary font-medium rounded-md bg-transparent;
-    @apply hover:bg-primary hover:text-primary-foreground;
-    transition: var(--transition-smooth);
-  }
-
-  .btn-ghost {
-    @apply px-4 py-2 text-primary font-medium rounded-md bg-transparent;
-    @apply hover:bg-primary/10;
-    transition: var(--transition-smooth);
-  }
-
-  /* Step Progress */
-  .step-progress {
-    @apply flex items-center justify-between max-w-2xl mx-auto mb-8;
-  }
-
-  .step-item {
-    @apply flex items-center flex-1;
-  }
-
-  .step-circle {
-    @apply w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm;
-    @apply border-2 transition-all duration-300;
-  }
-
-  .step-circle.active {
-    @apply bg-primary text-primary-foreground border-primary;
-  }
-
-  .step-circle.completed {
-    @apply bg-success text-success-foreground border-success;
-  }
-
-  .step-circle.pending {
-    @apply bg-muted text-muted-foreground border-border;
-  }
-
-  .step-connector {
-    @apply flex-1 h-1 mx-4 rounded-full bg-border;
-  }
-
-  .step-connector.completed {
-    @apply bg-success;
-  }
-
-  /* AI Assistant Modal */
-  .ai-modal {
-    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
-    background: hsl(220 15% 25% / 0.8);
-    backdrop-filter: blur(4px);
-  }
-
-  .ai-modal-content {
-    @apply bg-card border border-card-border rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-auto;
-    animation: modalSlideIn 0.3s ease-out;
-  }
-
-  @keyframes modalSlideIn {
-    from {
-      opacity: 0;
-      transform: translateY(-20px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  /* Loading States */
-  .loading-spinner {
-    @apply animate-spin rounded-full border-2 border-muted border-t-primary;
-  }
-
-  /* Focus Styles for Accessibility */
-  .focus-visible {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
-  }
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* RTL Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="ltr"] {
+  text-align: left;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Additional styles can be added here if needed for Material UI customizations */

@@ -1,10 +1,18 @@
 import React from "react";
-import { Controller, Control, FieldError, FieldValues } from "react-hook-form";
+import {
+  Controller,
+  Control,
+  FieldError,
+  FieldValues,
+  Path,
+} from "react-hook-form";
 import { TextField, InputAdornment, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-interface InputControllerProps<T = Record<string, unknown>> {
-  name: string;
+interface InputControllerProps<
+  T extends FieldValues = Record<string, unknown>
+> {
+  name: Path<T>;
   control: Control<T>;
   label: string;
   error?: FieldError;
@@ -18,7 +26,9 @@ interface InputControllerProps<T = Record<string, unknown>> {
   inputProps?: Record<string, unknown>;
 }
 
-export const InputController: React.FC<InputControllerProps> = ({
+export const InputController = <
+  T extends FieldValues = Record<string, unknown>
+>({
   name,
   control,
   label,
@@ -31,7 +41,7 @@ export const InputController: React.FC<InputControllerProps> = ({
   startAdornment,
   endAdornment,
   inputProps,
-}) => {
+}: InputControllerProps<T>) => {
   const { t } = useTranslation();
   const theme = useTheme();
 

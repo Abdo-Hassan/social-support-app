@@ -1,5 +1,11 @@
 import React from "react";
-import { Controller, Control, FieldError } from "react-hook-form";
+import {
+  Controller,
+  Control,
+  FieldError,
+  FieldValues,
+  Path,
+} from "react-hook-form";
 import { TextField, MenuItem, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -8,8 +14,10 @@ interface SelectOption {
   label: string;
 }
 
-interface SelectControllerProps<T = Record<string, unknown>> {
-  name: string;
+interface SelectControllerProps<
+  T extends FieldValues = Record<string, unknown>
+> {
+  name: Path<T>;
   control: Control<T>;
   label: string;
   options: SelectOption[];
@@ -20,7 +28,9 @@ interface SelectControllerProps<T = Record<string, unknown>> {
   fullWidth?: boolean;
 }
 
-export const SelectController: React.FC<SelectControllerProps> = ({
+export const SelectController = <
+  T extends FieldValues = Record<string, unknown>
+>({
   name,
   control,
   label,
@@ -30,7 +40,7 @@ export const SelectController: React.FC<SelectControllerProps> = ({
   placeholder = "Select an option",
   required = false,
   fullWidth = true,
-}) => {
+}: SelectControllerProps<T>) => {
   const { t } = useTranslation();
   const theme = useTheme();
 

@@ -106,7 +106,7 @@ export const FamilyFinancialStep: React.FC = () => {
             <Grid container spacing={3}>
               {/* Marital Status */}
               <Grid size={{ xs: 12, md: 6 }}>
-                <SelectController
+                <SelectController<FamilyFinancial>
                   name="maritalStatus"
                   control={control}
                   label={t("family.maritalStatus")}
@@ -119,7 +119,7 @@ export const FamilyFinancialStep: React.FC = () => {
 
               {/* Number of Dependents */}
               <Grid size={{ xs: 12, md: 6 }}>
-                <InputController
+                <InputController<FamilyFinancial>
                   name="dependents"
                   control={control}
                   label={t("family.dependents")}
@@ -134,7 +134,7 @@ export const FamilyFinancialStep: React.FC = () => {
 
               {/* Employment Status */}
               <Grid size={{ xs: 12, md: 6 }}>
-                <SelectController
+                <SelectController<FamilyFinancial>
                   name="employmentStatus"
                   control={control}
                   label={t("family.employmentStatus")}
@@ -147,7 +147,7 @@ export const FamilyFinancialStep: React.FC = () => {
 
               {/* Monthly Income */}
               <Grid size={{ xs: 12, md: 6 }}>
-                <InputController
+                <InputController<FamilyFinancial>
                   name="monthlyIncome"
                   control={control}
                   label={t("family.monthlyIncome")}
@@ -163,7 +163,7 @@ export const FamilyFinancialStep: React.FC = () => {
 
               {/* Housing Status */}
               <Grid size={{ xs: 12 }}>
-                <SelectController
+                <SelectController<FamilyFinancial>
                   name="housingStatus"
                   control={control}
                   label={t("family.housingStatus")}

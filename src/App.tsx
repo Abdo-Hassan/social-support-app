@@ -1,32 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import {
-  ApplicationProvider,
-  useApplication,
-} from "./contexts/ApplicationContext";
-import { Language, Direction } from "./types/form";
-import "./i18n/config";
-import { Header } from "./components/Layout/Header";
-import { ProgressBar } from "./components/Layout/ProgressBar";
-import { PersonalInfoStep } from "./components/Steps/PersonalInfoStep";
-import { FamilyFinancialStep } from "./components/Steps/FamilyFinancialStep";
-import { SituationDescriptionsStep } from "./components/Steps/SituationDescriptionsStep";
-import { SuccessStep } from "./components/Steps/SuccessStep";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ThemeProvider, CssBaseline, Box } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { enUS, ar } from 'date-fns/locale';
+import { ApplicationProvider } from './contexts/ApplicationContext';
+import { Header } from './components/Layout/Header';
+import { ProgressBar } from './components/Layout/ProgressBar';
+import { Footer } from './components/Layout/Footer';
+import { PersonalInfoStep } from './components/Steps/PersonalInfoStep';
+import { FamilyFinancialStep } from './components/Steps/FamilyFinancialStep';
+import { SituationDescriptionsStep } from './components/Steps/SituationDescriptionsStep';
+import { SuccessStep } from './components/Steps/SuccessStep';
+import { useApplication } from './contexts/ApplicationContext';
+import { theme } from './theme/theme';
+import './i18n/config';
 
-const ApplicationWizard: React.FC = () => {
-  const { currentStep, isSubmitting } = useApplication();
 
-  const renderCurrentStep = () => {
+const AppContent: React.FC = () => {
+  const { currentStep } = useApplication();
+  
+  const renderStep = () => {
     switch (currentStep) {
-      case "personal":
+      case 'personal':
         return <PersonalInfoStep />;
-      case "family":
+      case 'family':
         return <FamilyFinancialStep />;
-      case "situation":
+      case 'situation':
         return <SituationDescriptionsStep />;
-      case "success":
+      case 'success':
         return <SuccessStep />;
       default:
         return <PersonalInfoStep />;
@@ -34,70 +36,50 @@ const ApplicationWizard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <main className="flex-1 py-6" role="main">
-        <div className="container mx-auto px-4">
-          <ProgressBar currentStep={currentStep} />
-
-          <div className="relative">
-            {isSubmitting && (
-              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-40 flex items-center justify-center">
-                <div className="bg-card border border-card-border rounded-lg p-6 shadow-lg">
-                  <div className="flex items-center">
-                    <div className="loading-spinner w-6 h-6 mr-3"></div>
-                    <span className="text-foreground font-medium">
-                      Submitting your application...
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {renderCurrentStep()}
-          </div>
-        </div>
-      </main>
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+      }}
+    >
+      <Header />
+      <ProgressBar />
+      <Box
+        component="main"
+        sx={{
+          flex: 1,
+          py: { xs: 2, md: 4 },
+        }}
+      >
+        {renderStep()}
+      </Box>
+      <Footer />
+    </Box>
   );
 };
 
 const App: React.FC = () => {
   const { i18n } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
-  const [direction, setDirection] = useState<Direction>("ltr");
+  const isRtl = i18n.language === 'ar';
+  const dateLocale = isRtl ? ar : enUS;
 
-  // Handle language and direction changes
   useEffect(() => {
-    const newDirection: Direction = currentLanguage === "ar" ? "rtl" : "ltr";
-    setDirection(newDirection);
-
-    // Update document attributes
-    document.documentElement.dir = newDirection;
-    document.documentElement.lang = currentLanguage;
-
-    // Update i18n language
-    i18n.changeLanguage(currentLanguage);
-  }, [currentLanguage, i18n]);
-
-  const handleLanguageChange = (language: Language) => {
-    setCurrentLanguage(language);
-  };
+    // Set document direction and language
+    document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', i18n.language);
+  }, [i18n.language, isRtl]);
 
   return (
-    <ApplicationProvider>
-      <div
-        className={`min-h-screen bg-background text-foreground ${direction}`}>
-        <Header
-          currentLanguage={currentLanguage}
-          onLanguageChange={handleLanguageChange}
-        />
-
-        <ApplicationWizard />
-
-        <Toaster />
-        <Sonner />
-      </div>
-    </ApplicationProvider>
+    <ThemeProvider theme={theme}>
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={dateLocale}>
+        <CssBaseline />
+        <ApplicationProvider>
+          <AppContent />
+        </ApplicationProvider>
+      </LocalizationProvider>
+    </ThemeProvider>
   );
 };
 

@@ -2,28 +2,38 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { 
-  familyFinancialSchema, 
-  FamilyFinancial, 
-  MaritalStatusOptions,
-  EmploymentStatusOptions,
-  HousingStatusOptions
-} from '../../types/form';
+import {
+  Box,
+  Typography,
+  TextField,
+  MenuItem,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  InputAdornment,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
+import { familyFinancialSchema, FamilyFinancial } from '../../types/form';
 import { useApplication } from '../../contexts/ApplicationContext';
 
 export const FamilyFinancialStep: React.FC = () => {
   const { t } = useTranslation();
   const { familyFinancial, updateFamilyFinancial, setCurrentStep } = useApplication();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { 
-    control, 
-    handleSubmit, 
-    formState: { errors, isValid }, 
-    watch 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    watch,
   } = useForm<FamilyFinancial>({
     resolver: zodResolver(familyFinancialSchema),
     defaultValues: familyFinancial as FamilyFinancial,
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   // Auto-save on form changes
@@ -44,244 +54,247 @@ export const FamilyFinancialStep: React.FC = () => {
     setCurrentStep('personal');
   };
 
+  const maritalOptions = [
+    { value: 'single', label: t('family.maritalOptions.single') },
+    { value: 'married', label: t('family.maritalOptions.married') },
+    { value: 'divorced', label: t('family.maritalOptions.divorced') },
+    { value: 'widowed', label: t('family.maritalOptions.widowed') },
+    { value: 'separated', label: t('family.maritalOptions.separated') },
+  ];
+
+  const employmentOptions = [
+    { value: 'employed', label: t('family.employmentOptions.employed') },
+    { value: 'partTime', label: t('family.employmentOptions.partTime') },
+    { value: 'unemployed', label: t('family.employmentOptions.unemployed') },
+    { value: 'retired', label: t('family.employmentOptions.retired') },
+    { value: 'student', label: t('family.employmentOptions.student') },
+    { value: 'disabled', label: t('family.employmentOptions.disabled') },
+  ];
+
+  const housingOptions = [
+    { value: 'own', label: t('family.housingOptions.own') },
+    { value: 'rent', label: t('family.housingOptions.rent') },
+    { value: 'family', label: t('family.housingOptions.family') },
+    { value: 'homeless', label: t('family.housingOptions.homeless') },
+    { value: 'temporary', label: t('family.housingOptions.temporary') },
+  ];
+
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="form-section">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground mb-2">
-            {t('family.title')}
-          </h2>
-          <p className="text-muted-foreground">
-            {t('family.subtitle')}
-          </p>
-        </div>
+    <Box sx={{ maxWidth: 800, mx: 'auto', p: { xs: 2, md: 3 } }}>
+      <Card elevation={2}>
+        <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+          <Box sx={{ mb: 4 }}>
+            <Typography
+              variant="h4"
+              component="h2"
+              sx={{
+                fontWeight: 600,
+                color: 'text.primary',
+                mb: 1,
+                fontSize: { xs: '1.5rem', md: '2rem' },
+              }}
+            >
+              {t('family.title')}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {t('family.subtitle')}
+            </Typography>
+          </Box>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Marital Status */}
-          <div className="form-field">
-            <label htmlFor="maritalStatus" className="form-label">
-              {t('family.maritalStatus')} <span className="text-error">*</span>
-            </label>
-            <Controller
-              name="maritalStatus"
-              control={control}
-              render={({ field }) => (
-                <select
-                  {...field}
-                  id="maritalStatus"
-                  className="form-input"
-                  aria-describedby={errors.maritalStatus ? 'maritalStatus-error' : undefined}
-                  aria-invalid={!!errors.maritalStatus}
-                >
-                  <option value="">Select marital status</option>
-                  <option value={MaritalStatusOptions.SINGLE}>
-                    {t('family.maritalOptions.single')}
-                  </option>
-                  <option value={MaritalStatusOptions.MARRIED}>
-                    {t('family.maritalOptions.married')}
-                  </option>
-                  <option value={MaritalStatusOptions.DIVORCED}>
-                    {t('family.maritalOptions.divorced')}
-                  </option>
-                  <option value={MaritalStatusOptions.WIDOWED}>
-                    {t('family.maritalOptions.widowed')}
-                  </option>
-                  <option value={MaritalStatusOptions.SEPARATED}>
-                    {t('family.maritalOptions.separated')}
-                  </option>
-                </select>
-              )}
-            />
-            {errors.maritalStatus && (
-              <p id="maritalStatus-error" className="form-error" role="alert">
-                {t(errors.maritalStatus.message as string)}
-              </p>
-            )}
-          </div>
-
-          {/* Number of Dependents */}
-          <div className="form-field">
-            <label htmlFor="dependents" className="form-label">
-              {t('family.dependents')} <span className="text-error">*</span>
-            </label>
-            <Controller
-              name="dependents"
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                  id="dependents"
-                  type="number"
-                  min="0"
-                  max="20"
-                  className="form-input"
-                  placeholder="0"
-                  aria-describedby={errors.dependents ? 'dependents-error' : 'dependents-help'}
-                  aria-invalid={!!errors.dependents}
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={3}>
+              {/* Marital Status */}
+              <Grid item xs={12} md={6}>
+                <Controller
+                  name="maritalStatus"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      select
+                      label={
+                        <>
+                          {t('family.maritalStatus')} <span style={{ color: theme.palette.error.main }}>*</span>
+                        </>
+                      }
+                      error={!!errors.maritalStatus}
+                      helperText={errors.maritalStatus?.message ? t(errors.maritalStatus.message) : ''}
+                      fullWidth
+                      variant="outlined"
+                    >
+                      <MenuItem value="">
+                        <em>Select marital status</em>
+                      </MenuItem>
+                      {maritalOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
                 />
-              )}
-            />
-            {errors.dependents && (
-              <p id="dependents-error" className="form-error" role="alert">
-                {t(errors.dependents.message as string)}
-              </p>
-            )}
-            <p id="dependents-help" className="form-helper">
-              Include children under 18 and other family members you support financially
-            </p>
-          </div>
+              </Grid>
 
-          {/* Employment Status */}
-          <div className="form-field">
-            <label htmlFor="employmentStatus" className="form-label">
-              {t('family.employmentStatus')} <span className="text-error">*</span>
-            </label>
-            <Controller
-              name="employmentStatus"
-              control={control}
-              render={({ field }) => (
-                <select
-                  {...field}
-                  id="employmentStatus"
-                  className="form-input"
-                  aria-describedby={errors.employmentStatus ? 'employmentStatus-error' : undefined}
-                  aria-invalid={!!errors.employmentStatus}
-                >
-                  <option value="">Select employment status</option>
-                  <option value={EmploymentStatusOptions.EMPLOYED}>
-                    {t('family.employmentOptions.employed')}
-                  </option>
-                  <option value={EmploymentStatusOptions.PART_TIME}>
-                    {t('family.employmentOptions.partTime')}
-                  </option>
-                  <option value={EmploymentStatusOptions.UNEMPLOYED}>
-                    {t('family.employmentOptions.unemployed')}
-                  </option>
-                  <option value={EmploymentStatusOptions.RETIRED}>
-                    {t('family.employmentOptions.retired')}
-                  </option>
-                  <option value={EmploymentStatusOptions.STUDENT}>
-                    {t('family.employmentOptions.student')}
-                  </option>
-                  <option value={EmploymentStatusOptions.DISABLED}>
-                    {t('family.employmentOptions.disabled')}
-                  </option>
-                </select>
-              )}
-            />
-            {errors.employmentStatus && (
-              <p id="employmentStatus-error" className="form-error" role="alert">
-                {t(errors.employmentStatus.message as string)}
-              </p>
-            )}
-          </div>
+              {/* Number of Dependents */}
+              <Grid item xs={12} md={6}>
+                <Controller
+                  name="dependents"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      type="number"
+                      label={
+                        <>
+                          {t('family.dependents')} <span style={{ color: theme.palette.error.main }}>*</span>
+                        </>
+                      }
+                      placeholder="0"
+                      error={!!errors.dependents}
+                      helperText={errors.dependents?.message ? t(errors.dependents.message) : 'Include children and other dependents'}
+                      fullWidth
+                      variant="outlined"
+                      inputProps={{ min: 0, max: 20 }}
+                    />
+                  )}
+                />
+              </Grid>
 
-          {/* Monthly Income */}
-          <div className="form-field">
-            <label htmlFor="monthlyIncome" className="form-label">
-              {t('family.monthlyIncome')} <span className="text-error">*</span>
-            </label>
-            <Controller
-              name="monthlyIncome"
-              control={control}
-              render={({ field }) => (
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-                    $
-                  </span>
-                  <input
-                    {...field}
-                    onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                    id="monthlyIncome"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    className="form-input pl-8 ltr-only"
-                    placeholder="0.00"
-                    aria-describedby={errors.monthlyIncome ? 'monthlyIncome-error' : 'monthlyIncome-help'}
-                    aria-invalid={!!errors.monthlyIncome}
-                  />
-                </div>
-              )}
-            />
-            {errors.monthlyIncome && (
-              <p id="monthlyIncome-error" className="form-error" role="alert">
-                {t(errors.monthlyIncome.message as string)}
-              </p>
-            )}
-            <p id="monthlyIncome-help" className="form-helper">
-              Include all sources of income (salary, benefits, support, etc.)
-            </p>
-          </div>
+              {/* Employment Status */}
+              <Grid item xs={12} md={6}>
+                <Controller
+                  name="employmentStatus"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      select
+                      label={
+                        <>
+                          {t('family.employmentStatus')} <span style={{ color: theme.palette.error.main }}>*</span>
+                        </>
+                      }
+                      error={!!errors.employmentStatus}
+                      helperText={errors.employmentStatus?.message ? t(errors.employmentStatus.message) : ''}
+                      fullWidth
+                      variant="outlined"
+                    >
+                      <MenuItem value="">
+                        <em>Select employment status</em>
+                      </MenuItem>
+                      {employmentOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
 
-          {/* Housing Status */}
-          <div className="form-field">
-            <label htmlFor="housingStatus" className="form-label">
-              {t('family.housingStatus')} <span className="text-error">*</span>
-            </label>
-            <Controller
-              name="housingStatus"
-              control={control}
-              render={({ field }) => (
-                <select
-                  {...field}
-                  id="housingStatus"
-                  className="form-input"
-                  aria-describedby={errors.housingStatus ? 'housingStatus-error' : undefined}
-                  aria-invalid={!!errors.housingStatus}
-                >
-                  <option value="">Select housing status</option>
-                  <option value={HousingStatusOptions.OWN}>
-                    {t('family.housingOptions.own')}
-                  </option>
-                  <option value={HousingStatusOptions.RENT}>
-                    {t('family.housingOptions.rent')}
-                  </option>
-                  <option value={HousingStatusOptions.FAMILY}>
-                    {t('family.housingOptions.family')}
-                  </option>
-                  <option value={HousingStatusOptions.HOMELESS}>
-                    {t('family.housingOptions.homeless')}
-                  </option>
-                  <option value={HousingStatusOptions.TEMPORARY}>
-                    {t('family.housingOptions.temporary')}
-                  </option>
-                </select>
-              )}
-            />
-            {errors.housingStatus && (
-              <p id="housingStatus-error" className="form-error" role="alert">
-                {t(errors.housingStatus.message as string)}
-              </p>
-            )}
-          </div>
+              {/* Monthly Income */}
+              <Grid item xs={12} md={6}>
+                <Controller
+                  name="monthlyIncome"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      type="number"
+                      label={
+                        <>
+                          {t('family.monthlyIncome')} <span style={{ color: theme.palette.error.main }}>*</span>
+                        </>
+                      }
+                      placeholder="0"
+                      error={!!errors.monthlyIncome}
+                      helperText={errors.monthlyIncome?.message ? t(errors.monthlyIncome.message) : 'Total household monthly income before taxes'}
+                      fullWidth
+                      variant="outlined"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      }}
+                      inputProps={{ min: 0, step: 1 }}
+                    />
+                  )}
+                />
+              </Grid>
 
-          {/* Navigation */}
-          <div className="flex justify-between pt-6">
-            <button
-              type="button"
-              onClick={handlePrevious}
-              className="btn-outline"
+              {/* Housing Status */}
+              <Grid item xs={12}>
+                <Controller
+                  name="housingStatus"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      select
+                      label={
+                        <>
+                          {t('family.housingStatus')} <span style={{ color: theme.palette.error.main }}>*</span>
+                        </>
+                      }
+                      error={!!errors.housingStatus}
+                      helperText={errors.housingStatus?.message ? t(errors.housingStatus.message) : 'Your current living situation'}
+                      fullWidth
+                      variant="outlined"
+                    >
+                      <MenuItem value="">
+                        <em>Select housing status</em>
+                      </MenuItem>
+                      {housingOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+            </Grid>
+
+            {/* Navigation */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: { xs: 'column-reverse', sm: 'row' },
+                gap: 2,
+                mt: 4,
+                pt: 3,
+                borderTop: 1,
+                borderColor: 'divider',
+              }}
             >
-              {t('form.previous')}
-            </button>
-            <button
-              type="submit"
-              disabled={!isValid}
-              className="btn-primary"
-              aria-describedby={!isValid ? 'form-invalid' : undefined}
-            >
-              {t('form.next')}
-            </button>
-            {!isValid && (
-              <p id="form-invalid" className="sr-only">
-                Please complete all required fields before continuing
-              </p>
-            )}
-          </div>
-        </form>
-      </div>
-    </div>
+              <Button
+                variant="outlined"
+                onClick={handlePrevious}
+                startIcon={<ArrowBack />}
+                size="large"
+                sx={{
+                  minWidth: { xs: '100%', sm: 150 },
+                  py: 1.5,
+                }}
+              >
+                {t('form.previous')}
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={!isValid}
+                size="large"
+                sx={{
+                  minWidth: { xs: '100%', sm: 150 },
+                  py: 1.5,
+                  fontWeight: 600,
+                }}
+              >
+                {t('form.next')}
+              </Button>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };

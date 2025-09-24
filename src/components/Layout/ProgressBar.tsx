@@ -1,94 +1,114 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormStep } from '../../types/form';
+import {
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  Container,
+  useTheme,
+  useMediaQuery,
+  MobileStepper,
+} from '@mui/material';
+import { useApplication } from '../../contexts/ApplicationContext';
 
-interface ProgressBarProps {
-  currentStep: FormStep;
-}
+const steps = ['personal', 'family', 'situation'] as const;
 
-interface StepInfo {
-  id: FormStep;
-  translationKey: string;
-  stepNumber: number;
-}
-
-const steps: StepInfo[] = [
-  { id: 'personal', translationKey: 'steps.personal', stepNumber: 1 },
-  { id: 'family', translationKey: 'steps.family', stepNumber: 2 },
-  { id: 'situation', translationKey: 'steps.situation', stepNumber: 3 },
-];
-
-export const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
+export const ProgressBar: React.FC = () => {
   const { t } = useTranslation();
+  const { currentStep } = useApplication();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
+  const currentStepIndex = steps.indexOf(currentStep as typeof steps[number]);
+  const activeStep = currentStepIndex >= 0 ? currentStepIndex : 0;
 
-  const getCurrentStepIndex = () => {
-    return steps.findIndex(step => step.id === currentStep);
-  };
-
-  const getStepStatus = (stepIndex: number, currentIndex: number) => {
-    if (stepIndex < currentIndex) return 'completed';
-    if (stepIndex === currentIndex) return 'active';
-    return 'pending';
-  };
-
-  const currentStepIndex = getCurrentStepIndex();
-
-  // Don't show progress bar on success page
   if (currentStep === 'success') {
     return null;
   }
 
+  if (isMobile) {
+    return (
+      <Box sx={{ bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
+        <Container maxWidth="lg">
+          <MobileStepper
+            variant="progress"
+            steps={steps.length}
+            position="static"
+            activeStep={activeStep}
+            sx={{
+              bgcolor: 'transparent',
+              '& .MuiMobileStepper-progress': {
+                width: '100%',
+                height: 8,
+                borderRadius: 4,
+              },
+            }}
+            nextButton={<div />}
+            backButton={<div />}
+          />
+          <Box sx={{ textAlign: 'center', pb: 2 }}>
+            <Box sx={{ typography: 'body2', color: 'text.secondary', mb: 0.5 }}>
+              Step {activeStep + 1} of {steps.length}
+            </Box>
+            <Box sx={{ typography: 'subtitle1', fontWeight: 500, color: 'text.primary' }}>
+              {t(`steps.${steps[activeStep]}`)}
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+    );
+  }
+
   return (
-    <div className="step-progress" role="progressbar" aria-valuemin={0} aria-valuemax={3} aria-valuenow={currentStepIndex + 1}>
-      {steps.map((step, index) => {
-        const status = getStepStatus(index, currentStepIndex);
-        const isLast = index === steps.length - 1;
-
-        return (
-          <div key={step.id} className="step-item">
-            <div className="flex items-center">
-              <div 
-                className={`step-circle ${status}`}
-                aria-label={`Step ${step.stepNumber}: ${t(step.translationKey)}`}
+    <Box sx={{ bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
+      <Container maxWidth="lg">
+        <Stepper
+          activeStep={activeStep}
+          alternativeLabel
+          sx={{
+            py: 3,
+            '& .MuiStepConnector-root': {
+              top: 22,
+            },
+            '& .MuiStepConnector-line': {
+              borderColor: 'divider',
+              borderTopWidth: 2,
+            },
+            '& .MuiStepConnector-root.Mui-active .MuiStepConnector-line': {
+              borderColor: 'primary.main',
+            },
+            '& .MuiStepConnector-root.Mui-completed .MuiStepConnector-line': {
+              borderColor: 'primary.main',
+            },
+          }}
+        >
+          {steps.map((step, index) => (
+            <Step key={step}>
+              <StepLabel
+                sx={{
+                  '& .MuiStepLabel-label': {
+                    typography: 'body2',
+                    fontWeight: index === activeStep ? 600 : 400,
+                    color: index === activeStep ? 'primary.main' : 'text.secondary',
+                    mt: 1,
+                  },
+                  '& .MuiStepIcon-root': {
+                    fontSize: '1.8rem',
+                    color: index <= activeStep ? 'primary.main' : 'action.disabled',
+                  },
+                  '& .MuiStepIcon-text': {
+                    fill: 'white',
+                    fontWeight: 600,
+                  },
+                }}
               >
-                {status === 'completed' ? (
-                  <svg 
-                    className="w-5 h-5" 
-                    fill="currentColor" 
-                    viewBox="0 0 20 20"
-                    aria-hidden="true"
-                  >
-                    <path 
-                      fillRule="evenodd" 
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
-                      clipRule="evenodd" 
-                    />
-                  </svg>
-                ) : (
-                  <span>{step.stepNumber}</span>
-                )}
-              </div>
-              
-              <div className="ml-3 min-w-0">
-                <p className={`text-sm font-medium ${
-                  status === 'active' ? 'text-primary' : 
-                  status === 'completed' ? 'text-success' : 
-                  'text-muted-foreground'
-                }`}>
-                  {t(step.translationKey)}
-                </p>
-              </div>
-            </div>
-
-            {!isLast && (
-              <div 
-                className={`step-connector ${currentStepIndex > index ? 'completed' : ''}`}
-                aria-hidden="true"
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
+                {t(`steps.${step}`)}
+              </StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </Container>
+    </Box>
   );
 };

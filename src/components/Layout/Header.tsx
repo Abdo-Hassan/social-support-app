@@ -1,62 +1,100 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { Language } from "../../types/form";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Container,
+  Avatar,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
+import { Language as LanguageIcon } from '@mui/icons-material';
 
-interface HeaderProps {
-  currentLanguage: Language;
-  onLanguageChange: (language: Language) => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({
-  currentLanguage,
-  onLanguageChange,
-}) => {
-  const { t } = useTranslation();
-
+export const Header: React.FC = () => {
+  const { t, i18n } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
   const toggleLanguage = () => {
-    const newLanguage: Language = currentLanguage === "en" ? "ar" : "en";
-    onLanguageChange(newLanguage);
+    const currentLang = i18n.language;
+    const newLang = currentLang === 'en' ? 'ar' : 'en';
+    i18n.changeLanguage(newLang);
+    document.documentElement.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', newLang);
   };
 
   return (
-    <header
-      className="bg-card border-b border-card-border shadow-sm"
-      role="banner">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">
-                  SSP
-                </span>
-              </div>
-              <div className="ml-3">
-                <h1 className="text-xl font-bold text-foreground">
-                  Social Support Portal
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Government Financial Assistance Application
-                </p>
-              </div>
-            </div>
-          </div>
+    <AppBar position="static" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
+      <Container maxWidth="lg">
+        <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Avatar
+              sx={{
+                bgcolor: 'primary.main',
+                color: 'primary.contrastText',
+                width: 40,
+                height: 40,
+                fontSize: '1rem',
+                fontWeight: 'bold',
+              }}
+            >
+              SSP
+            </Avatar>
+            <Box>
+              <Typography
+                variant={isMobile ? 'h6' : 'h5'}
+                component="h1"
+                sx={{
+                  fontWeight: 600,
+                  color: 'text.primary',
+                  lineHeight: 1.2,
+                }}
+              >
+                Social Support Portal
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.secondary',
+                  display: { xs: 'none', sm: 'block' },
+                }}
+              >
+                Government Financial Assistance Application
+              </Typography>
+            </Box>
+          </Box>
 
-          <nav
-            className="flex items-center space-x-4"
-            role="navigation"
-            aria-label="Main navigation">
-            <button
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Button
+              variant="outlined"
+              startIcon={<LanguageIcon />}
               onClick={toggleLanguage}
-              className="btn-ghost text-sm"
-              aria-label={`Switch to ${
-                currentLanguage === "en" ? "Arabic" : "English"
-              }`}>
-              {t("navigation.language")}
-            </button>
-          </nav>
-        </div>
-      </div>
-    </header>
+              size={isMobile ? 'small' : 'medium'}
+              sx={{
+                borderColor: 'divider',
+                color: 'text.primary',
+                '&:hover': {
+                  borderColor: 'primary.main',
+                  bgcolor: 'primary.50',
+                },
+              }}
+            >
+              {t('navigation.language')}
+            </Button>
+            <Button
+              variant="text"
+              color="primary"
+              size={isMobile ? 'small' : 'medium'}
+              sx={{ ml: 1 }}
+            >
+              {t('navigation.help')}
+            </Button>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };

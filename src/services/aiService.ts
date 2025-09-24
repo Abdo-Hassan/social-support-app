@@ -106,8 +106,7 @@ export const generateAIAssistance = async (
   if (!OPENAI_API_KEY) {
     return {
       success: false,
-      error:
-        "OpenAI API key not configured. Please set VITE_OPENAI_API_KEY environment variable.",
+      error: "OpenAI API key not configured.",
     };
   }
 

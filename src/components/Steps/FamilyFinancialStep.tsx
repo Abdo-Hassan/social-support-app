@@ -80,18 +80,18 @@ export const FamilyFinancialStep: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, md: 3 } }}>
+    <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, md: 0 } }}>
       <Card elevation={2}>
-        <CardContent sx={{ p: { xs: 3, md: 2 } }}>
+        <CardContent sx={{ p: { xs: 3, md: 4 } }}>
           <Box sx={{ mb: 4 }}>
             <Typography
               variant="h4"
-              component="h2"
+              component="h3"
               sx={{
                 fontWeight: 600,
                 color: "text.primary",
                 mb: 1,
-                fontSize: { xs: "1.5rem", md: "2rem" },
+                fontSize: { xs: "1.25rem", md: "1.5rem" },
               }}>
               {t("family.title")}
             </Typography>
@@ -180,6 +180,7 @@ export const FamilyFinancialStep: React.FC = () => {
               onNext={handleSubmit(onSubmit)}
               nextText={t("form.next")}
               nextType="submit"
+              showBorder={false}
               isNextDisabled={!isValid}
             />
           </Box>

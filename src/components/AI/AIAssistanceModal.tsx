@@ -127,7 +127,7 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ minHeight: 300 }}>
+      <DialogContent>
         {isLoading && (
           <Box
             display="flex"

@@ -15,7 +15,7 @@
     "generating": "Generating your personalized text...",
     "suggestion": "AI Suggestion",
     "accept": "Accept",
-    "edit": "Accept & Edit",
+    "edit": "Edit",
     "discard": "Discard",
     "retry": "Try Again",
     "error": "Failed to generate text. Please try again.",

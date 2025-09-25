@@ -33,7 +33,8 @@
     "copiedToClipboard": "تم نسخ الرقم المرجعي!",
     "noApplicationFound": "لم يتم العثور على نتيجة طلب محفوظة.",
     "copied": "تم النسخ!",
-    "copyToClipboard": "نسخ إلى الحافظة"
+    "copyToClipboard": "نسخ إلى الحافظة",
+    "cancel": "إلغاء"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

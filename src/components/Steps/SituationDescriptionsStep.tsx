@@ -268,6 +268,10 @@ export const SituationDescriptionsStep: React.FC = () => {
                           bgcolor: "background.default",
                           lineHeight: 1.5,
                         },
+                        "& textarea": {
+                          resize: "vertical",
+                          minHeight: "0px", // Equivalent to 6 rows
+                        },
                       }}
                     />
                   )}

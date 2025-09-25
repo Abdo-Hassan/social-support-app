@@ -33,7 +33,8 @@
     "copiedToClipboard": "Reference number copied to clipboard!",
     "noApplicationFound": "No saved application result found.",
     "copied": "Copied!",
-    "copyToClipboard": "Copy to clipboard"
+    "copyToClipboard": "Copy to clipboard",
+    "cancel": "Cancel"
   },
   "validation": {
     "required": "This field is required",

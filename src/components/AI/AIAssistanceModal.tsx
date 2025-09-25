@@ -12,6 +12,7 @@ import {
   Alert,
   IconButton,
   Paper,
+  TextField,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { AIAssistanceRequest, AIAssistanceResponse } from "../../types/form";
@@ -35,6 +36,8 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [suggestion, setSuggestion] = useState<string>("");
+  const [editedText, setEditedText] = useState<string>("");
+  const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string>("");
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -49,6 +52,7 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
 
       if (response.success && response.suggestion) {
         setSuggestion(response.suggestion);
+        setEditedText(response.suggestion);
       } else {
         // Use the specific error message from the service, or fallback to generic message
         setError(response.error || t("situation:aiModal.error"));
@@ -113,19 +117,20 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  const handleAccept = () => {
-    onAccept(suggestion);
-    onClose();
+  const handleEdit = () => {
+    setIsEditing(true);
   };
 
-  const handleEdit = () => {
-    onEdit(suggestion);
+  const handleAcceptEdited = () => {
+    onAccept(editedText);
     onClose();
   };
 
   const handleRetry = () => {
     setSuggestion("");
+    setEditedText("");
     setError("");
+    setIsEditing(false);
     generateAssistance();
   };
 
@@ -195,42 +200,72 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
 
         {suggestion && (
           <Box>
-            <Typography variant="subtitle1" fontWeight={500} sx={{ mb: 2 }}>
-              {t("situation:aiModal.suggestion")}
-            </Typography>
-            <Paper
-              variant="outlined"
-              sx={{
-                p: 3,
-                mb: 3,
-                backgroundColor: "grey.50",
-                border: 1,
-                borderColor: "grey.200",
-              }}>
-              <Typography
-                variant="body1"
+            {isEditing ? (
+              <TextField
+                value={editedText}
+                onChange={(e) => setEditedText(e.target.value)}
+                multiline
+                rows={8}
+                fullWidth
+                variant="outlined"
                 sx={{
-                  whiteSpace: "pre-wrap",
-                  lineHeight: 1.6,
+                  mb: 3,
+                  "& .MuiOutlinedInput-root": {
+                    fontSize: "1rem",
+                    lineHeight: 1.6,
+                  },
+                  "& textarea": {
+                    resize: "vertical",
+                    minHeight: "0px", // Equivalent to 8 rows
+                  },
+                }}
+              />
+            ) : (
+              <Paper
+                variant="outlined"
+                sx={{
+                  p: 3,
+                  mb: 3,
+                  backgroundColor: "grey.50",
+                  border: 1,
+                  borderColor: "grey.200",
                 }}>
-                {suggestion}
-              </Typography>
-            </Paper>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    whiteSpace: "pre-wrap",
+                    lineHeight: 1.6,
+                  }}>
+                  {suggestion}
+                </Typography>
+              </Paper>
+            )}
           </Box>
         )}
       </DialogContent>
 
       {suggestion && (
         <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
-          <Button variant="outlined" onClick={onClose}>
+          <Button variant="text" onClick={onClose}>
             {t("situation:aiModal.discard")}
           </Button>
-          <Button variant="outlined" onClick={handleEdit}>
-            {t("situation:aiModal.edit")}
-          </Button>
-          <Button variant="contained" onClick={handleAccept}>
-            {t("situation:aiModal.accept")}
-          </Button>
+
+          {isEditing ? (
+            <>
+              <Button variant="contained" onClick={handleAcceptEdited}>
+                {t("situation:aiModal.accept")}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outlined" onClick={handleEdit}>
+                {t("situation:aiModal.edit")}
+              </Button>
+              <Button variant="contained" onClick={handleAcceptEdited}>
+                {t("situation:aiModal.accept")}
+              </Button>
+            </>
+          )}
         </DialogActions>
       )}
     </Dialog>

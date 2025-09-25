@@ -5,7 +5,7 @@ import api from "./api";
 const mock = new AxiosMockAdapter(api, { delayResponse: 1500 });
 
 // Mock the application submit endpoint
-mock.onPost("/api/application/submit").reply((config) => {
+mock.onPost("/application/submit").reply((config) => {
   console.log("Mock API: Processing application submission...");
   console.log("Request data:", JSON.parse(config.data));
 
@@ -63,4 +63,48 @@ declare global {
       testSubmit: () => void;
     };
   }
+}
+
+// Add helper functions to window for easy testing
+if (typeof window !== "undefined") {
+  window.mockAPI = {
+    forceSuccess: () => {
+      localStorage.setItem("mock-force-success", "true");
+      localStorage.removeItem("mock-force-error");
+      console.log("Mock API set to force success responses");
+    },
+    forceError: () => {
+      localStorage.setItem("mock-force-error", "true");
+      localStorage.removeItem("mock-force-success");
+      console.log("Mock API set to force error responses");
+    },
+    randomMode: () => {
+      localStorage.removeItem("mock-force-success");
+      localStorage.removeItem("mock-force-error");
+      console.log("Mock API set to random mode (80% success, 20% error)");
+    },
+    testSubmit: () => {
+      console.log("Mock API test submit functionality");
+      const testData = {
+        personalInfo: { name: "Test User" },
+        familyFinancial: { monthlyIncome: 1000 },
+        situationDescriptions: { financialSituation: "Test situation" },
+      };
+
+      // Use the api instance to test the mock
+      import("./api").then(({ default: api }) => {
+        api
+          .post("/application/submit", testData)
+          .then((response) =>
+            console.log("Test submit success:", response.data)
+          )
+          .catch((error) =>
+            console.log(
+              "Test submit error:",
+              error.response?.data || error.message
+            )
+          );
+      });
+    },
+  };
 }

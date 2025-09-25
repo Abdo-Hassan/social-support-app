@@ -75,7 +75,7 @@ export const InputController = <
               fontSize: "0.9rem",
               direction: isRtl ? "rtl" : "ltr",
               "& .MuiOutlinedInput-input": {
-                padding: "12px 5px 12px",
+                padding: "12px 16px",
                 textAlign: isRtl ? "right" : "left",
                 "&::placeholder": {
                   textAlign: isRtl ? "right" : "left",
@@ -102,7 +102,10 @@ export const InputController = <
               {label}
               {required && (
                 <span
-                  style={{ color: theme.palette.error.main, margin: "0 4px" }}>
+                  style={{
+                    color: theme.palette.error.main,
+                    margin: isRtl ? "0 4px 0 0" : "0 0 0 4px",
+                  }}>
                   *
                 </span>
               )}

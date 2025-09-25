@@ -57,20 +57,17 @@ const App: React.FC = () => {
           adapterLocale={dateLocale}>
           <CssBaseline />
           <ErrorBoundary>
-            <Suspense
-              fallback={<LoadingSpinner message="Loading translations..." />}>
-              <I18nProvider>
-                <ApplicationProvider>
-                  <Routes>
-                    <Route path="/" element={<ApplicationPage />} />
-                    <Route
-                      path="/application-result"
-                      element={<ApplicationResultPage />}
-                    />
-                  </Routes>
-                </ApplicationProvider>
-              </I18nProvider>
-            </Suspense>
+            <I18nProvider>
+              <ApplicationProvider>
+                <Routes>
+                  <Route path="/" element={<ApplicationPage />} />
+                  <Route
+                    path="/application-result"
+                    element={<ApplicationResultPage />}
+                  />
+                </Routes>
+              </ApplicationProvider>
+            </I18nProvider>
           </ErrorBoundary>
         </LocalizationProvider>
       </ThemeProvider>

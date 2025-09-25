@@ -71,59 +71,27 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
 
   // Actions
   const updatePersonalInfo = (data: Partial<PersonalInfo>) => {
-    // Only update if there's actual change
-    const hasChanges = Object.keys(data).some((key) => {
-      const currentValue = state.personalInfo[key as keyof PersonalInfo];
-      const newValue = data[key as keyof PersonalInfo];
-
-      // Handle undefined/null values
-      if (currentValue === undefined && newValue === undefined) return false;
-      if (currentValue === undefined || newValue === undefined) return true;
-
-      // Handle empty strings vs undefined
-      if (currentValue === "" && newValue === undefined) return false;
-      if (currentValue === undefined && newValue === "") return false;
-
-      return currentValue !== newValue;
-    });
-
-    if (hasChanges) {
-      shouldSaveRef.current = true;
-      dispatch({ type: "UPDATE_PERSONAL_INFO", payload: data });
-      dispatch({ type: "UPDATE_LAST_SAVED" });
-    }
+    // Always update and let the reducer handle the merge
+    console.log("Updating personal info:", data);
+    shouldSaveRef.current = true;
+    dispatch({ type: "UPDATE_PERSONAL_INFO", payload: data });
+    dispatch({ type: "UPDATE_LAST_SAVED" });
   };
 
   const updateFamilyFinancial = (data: Partial<FamilyFinancial>) => {
-    // Only update if there's actual change
-    const hasChanges = Object.keys(data).some(
-      (key) =>
-        state.familyFinancial[key as keyof FamilyFinancial] !==
-        data[key as keyof FamilyFinancial]
-    );
-
-    if (hasChanges) {
-      shouldSaveRef.current = true;
-      dispatch({ type: "UPDATE_FAMILY_FINANCIAL", payload: data });
-      dispatch({ type: "UPDATE_LAST_SAVED" });
-    }
+    console.log("Updating family financial info:", data);
+    shouldSaveRef.current = true;
+    dispatch({ type: "UPDATE_FAMILY_FINANCIAL", payload: data });
+    dispatch({ type: "UPDATE_LAST_SAVED" });
   };
 
   const updateSituationDescriptions = (
     data: Partial<SituationDescriptions>
   ) => {
-    // Only update if there's actual change
-    const hasChanges = Object.keys(data).some(
-      (key) =>
-        state.situationDescriptions[key as keyof SituationDescriptions] !==
-        data[key as keyof SituationDescriptions]
-    );
-
-    if (hasChanges) {
-      shouldSaveRef.current = true;
-      dispatch({ type: "UPDATE_SITUATION_DESCRIPTIONS", payload: data });
-      dispatch({ type: "UPDATE_LAST_SAVED" });
-    }
+    console.log("Updating situation descriptions:", data);
+    shouldSaveRef.current = true;
+    dispatch({ type: "UPDATE_SITUATION_DESCRIPTIONS", payload: data });
+    dispatch({ type: "UPDATE_LAST_SAVED" });
   };
 
   const setCurrentStep = (step: FormStep) => {

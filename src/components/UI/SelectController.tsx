@@ -58,8 +58,10 @@ export const SelectController = <
               borderRadius: 1,
               backgroundColor: "background.default",
               fontSize: "0.9rem",
+              direction: isRtl ? "rtl" : "ltr",
               "& .MuiOutlinedInput-input": {
-                padding: "12px 16px 12px",
+                padding: "12px 16px",
+                textAlign: isRtl ? "right" : "left",
               },
               "& fieldset": {
                 borderColor: "grey.300",
@@ -88,7 +90,13 @@ export const SelectController = <
             </>
           }
           error={!!error}
-          helperText={error?.message ? t(error.message) : helperText}
+          helperText={
+            error?.message ? (
+              <span role="alert">{t(error.message)}</span>
+            ) : (
+              helperText || ""
+            )
+          }
           fullWidth={fullWidth}
           variant="outlined">
           {options.map((option) => (

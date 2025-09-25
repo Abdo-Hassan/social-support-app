@@ -26,6 +26,12 @@
     "error": "Please correct the errors below",
     "selectOption": "Select an option"
   },
+  "actions": {
+    "applyNewRequest": "Apply New Request",
+    "goToHome": "Go to Home",
+    "copiedToClipboard": "Reference number copied to clipboard!",
+    "noApplicationFound": "No saved application result found."
+  },
   "validation": {
     "required": "This field is required",
     "email": "Please enter a valid email address",

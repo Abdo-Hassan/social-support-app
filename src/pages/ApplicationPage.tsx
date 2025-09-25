@@ -1,5 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { Header } from "../components/Layout/Header";
 import { ProgressBar } from "../components/Layout/ProgressBar";
 import { useApplication } from "../hooks/use-application";
@@ -8,6 +9,7 @@ import { FamilyFinancialStep } from "../components/Steps/FamilyFinancialStep";
 import { SituationDescriptionsStep } from "../components/Steps/SituationDescriptionsStep";
 
 export const ApplicationPage: React.FC = () => {
+  const { t } = useTranslation("common");
   const { currentStep } = useApplication();
 
   const renderStep = () => {

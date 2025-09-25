@@ -18,9 +18,10 @@ import {
   ContentCopy as CopyIcon,
   Refresh as RefreshIcon,
   Home as HomeIcon,
+  Add as AddIcon,
 } from "@mui/icons-material";
 import { useApplication } from "../../hooks/use-application";
-
+import noApplication from "../../../public/assets/noApplication.svg";
 interface SavedApplicationResult {
   referenceNumber: string;
   submissionDate: string;
@@ -101,27 +102,42 @@ export const SuccessStep: React.FC = () => {
   // Show error message if no saved result on result page
   if (isResultPage && !savedResult) {
     return (
-      <Box sx={{ maxWidth: 700, mx: "auto", p: { xs: 2, md: 3 } }}>
-        <Alert severity="warning" sx={{ mb: 3 }}>
-          <Typography variant="body1">
-            {t(
-              "common:noApplicationFound",
-              "No saved application result found."
-            )}
-          </Typography>
-        </Alert>
-        <Box sx={{ textAlign: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          maxWidth: 700,
+          mx: "auto",
+          my: 3,
+          p: { xs: 2, md: 3 },
+        }}>
+        <Typography variant="h4" sx={{ mb: 3, textAlign: "center" }}>
+          {t(
+            "common:actions.noApplicationFound",
+            "No saved application result found."
+          )}
+        </Typography>
+
+        <img
+          src={noApplication}
+          alt="no application"
+          width={300}
+          height={300}
+        />
+        <Box sx={{ textAlign: "center", mt: 3 }}>
           <Button
             variant="contained"
             onClick={handleNewApplication}
-            startIcon={<HomeIcon />}
+            startIcon={<AddIcon />}
             size="large"
             sx={{
               minWidth: { xs: "100%", sm: 220 },
               py: 1.5,
               fontWeight: 600,
             }}>
-            {t("common:goToHome", "Go to Home")}
+            {t("common:actions.applyNewRequest", "Apply New Request")}
           </Button>
         </Box>
       </Box>
@@ -134,7 +150,7 @@ export const SuccessStep: React.FC = () => {
       {copySuccess && (
         <Alert severity="success" sx={{ mb: 3 }}>
           {t(
-            "common:copiedToClipboard",
+            "common:actions.copiedToClipboard",
             "Reference number copied to clipboard!"
           )}
         </Alert>
@@ -294,7 +310,7 @@ export const SuccessStep: React.FC = () => {
             fontWeight: 600,
           }}>
           {isResultPage
-            ? t("common:goToHome", "Go to Home")
+            ? t("common:actions.applyNewRequest", "Apply New Request")
             : t("success:newApplication")}
         </Button>
       </Box>

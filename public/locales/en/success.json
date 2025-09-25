@@ -7,5 +7,7 @@
   "processing": "Your application will be reviewed within 5-7 business days",
   "contact": "You may be contacted for additional information",
   "decision": "You will be notified of the decision by email and mail",
-  "newApplication": "Submit New Application"
+  "newApplication": "Submit New Application",
+  "applicationResult": "Application Created Successfully",
+  "resultSubtitle": "Here are your application details and reference number."
 }

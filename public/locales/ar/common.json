@@ -26,6 +26,12 @@
     "error": "يرجى تصحيح الأخطاء أدناه",
     "selectOption": "اختر خياراً"
   },
+  "actions": {
+    "applyNewRequest": "تقديم طلب جديد",
+    "goToHome": "الذهاب للرئيسية",
+    "copiedToClipboard": "تم نسخ الرقم المرجعي!",
+    "noApplicationFound": "لم يتم العثور على نتيجة طلب محفوظة."
+  },
   "validation": {
     "required": "هذا الحقل مطلوب",
     "email": "يرجى إدخال بريد إلكتروني صحيح",

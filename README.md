@@ -39,7 +39,7 @@ A modern, multilingual React application for government financial assistance app
    ```
 
 5. **Open in browser**
-   Navigate to `http://localhost:5173`
+   Navigate to `http://localhost:8080`
 
 ## Available Scripts
 
@@ -59,7 +59,6 @@ npm run test         # Run tests once
 npm run test:watch   # Run tests in watch mode
 npm run test:coverage # Run tests with coverage report
 ```
-
 
 ## Features
 
@@ -245,15 +244,6 @@ Set these environment variables in your deployment platform:
 
 - `VITE_OPENAI_API_KEY` - Your OpenAI API key
 - `VITE_API_BASE_URL` - Your backend API URL
-
-### Static Hosting
-
-The built application can be deployed to any static hosting service:
-
-- Netlify
-- Vercel
-- AWS S3 + CloudFront
-- GitHub Pages
 
 ## Browser Support
 

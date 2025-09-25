@@ -12,6 +12,9 @@ export interface ApplicationContextState extends ApplicationState {
   updatePersonalInfo: (data: Partial<PersonalInfo>) => void;
   updateFamilyFinancial: (data: Partial<FamilyFinancial>) => void;
   updateSituationDescriptions: (data: Partial<SituationDescriptions>) => void;
+  completePersonalInfoStep: (data: PersonalInfo) => void;
+  completeFamilyFinancialStep: (data: FamilyFinancial) => void;
+  completeSituationDescriptionsStep: (data: SituationDescriptions) => void;
   setCurrentStep: (step: FormStep) => void;
   setSubmitting: (submitting: boolean) => void;
   setReferenceNumber: (referenceNumber: string) => void;

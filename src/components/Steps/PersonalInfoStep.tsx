@@ -21,7 +21,7 @@ import { PersonalInfo, personalInfoSchema } from "../../types/form";
 
 export const PersonalInfoStep: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { personalInfo, updatePersonalInfo, setCurrentStep } = useApplication();
+  const { personalInfo, completePersonalInfoStep } = useApplication();
   const isArabic = i18n.language === "ar";
 
   const {
@@ -35,18 +35,8 @@ export const PersonalInfoStep: React.FC = () => {
     mode: "onChange",
   });
 
-  // Auto-save on form changes
-  // const watchedValues = watch();
-  // React.useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     updatePersonalInfo(watchedValues);
-  //   }, 500);
-  //   return () => clearTimeout(timeoutId);
-  // }, [watchedValues, updatePersonalInfo]);
-
   const onSubmit = (data: PersonalInfo) => {
-    updatePersonalInfo(data);
-    setCurrentStep("family");
+    completePersonalInfoStep(data);
   };
 
   const genderOptions = [

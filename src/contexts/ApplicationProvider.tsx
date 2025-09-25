@@ -10,6 +10,7 @@ import {
   FamilyFinancial,
   SituationDescriptions,
   FormStep,
+  ApplicationState,
 } from "../types/form";
 
 // Local Storage Keys
@@ -25,14 +26,28 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(applicationReducer, initialState);
-  const shouldSaveRef = useRef(false);
   const isLoadingRef = useRef(false);
+
+  // Save current state to localStorage
+  const saveToLocalStorage = (stateToSave?: ApplicationState) => {
+    if (isLoadingRef.current) return;
+
+    try {
+      const dataToSave = {
+        ...(stateToSave || state),
+        lastSaved: new Date(),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+      console.log("Application progress saved to localStorage");
+    } catch (error) {
+      console.warn("Failed to save application progress:", error);
+    }
+  };
 
   // Define loadProgress function
   const loadProgress = () => {
     try {
       isLoadingRef.current = true;
-      shouldSaveRef.current = false; // Prevent saving during load
 
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -66,35 +81,15 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
     loadProgress();
   }, []);
 
-  // // Auto-save to localStorage when state changes and we should save
-  // useEffect(() => {
-  //   if (shouldSaveRef.current && !isLoadingRef.current) {
-  //     try {
-  //       console.log("Saving application progress to localStorage");
-  //       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  //       shouldSaveRef.current = false;
-  //     } catch (error) {
-  //       console.warn("Failed to save application progress:", error);
-  //     }
-  //   }
-  // }, [state]);
-
-  // Actions
+  // Actions - Update data without saving
   const updatePersonalInfo = (data: Partial<PersonalInfo>) => {
-    // Always update and let the reducer handle the merge
     console.log("Updating personal info:", data);
-    if (!isLoadingRef.current) {
-      shouldSaveRef.current = true;
-    }
     dispatch({ type: "UPDATE_PERSONAL_INFO", payload: data });
     dispatch({ type: "UPDATE_LAST_SAVED" });
   };
 
   const updateFamilyFinancial = (data: Partial<FamilyFinancial>) => {
     console.log("Updating family financial info:", data);
-    if (!isLoadingRef.current) {
-      shouldSaveRef.current = true;
-    }
     dispatch({ type: "UPDATE_FAMILY_FINANCIAL", payload: data });
     dispatch({ type: "UPDATE_LAST_SAVED" });
   };
@@ -103,11 +98,46 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
     data: Partial<SituationDescriptions>
   ) => {
     console.log("Updating situation descriptions:", data);
-    if (!isLoadingRef.current) {
-      shouldSaveRef.current = true;
-    }
     dispatch({ type: "UPDATE_SITUATION_DESCRIPTIONS", payload: data });
     dispatch({ type: "UPDATE_LAST_SAVED" });
+  };
+
+  // Actions - Save and proceed to next step
+  const completePersonalInfoStep = (data: PersonalInfo) => {
+    const updatedState = {
+      ...state,
+      personalInfo: { ...state.personalInfo, ...data },
+      currentStep: "family" as FormStep,
+      lastSaved: new Date(),
+    };
+
+    updatePersonalInfo(data);
+    setCurrentStep("family");
+    saveToLocalStorage(updatedState);
+  };
+
+  const completeFamilyFinancialStep = (data: FamilyFinancial) => {
+    const updatedState = {
+      ...state,
+      familyFinancial: { ...state.familyFinancial, ...data },
+      currentStep: "situation" as FormStep,
+      lastSaved: new Date(),
+    };
+
+    updateFamilyFinancial(data);
+    setCurrentStep("situation");
+    saveToLocalStorage(updatedState);
+  };
+
+  const completeSituationDescriptionsStep = (data: SituationDescriptions) => {
+    const updatedState = {
+      ...state,
+      situationDescriptions: { ...state.situationDescriptions, ...data },
+      lastSaved: new Date(),
+    };
+
+    updateSituationDescriptions(data);
+    saveToLocalStorage(updatedState);
   };
 
   const setCurrentStep = (step: FormStep) => {
@@ -153,9 +183,7 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
   };
 
   const saveProgress = () => {
-    if (!isLoadingRef.current) {
-      shouldSaveRef.current = true;
-    }
+    saveToLocalStorage();
     dispatch({ type: "UPDATE_LAST_SAVED" });
   };
 
@@ -173,6 +201,9 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
     updatePersonalInfo,
     updateFamilyFinancial,
     updateSituationDescriptions,
+    completePersonalInfoStep,
+    completeFamilyFinancialStep,
+    completeSituationDescriptionsStep,
     setCurrentStep,
     setSubmitting,
     setReferenceNumber,

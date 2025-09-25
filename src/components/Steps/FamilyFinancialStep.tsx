@@ -5,7 +5,6 @@ import {
   CardContent,
   Grid,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import React from "react";
@@ -19,10 +18,9 @@ import { SelectController } from "../UI/SelectController";
 
 export const FamilyFinancialStep: React.FC = () => {
   const { t } = useTranslation();
-  const { familyFinancial, updateFamilyFinancial, setCurrentStep } =
+  const { familyFinancial, completeFamilyFinancialStep, setCurrentStep } =
     useApplication();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const {
     control,
@@ -36,18 +34,8 @@ export const FamilyFinancialStep: React.FC = () => {
     mode: "onChange",
   });
 
-  // Auto-save on form changes
-  const watchedValues = watch();
-  React.useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      updateFamilyFinancial(watchedValues);
-    }, 500);
-    return () => clearTimeout(timeoutId);
-  }, [watchedValues, updateFamilyFinancial]);
-
   const onSubmit = (data: FamilyFinancial) => {
-    updateFamilyFinancial(data);
-    setCurrentStep("situation");
+    completeFamilyFinancialStep(data);
   };
 
   const handlePrevious = () => {

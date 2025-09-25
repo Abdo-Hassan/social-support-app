@@ -1,45 +1,42 @@
-import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import {
+  AutoAwesome as AIIcon,
+  Error as ErrorIcon,
+  Info as InfoIcon,
+  Send as SendIcon,
+} from "@mui/icons-material";
+import {
+  Alert,
   Box,
-  Typography,
-  TextField,
   Button,
   Card,
   CardContent,
-  Alert,
-  useTheme,
-  useMediaQuery,
   Divider,
+  TextField,
+  Typography,
+  useTheme,
 } from "@mui/material";
-import {
-  ArrowBack,
-  AutoAwesome as AIIcon,
-  Info as InfoIcon,
-  Send as SendIcon,
-  Error as ErrorIcon,
-} from "@mui/icons-material";
-import {
-  situationDescriptionsSchema,
-  SituationDescriptions,
-  AIAssistanceRequest,
-} from "../../types/form";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useApplication } from "../../hooks/use-application";
+import api from "../../services/api";
+import {
+  AIAssistanceRequest,
+  SituationDescriptions,
+  situationDescriptionsSchema,
+} from "../../types/form";
 import { AIAssistanceModal } from "../AI/AIAssistanceModal";
 import { NavigationButtons } from "../UI/NavigationButtons";
-import api from "../../services/api";
 
 export const SituationDescriptionsStep: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const {
     situationDescriptions,
-    updateSituationDescriptions,
+    completeSituationDescriptionsStep,
     setCurrentStep,
     isSubmitting,
     setSubmitting,
@@ -70,15 +67,6 @@ export const SituationDescriptionsStep: React.FC = () => {
     defaultValues: situationDescriptions as SituationDescriptions,
     mode: "onChange",
   });
-
-  // Auto-save on form changes
-  const watchedValues = watch();
-  React.useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      updateSituationDescriptions(watchedValues);
-    }, 500);
-    return () => clearTimeout(timeoutId);
-  }, [watchedValues, updateSituationDescriptions]);
 
   const openAIAssistance = (field: keyof SituationDescriptions) => {
     const request: AIAssistanceRequest = {
@@ -128,7 +116,7 @@ export const SituationDescriptionsStep: React.FC = () => {
   const onSubmit = async (data: SituationDescriptions) => {
     setSubmitting(true);
     setSubmitError(null);
-    updateSituationDescriptions(data);
+    completeSituationDescriptionsStep(data);
 
     // Prepare complete form data for submission
     const formData = {

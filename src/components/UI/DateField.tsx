@@ -73,6 +73,10 @@ export const DateField = <T = Record<string, unknown>,>({
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 1.5,
                   fontSize: "0.9rem",
+                  direction: isRtl ? "rtl" : "ltr",
+                  "& .MuiOutlinedInput-input": {
+                    textAlign: isRtl ? "right" : "left",
+                  },
                   "& fieldset": {
                     borderColor: "grey.300",
                   },
@@ -88,13 +92,33 @@ export const DateField = <T = Record<string, unknown>,>({
                   fontSize: "0.9rem",
                   fontWeight: 400,
                   color: "text.secondary",
+                  // Fix label positioning for RTL
+                  right: isRtl ? 14 : "auto",
+                  left: isRtl ? "auto" : 14,
+                  transformOrigin: isRtl ? "top right" : "top left",
                   "&.Mui-focused": {
                     color: "primary.main",
+                  },
+                  "&.MuiInputLabel-shrink": {
+                    transform: isRtl
+                      ? "translate(14px, -9px) scale(0.75)"
+                      : "translate(14px, -9px) scale(0.75)",
                   },
                 },
                 "& .MuiFormHelperText-root": {
                   fontSize: "0.775rem",
                   mt: 0.5,
+                  textAlign: isRtl ? "right" : "left",
+                  direction: isRtl ? "rtl" : "ltr",
+                },
+                // Fix date picker icon alignment for RTL
+                "& .MuiInputAdornment-root": {
+                  "& .MuiSvgIcon-root": {
+                    transform: isRtl ? "scaleX(-1)" : "none",
+                  },
+                },
+                "& .MuiIconButton-root": {
+                  transform: isRtl ? "scaleX(-1)" : "none",
                 },
               },
             },

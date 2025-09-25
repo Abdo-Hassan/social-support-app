@@ -20,7 +20,14 @@ interface InputControllerProps<
   placeholder?: string;
   required?: boolean;
   fullWidth?: boolean;
-  type?: "text" | "number" | "email" | "tel";
+  type?:
+    | "text"
+    | "number"
+    | "email"
+    | "tel"
+    | "date"
+    | "time"
+    | "datetime-local";
   startAdornment?: string;
   endAdornment?: string;
   inputProps?: Record<string, unknown>;
@@ -50,16 +57,29 @@ export const InputController = <
 
   const InputProps: Record<string, unknown> = {};
 
+  // Fix adornment positioning for RTL
   if (startAdornment) {
-    InputProps.startAdornment = (
-      <InputAdornment position="start">{startAdornment}</InputAdornment>
-    );
+    if (isRtl) {
+      InputProps.endAdornment = (
+        <InputAdornment position="end">{startAdornment}</InputAdornment>
+      );
+    } else {
+      InputProps.startAdornment = (
+        <InputAdornment position="start">{startAdornment}</InputAdornment>
+      );
+    }
   }
 
   if (endAdornment) {
-    InputProps.endAdornment = (
-      <InputAdornment position="end">{endAdornment}</InputAdornment>
-    );
+    if (isRtl) {
+      InputProps.startAdornment = (
+        <InputAdornment position="start">{endAdornment}</InputAdornment>
+      );
+    } else {
+      InputProps.endAdornment = (
+        <InputAdornment position="end">{endAdornment}</InputAdornment>
+      );
+    }
   }
 
   return (
@@ -91,6 +111,57 @@ export const InputController = <
               "&.Mui-focused fieldset": {
                 borderColor: "primary.main",
                 borderWidth: "1.5px",
+              },
+            },
+            "& .MuiInputLabel-root": {
+              fontSize: "0.9rem",
+              fontWeight: 400,
+              color: "text.secondary",
+              // Fix label positioning for RTL
+              right: isRtl ? 14 : "auto",
+              left: isRtl ? "auto" : 14,
+              transformOrigin: isRtl ? "top right" : "top left",
+              "&.Mui-focused": {
+                color: "primary.main",
+              },
+              "&.MuiInputLabel-shrink": {
+                transform: isRtl
+                  ? "translate(14px, -9px) scale(0.75)"
+                  : "translate(14px, -9px) scale(0.75)",
+              },
+            },
+            "& .MuiFormHelperText-root": {
+              fontSize: "0.775rem",
+              mt: 0.5,
+              textAlign: isRtl ? "right" : "left",
+              direction: isRtl ? "rtl" : "ltr",
+            },
+            // Fix native date picker icon alignment for RTL
+            "& input[type=date]::-webkit-calendar-picker-indicator": {
+              position: "absolute",
+              right: isRtl ? "auto" : 12,
+              left: isRtl ? 12 : "auto",
+              transform: isRtl ? "scaleX(-1)" : "none",
+              cursor: "pointer",
+            },
+            "& input[type=time]::-webkit-calendar-picker-indicator": {
+              position: "absolute",
+              right: isRtl ? "auto" : 12,
+              left: isRtl ? 12 : "auto",
+              transform: isRtl ? "scaleX(-1)" : "none",
+              cursor: "pointer",
+            },
+            "& input[type=datetime-local]::-webkit-calendar-picker-indicator": {
+              position: "absolute",
+              right: isRtl ? "auto" : 12,
+              left: isRtl ? 12 : "auto",
+              transform: isRtl ? "scaleX(-1)" : "none",
+              cursor: "pointer",
+            },
+            // Fix MUI date picker icon alignment
+            "& .MuiInputAdornment-root": {
+              "& .MuiSvgIcon-root": {
+                transform: isRtl ? "scaleX(-1)" : "none",
               },
             },
           }}

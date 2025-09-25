@@ -66,18 +66,18 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
     loadProgress();
   }, []);
 
-  // Auto-save to localStorage when state changes and we should save
-  useEffect(() => {
-    if (shouldSaveRef.current && !isLoadingRef.current) {
-      try {
-        console.log("Saving application progress to localStorage");
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        shouldSaveRef.current = false;
-      } catch (error) {
-        console.warn("Failed to save application progress:", error);
-      }
-    }
-  }, [state]);
+  // // Auto-save to localStorage when state changes and we should save
+  // useEffect(() => {
+  //   if (shouldSaveRef.current && !isLoadingRef.current) {
+  //     try {
+  //       console.log("Saving application progress to localStorage");
+  //       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  //       shouldSaveRef.current = false;
+  //     } catch (error) {
+  //       console.warn("Failed to save application progress:", error);
+  //     }
+  //   }
+  // }, [state]);
 
   // Actions
   const updatePersonalInfo = (data: Partial<PersonalInfo>) => {

@@ -277,6 +277,7 @@ export const SituationDescriptionsStep: React.FC = () => {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           fontSize: "1rem",
+                          bgcolor: "background.default",
                           lineHeight: 1.5,
                         },
                       }}

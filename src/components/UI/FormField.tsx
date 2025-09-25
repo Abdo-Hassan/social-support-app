@@ -82,6 +82,23 @@ export const FormField = <T = Record<string, unknown>,>({
           size="small"
           aria-invalid={!!error}
           aria-describedby={error ? errorId : undefined}
+          slotProps={{
+            select:
+              type === "select"
+                ? {
+                    MenuProps: {
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: isRtl ? "right" : "left",
+                      },
+                      transformOrigin: {
+                        vertical: "top",
+                        horizontal: isRtl ? "right" : "left",
+                      },
+                    },
+                  }
+                : undefined,
+          }}
           sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: 1,
@@ -106,18 +123,41 @@ export const FormField = <T = Record<string, unknown>,>({
                 borderColor: "primary.main",
                 borderWidth: "1.5px",
               },
+              // Fix select dropdown icon positioning for RTL
+              "& .MuiSelect-icon": {
+                right: isRtl ? "auto" : 14,
+                left: isRtl ? 14 : "auto",
+              },
             },
             "& .MuiInputLabel-root": {
               fontSize: "0.9rem",
               fontWeight: 400,
               color: "text.secondary",
+              // Fix label positioning for RTL
+              right: isRtl ? 30 : "auto",
+              left: isRtl ? "auto" : 0,
+              top: isRtl ? "auto" : 0,
+              transformOrigin: isRtl ? "top right" : "top left",
               "&.Mui-focused": {
                 color: "primary.main",
+              },
+              "&.MuiInputLabel-shrink": {
+                transform: isRtl
+                  ? "translate(14px, -9px) scale(0.75)"
+                  : "translate(14px, -9px) scale(0.75)",
               },
             },
             "& .MuiFormHelperText-root": {
               fontSize: "0.775rem",
               mt: 0.5,
+              textAlign: isRtl ? "right" : "left",
+              direction: isRtl ? "rtl" : "ltr",
+            },
+            // Fix select dropdown menu positioning for RTL
+            "& .MuiSelect-select": {
+              textAlign: isRtl ? "right" : "left",
+              paddingRight: isRtl ? 14 : 32,
+              paddingLeft: isRtl ? 32 : 14,
             },
           }}>
           {type === "select" &&

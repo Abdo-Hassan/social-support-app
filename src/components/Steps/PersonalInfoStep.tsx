@@ -36,13 +36,13 @@ export const PersonalInfoStep: React.FC = () => {
   });
 
   // Auto-save on form changes
-  const watchedValues = watch();
-  React.useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      updatePersonalInfo(watchedValues);
-    }, 500);
-    return () => clearTimeout(timeoutId);
-  }, [watchedValues, updatePersonalInfo]);
+  // const watchedValues = watch();
+  // React.useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     updatePersonalInfo(watchedValues);
+  //   }, 500);
+  //   return () => clearTimeout(timeoutId);
+  // }, [watchedValues, updatePersonalInfo]);
 
   const onSubmit = (data: PersonalInfo) => {
     updatePersonalInfo(data);

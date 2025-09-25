@@ -73,6 +73,53 @@ export const SelectController = <
                 borderColor: "primary.main",
                 borderWidth: "1.5px",
               },
+              // Fix select dropdown icon positioning for RTL
+              "& .MuiSelect-icon": {
+                right: isRtl ? "auto" : 14,
+                left: isRtl ? 14 : "auto",
+              },
+            },
+            "& .MuiInputLabel-root": {
+              fontSize: "0.9rem",
+              fontWeight: 400,
+              color: "text.secondary",
+              // Fix label positioning for RTL
+              right: isRtl ? 14 : "auto",
+              left: isRtl ? "auto" : 14,
+              transformOrigin: isRtl ? "top right" : "top left",
+              "&.Mui-focused": {
+                color: "primary.main",
+              },
+              "&.MuiInputLabel-shrink": {
+                transform: isRtl
+                  ? "translate(14px, -9px) scale(0.75)"
+                  : "translate(14px, -9px) scale(0.75)",
+              },
+            },
+            "& .MuiFormHelperText-root": {
+              fontSize: "0.775rem",
+              mt: 0.5,
+              textAlign: isRtl ? "right" : "left",
+              direction: isRtl ? "rtl" : "ltr",
+            },
+            // Fix select dropdown content positioning for RTL
+            "& .MuiSelect-select": {
+              textAlign: isRtl ? "right" : "left",
+              paddingRight: isRtl ? 14 : 32,
+              paddingLeft: isRtl ? 32 : 14,
+            },
+            // Fix MUI date/time picker icons in select fields
+            "& .MuiInputAdornment-root": {
+              "& .MuiSvgIcon-root": {
+                transform: isRtl ? "scaleX(-1)" : "none",
+              },
+            },
+            // Fix any calendar or time icons specifically
+            "& .MuiSvgIcon-root[data-testid*='Calendar']": {
+              transform: isRtl ? "scaleX(-1)" : "none",
+            },
+            "& .MuiSvgIcon-root[data-testid*='Clock']": {
+              transform: isRtl ? "scaleX(-1)" : "none",
             },
           }}
           label={
@@ -98,7 +145,19 @@ export const SelectController = <
             )
           }
           fullWidth={fullWidth}
-          variant="outlined">
+          variant="outlined"
+          SelectProps={{
+            MenuProps: {
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: isRtl ? "right" : "left",
+              },
+              transformOrigin: {
+                vertical: "top",
+                horizontal: isRtl ? "right" : "left",
+              },
+            },
+          }}>
           {options.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}

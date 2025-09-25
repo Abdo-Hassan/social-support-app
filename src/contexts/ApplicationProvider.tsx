@@ -12,8 +12,9 @@ import {
   FormStep,
 } from "../types/form";
 
-// Local Storage Key
+// Local Storage Keys
 const STORAGE_KEY = "social-support-application";
+const RESULT_STORAGE_KEY = "social-support-application-result";
 
 // Provider Component
 interface ApplicationProviderProps {
@@ -128,6 +129,36 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
     dispatch({ type: "SET_REFERENCE_NUMBER", payload: referenceNumber });
   };
 
+  // Save application result to localStorage (for /application-result page)
+  const saveApplicationResult = (referenceNumber: string) => {
+    try {
+      const resultData = {
+        referenceNumber,
+        submissionDate: new Date().toISOString(),
+        personalInfo: state.personalInfo,
+        familyFinancial: state.familyFinancial,
+        situationDescriptions: state.situationDescriptions,
+      };
+      localStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(resultData));
+    } catch (error) {
+      console.warn("Failed to save application result:", error);
+    }
+  };
+
+  // Load application result from localStorage
+  const loadApplicationResult = () => {
+    try {
+      const saved = localStorage.getItem(RESULT_STORAGE_KEY);
+      if (saved) {
+        const parsedResult = JSON.parse(saved);
+        return parsedResult;
+      }
+    } catch (error) {
+      console.warn("Failed to load application result:", error);
+    }
+    return null;
+  };
+
   const saveProgress = () => {
     shouldSaveRef.current = true;
     dispatch({ type: "UPDATE_LAST_SAVED" });
@@ -153,6 +184,8 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
     saveProgress,
     loadProgress,
     resetApplication,
+    saveApplicationResult,
+    loadApplicationResult,
   };
 
   return (

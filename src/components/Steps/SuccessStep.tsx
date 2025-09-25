@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -10,31 +11,85 @@ import {
   useMediaQuery,
   IconButton,
   Stack,
+  Alert,
 } from "@mui/material";
 import {
   Check as CheckIcon,
   ContentCopy as CopyIcon,
   Refresh as RefreshIcon,
+  Home as HomeIcon,
 } from "@mui/icons-material";
 import { useApplication } from "../../hooks/use-application";
+
+interface SavedApplicationResult {
+  referenceNumber: string;
+  submissionDate: string;
+  personalInfo: Record<string, unknown>;
+  familyFinancial: Record<string, unknown>;
+  situationDescriptions: Record<string, unknown>;
+}
 
 export const SuccessStep: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const { resetApplication, referenceNumber } = useApplication();
+  const location = useLocation();
+  const {
+    resetApplication,
+    referenceNumber,
+    saveApplicationResult,
+    loadApplicationResult,
+  } = useApplication();
 
-  // Fallback reference number (shouldn't be needed if API works correctly)
+  const [savedResult, setSavedResult] = useState<SavedApplicationResult | null>(
+    null
+  );
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [isResultPage, setIsResultPage] = useState(false);
+
+  // Check if we're on the /application-result route
+  useEffect(() => {
+    const isOnResultPage = location.pathname === "/application-result";
+    setIsResultPage(isOnResultPage);
+
+    if (isOnResultPage) {
+      // Load saved result from localStorage
+      const result = loadApplicationResult();
+      setSavedResult(result);
+    } else if (referenceNumber) {
+      // Save result when we have a reference number (coming from form submission)
+      saveApplicationResult(referenceNumber);
+    }
+  }, [
+    location.pathname,
+    referenceNumber,
+    loadApplicationResult,
+    saveApplicationResult,
+  ]);
+
+  // Determine reference number to display
   const displayReferenceNumber =
-    referenceNumber || `SSP-${Math.floor(Math.random() * 90000000) + 10000000}`;
+    (isResultPage && savedResult?.referenceNumber) ||
+    referenceNumber ||
+    `SSP-${Math.floor(Math.random() * 90000000) + 10000000}`;
 
   const handleNewApplication = () => {
-    resetApplication();
+    if (isResultPage) {
+      // Navigate to home instead of resetting if on result page
+      window.location.href = "/";
+    } else {
+      resetApplication();
+    }
   };
 
-  const handleCopyReference = () => {
-    navigator.clipboard.writeText(displayReferenceNumber);
-    // You could add a toast notification here
+  const handleCopyReference = async () => {
+    try {
+      await navigator.clipboard.writeText(displayReferenceNumber);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (error) {
+      console.warn("Failed to copy reference number:", error);
+    }
   };
 
   const nextSteps = [
@@ -43,8 +98,48 @@ export const SuccessStep: React.FC = () => {
     t("success:decision"),
   ];
 
+  // Show error message if no saved result on result page
+  if (isResultPage && !savedResult) {
+    return (
+      <Box sx={{ maxWidth: 700, mx: "auto", p: { xs: 2, md: 3 } }}>
+        <Alert severity="warning" sx={{ mb: 3 }}>
+          <Typography variant="body1">
+            {t(
+              "common:noApplicationFound",
+              "No saved application result found."
+            )}
+          </Typography>
+        </Alert>
+        <Box sx={{ textAlign: "center" }}>
+          <Button
+            variant="contained"
+            onClick={handleNewApplication}
+            startIcon={<HomeIcon />}
+            size="large"
+            sx={{
+              minWidth: { xs: "100%", sm: 220 },
+              py: 1.5,
+              fontWeight: 600,
+            }}>
+            {t("common:goToHome", "Go to Home")}
+          </Button>
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ maxWidth: 700, mx: "auto", p: { xs: 2, md: 3 } }}>
+      {/* Copy Success Message */}
+      {copySuccess && (
+        <Alert severity="success" sx={{ mb: 3 }}>
+          {t(
+            "common:copiedToClipboard",
+            "Reference number copied to clipboard!"
+          )}
+        </Alert>
+      )}
+
       <Box sx={{ textAlign: "center", mb: 4 }}>
         {/* Success Icon */}
         <Box
@@ -72,7 +167,9 @@ export const SuccessStep: React.FC = () => {
             mb: 2,
             fontSize: { xs: "1.75rem", md: "2rem" },
           }}>
-          {t("success:title")}
+          {isResultPage
+            ? t("success:applicationResult", "Application Result")
+            : t("success:title")}
         </Typography>
 
         {/* Subtitle */}
@@ -80,7 +177,12 @@ export const SuccessStep: React.FC = () => {
           variant="body1"
           color="text.secondary"
           sx={{ mb: 4, lineHeight: 1.6 }}>
-          {t("success:subtitle")}
+          {isResultPage
+            ? t(
+                "success:resultSubtitle",
+                "Here are your application details and reference number."
+              )
+            : t("success:subtitle")}
         </Typography>
       </Box>
 
@@ -184,14 +286,16 @@ export const SuccessStep: React.FC = () => {
         <Button
           variant="contained"
           onClick={handleNewApplication}
-          startIcon={<RefreshIcon />}
+          startIcon={isResultPage ? <HomeIcon /> : <RefreshIcon />}
           size="large"
           sx={{
             minWidth: { xs: "100%", sm: 220 },
             py: 1.5,
             fontWeight: 600,
           }}>
-          {t("success:newApplication")}
+          {isResultPage
+            ? t("common:goToHome", "Go to Home")
+            : t("success:newApplication")}
         </Button>
       </Box>
     </Box>

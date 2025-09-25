@@ -1,4 +1,5 @@
 import React, { useEffect, Suspense } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -12,50 +13,8 @@ import { I18nProvider } from "./components/I18nProvider";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { createAppTheme } from "./theme";
 import { useApplication } from "./hooks/use-application";
-import { PersonalInfoStep } from "@/components/Steps/PersonalInfoStep";
-import { FamilyFinancialStep } from "@/components/Steps/FamilyFinancialStep";
-import { SituationDescriptionsStep } from "@/components/Steps/SituationDescriptionsStep";
-import { SuccessStep } from "@/components/Steps/SuccessStep";
-
-const AppContent: React.FC = () => {
-  const { currentStep } = useApplication();
-
-  const renderStep = () => {
-    switch (currentStep) {
-      case "personal":
-        return <PersonalInfoStep />;
-      case "family":
-        return <FamilyFinancialStep />;
-      case "situation":
-        return <SituationDescriptionsStep />;
-      case "success":
-        return <SuccessStep />;
-      default:
-        return <PersonalInfoStep />;
-    }
-  };
-
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        bgcolor: "background.default",
-      }}>
-      <Header />
-      <ProgressBar />
-      <Box
-        component="main"
-        sx={{
-          flex: 1,
-          py: { xs: 2, md: 2 },
-        }}>
-        {renderStep()}
-      </Box>
-    </Box>
-  );
-};
+import { ApplicationPage } from "./pages/ApplicationPage";
+import { ApplicationResultPage } from "./pages/ApplicationResultPage";
 
 const App: React.FC = () => {
   const { i18n } = useTranslation();
@@ -91,23 +50,31 @@ const App: React.FC = () => {
   }, [i18n]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <LocalizationProvider
-        dateAdapter={AdapterDateFns}
-        adapterLocale={dateLocale}>
-        <CssBaseline />
-        <ErrorBoundary>
-          <Suspense
-            fallback={<LoadingSpinner message="Loading translations..." />}>
-            <I18nProvider>
-              <ApplicationProvider>
-                <AppContent />
-              </ApplicationProvider>
-            </I18nProvider>
-          </Suspense>
-        </ErrorBoundary>
-      </LocalizationProvider>
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <LocalizationProvider
+          dateAdapter={AdapterDateFns}
+          adapterLocale={dateLocale}>
+          <CssBaseline />
+          <ErrorBoundary>
+            <Suspense
+              fallback={<LoadingSpinner message="Loading translations..." />}>
+              <I18nProvider>
+                <ApplicationProvider>
+                  <Routes>
+                    <Route path="/" element={<ApplicationPage />} />
+                    <Route
+                      path="/application-result"
+                      element={<ApplicationResultPage />}
+                    />
+                  </Routes>
+                </ApplicationProvider>
+              </I18nProvider>
+            </Suspense>
+          </ErrorBoundary>
+        </LocalizationProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 };
 

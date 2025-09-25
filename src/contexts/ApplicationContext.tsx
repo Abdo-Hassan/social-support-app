@@ -18,6 +18,14 @@ export interface ApplicationContextState extends ApplicationState {
   saveProgress: () => void;
   loadProgress: () => void;
   resetApplication: () => void;
+  saveApplicationResult: (referenceNumber: string) => void;
+  loadApplicationResult: () => {
+    referenceNumber: string;
+    submissionDate: string;
+    personalInfo: Record<string, unknown>;
+    familyFinancial: Record<string, unknown>;
+    situationDescriptions: Record<string, unknown>;
+  } | null;
 }
 
 // Action Types

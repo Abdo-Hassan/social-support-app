@@ -8,8 +8,9 @@ import { ApplicationProvider } from "./contexts/ApplicationProvider";
 import { Header } from "./components/Layout/Header";
 import { ProgressBar } from "./components/Layout/ProgressBar";
 import { LoadingSpinner } from "./components/UI/LoadingSpinner";
+import { I18nProvider } from "./components/I18nProvider";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { createAppTheme } from "./theme";
-import "./i18n/i18n";
 import { useApplication } from "./hooks/use-application";
 import { PersonalInfoStep } from "@/components/Steps/PersonalInfoStep";
 import { FamilyFinancialStep } from "@/components/Steps/FamilyFinancialStep";
@@ -73,12 +74,8 @@ const App: React.FC = () => {
     document.documentElement.setAttribute("dir", dir);
     document.documentElement.setAttribute("lang", lang);
 
-    // Also set the dir attribute on the body for better CSS support
+    // Set the dir attribute on the body for better CSS support
     document.body.setAttribute("dir", dir);
-
-    if (process.env.NODE_ENV === "development") {
-      console.log(`Document attributes updated: dir=${dir}, lang=${lang}`);
-    }
   }, [i18n.language, isRtl]);
 
   // Ensure language is loaded on mount
@@ -89,9 +86,6 @@ const App: React.FC = () => {
       ["en", "ar"].includes(storedLang) &&
       storedLang !== i18n.language
     ) {
-      if (process.env.NODE_ENV === "development") {
-        console.log(`Loading stored language preference: ${storedLang}`);
-      }
       i18n.changeLanguage(storedLang);
     }
   }, [i18n]);
@@ -102,12 +96,16 @@ const App: React.FC = () => {
         dateAdapter={AdapterDateFns}
         adapterLocale={dateLocale}>
         <CssBaseline />
-        <Suspense
-          fallback={<LoadingSpinner message="Loading application..." />}>
-          <ApplicationProvider>
-            <AppContent />
-          </ApplicationProvider>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense
+            fallback={<LoadingSpinner message="Loading translations..." />}>
+            <I18nProvider>
+              <ApplicationProvider>
+                <AppContent />
+              </ApplicationProvider>
+            </I18nProvider>
+          </Suspense>
+        </ErrorBoundary>
       </LocalizationProvider>
     </ThemeProvider>
   );

@@ -21,6 +21,10 @@ i18n
     },
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json",
+      // Add request options for better error handling
+      requestOptions: {
+        cache: "default",
+      },
     },
     detection: {
       // Check localStorage first, then browser settings, then HTML lang attribute
@@ -32,6 +36,12 @@ i18n
       // Don't automatically set HTML lang attribute (we do it manually in App.tsx)
       htmlTag: document.documentElement,
     },
+    // Preload all namespaces for the detected language
+    preload: ["en", "ar"],
+    // Load all namespaces upfront
+    load: "all",
+    // Wait for all resources to load
+    partialBundledLanguages: false,
   });
 
 // Helper function to verify localStorage language persistence
@@ -43,18 +53,5 @@ export const getStoredLanguage = () => {
 export const setStoredLanguage = (lng: string) => {
   localStorage.setItem("i18nextLng", lng);
 };
-
-// Log the detected language on initialization (development only)
-if (process.env.NODE_ENV === "development") {
-  i18n.on("initialized", (options) => {
-    console.log("i18n initialized with language:", i18n.language);
-    console.log("Stored language in localStorage:", getStoredLanguage());
-  });
-
-  i18n.on("languageChanged", (lng) => {
-    console.log("Language changed to:", lng);
-    console.log("Updated localStorage:", getStoredLanguage());
-  });
-}
 
 export default i18n;

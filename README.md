@@ -1,6 +1,6 @@
 # Social Support Application Portal
 
-A modern, multilingual React application for government financial assistance applications. Built with TypeScript, Material-UI, and React Hook Form, featuring full RTL (Right-to-Left) support for Arabic language.
+A modern, AI-powered multilingual React application for government financial assistance. Built with TypeScript, Material-UI, and React Hook Form, featuring full RTL (Right-to-Left) support for the Arabic language.
 
 ## Getting Started
 

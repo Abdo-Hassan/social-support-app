@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -17,7 +17,6 @@ import {
   Check as CheckIcon,
   ContentCopy as CopyIcon,
   Refresh as RefreshIcon,
-  Home as HomeIcon,
   Add as AddIcon,
 } from "@mui/icons-material";
 import { useApplication } from "../../hooks/use-application";
@@ -35,6 +34,7 @@ export const SuccessStep: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const location = useLocation();
+  const navigate = useNavigate();
   const {
     resetApplication,
     referenceNumber,
@@ -76,9 +76,7 @@ export const SuccessStep: React.FC = () => {
 
   const handleNewApplication = () => {
     if (isResultPage) {
-      // Navigate to home instead of resetting if on result page
-      window.location.href = "/";
-    } else {
+      navigate("/");
       resetApplication();
     }
   };
@@ -302,7 +300,7 @@ export const SuccessStep: React.FC = () => {
         <Button
           variant="contained"
           onClick={handleNewApplication}
-          startIcon={isResultPage ? <HomeIcon /> : <RefreshIcon />}
+          startIcon={isResultPage ? <AddIcon /> : <RefreshIcon />}
           size="large"
           sx={{
             minWidth: { xs: "100%", sm: 220 },

@@ -14,7 +14,6 @@ import {
   useTheme,
   useMediaQuery,
   Divider,
-  CircularProgress,
 } from "@mui/material";
 import {
   ArrowBack,
@@ -48,6 +47,7 @@ export const SituationDescriptionsStep: React.FC = () => {
     saveApplicationResult,
     familyFinancial,
     personalInfo,
+    resetApplication,
   } = useApplication();
 
   const [aiModalOpen, setAiModalOpen] = useState(false);
@@ -147,6 +147,7 @@ export const SituationDescriptionsStep: React.FC = () => {
         saveApplicationResult(response.data.referenceNumber);
 
         // Navigate to application result page
+        resetApplication();
         navigate("/application-result");
       } else {
         // Unexpected success response format

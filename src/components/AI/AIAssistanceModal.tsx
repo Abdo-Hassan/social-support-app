@@ -15,10 +15,7 @@ import {
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { AIAssistanceRequest, AIAssistanceResponse } from "../../types/form";
-import {
-  generateAIAssistance,
-  generateMockAIAssistance,
-} from "../../services/aiService";
+import { generateAIAssistance } from "../../services/aiService";
 
 interface AIAssistanceModalProps {
   isOpen: boolean;
@@ -47,17 +44,12 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
     setSuggestion("");
 
     try {
-      let response: AIAssistanceResponse;
-      try {
-        response = await generateAIAssistance(request);
-      } catch (apiError) {
-        // Fall back to mock service
-        response = await generateMockAIAssistance(request);
-      }
+      const response = await generateAIAssistance(request);
 
       if (response.success && response.suggestion) {
         setSuggestion(response.suggestion);
       } else {
+        // Use the specific error message from the service, or fallback to generic message
         setError(response.error || t("situation:aiModal.error"));
       }
     } catch (error) {

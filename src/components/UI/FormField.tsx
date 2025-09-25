@@ -35,7 +35,8 @@ export const FormField = <T = Record<string, unknown>,>({
   multiline = false,
   maxRows,
 }: FormFieldProps<T>) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === "ar";
   const fieldId = `field-${String(name)}`;
   const errorId = `error-${String(name)}`;
 
@@ -51,7 +52,13 @@ export const FormField = <T = Record<string, unknown>,>({
             <>
               {label}
               {required && (
-                <span style={{ color: "#d32f2f", marginLeft: "4px" }}>*</span>
+                <span
+                  style={{
+                    color: "#d32f2f",
+                    margin: isRtl ? "0 4px 0 0" : "0 0 0 4px",
+                  }}>
+                  *
+                </span>
               )}
             </>
           }
@@ -80,8 +87,14 @@ export const FormField = <T = Record<string, unknown>,>({
               borderRadius: 1,
               backgroundColor: "background.default",
               fontSize: "0.9rem",
+              direction: isRtl ? "rtl" : "ltr",
               "& .MuiOutlinedInput-input": {
                 padding: "12px 16px",
+                textAlign: isRtl ? "right" : "left",
+                "&::placeholder": {
+                  textAlign: isRtl ? "right" : "left",
+                  direction: isRtl ? "rtl" : "ltr",
+                },
               },
               "& fieldset": {
                 borderColor: "grey.300",

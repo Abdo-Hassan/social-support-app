@@ -72,11 +72,20 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
   // Actions
   const updatePersonalInfo = (data: Partial<PersonalInfo>) => {
     // Only update if there's actual change
-    const hasChanges = Object.keys(data).some(
-      (key) =>
-        state.personalInfo[key as keyof PersonalInfo] !==
-        data[key as keyof PersonalInfo]
-    );
+    const hasChanges = Object.keys(data).some((key) => {
+      const currentValue = state.personalInfo[key as keyof PersonalInfo];
+      const newValue = data[key as keyof PersonalInfo];
+
+      // Handle undefined/null values
+      if (currentValue === undefined && newValue === undefined) return false;
+      if (currentValue === undefined || newValue === undefined) return true;
+
+      // Handle empty strings vs undefined
+      if (currentValue === "" && newValue === undefined) return false;
+      if (currentValue === undefined && newValue === "") return false;
+
+      return currentValue !== newValue;
+    });
 
     if (hasChanges) {
       shouldSaveRef.current = true;

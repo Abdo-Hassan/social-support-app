@@ -22,7 +22,8 @@ export const DateField = <T = Record<string, unknown>,>({
   required = false,
   format = "MM/dd/yyyy",
 }: DateFieldProps<T>) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === "ar";
   const fieldId = `date-${String(name)}`;
   const errorId = `error-${String(name)}`;
 
@@ -41,7 +42,13 @@ export const DateField = <T = Record<string, unknown>,>({
             <>
               {label}
               {required && (
-                <span style={{ color: "#d32f2f", marginLeft: "4px" }}>*</span>
+                <span
+                  style={{
+                    color: "#d32f2f",
+                    margin: isRtl ? "0 4px 0 0" : "0 0 0 4px",
+                  }}>
+                  *
+                </span>
               )}
             </>
           }
@@ -79,8 +86,8 @@ export const DateField = <T = Record<string, unknown>,>({
                 },
                 "& .MuiInputLabel-root": {
                   fontSize: "0.9rem",
-                  fontWeight: 500,
-                  color: "text.primary",
+                  fontWeight: 400,
+                  color: "text.secondary",
                   "&.Mui-focused": {
                     color: "primary.main",
                   },

@@ -48,10 +48,10 @@ const baseThemeOptions: ThemeOptions = {
   },
   typography: {
     fontFamily: [
+      "Nunito",
       "-apple-system",
       "BlinkMacSystemFont",
       '"Segoe UI"',
-      "Roboto",
       '"Helvetica Neue"',
       "Arial",
       "sans-serif",
@@ -206,11 +206,38 @@ const baseThemeOptions: ThemeOptions = {
 
 export const createAppTheme = (language: string = "en") => {
   const locale = language === "ar" ? arSA : enUS;
+  const isArabic = language === "ar";
+
+  const fontFamily = isArabic
+    ? [
+        "Tajawal",
+        "Arial",
+        "sans-serif",
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(",")
+    : [
+        "Nunito",
+        "-apple-system",
+        "BlinkMacSystemFont",
+        '"Segoe UI"',
+        '"Helvetica Neue"',
+        "Arial",
+        "sans-serif",
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(",");
 
   return createTheme(
     {
       ...baseThemeOptions,
-      direction: language === "ar" ? "rtl" : "ltr",
+      direction: isArabic ? "rtl" : "ltr",
+      typography: {
+        ...baseThemeOptions.typography,
+        fontFamily,
+      },
     },
     locale
   );

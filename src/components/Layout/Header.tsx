@@ -87,7 +87,7 @@ export const Header: React.FC = () => {
                 borderRadius: 1.5,
                 px: 2.5,
                 py: 0.75,
-                fontSize: "0.8rem",
+                fontSize: "0.9rem",
                 fontWeight: 500,
                 textTransform: "none",
                 minHeight: 32,

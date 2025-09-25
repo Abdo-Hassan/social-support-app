@@ -39,14 +39,14 @@ export const personalInfoSchema = z.object({
     .string()
     .trim()
     .min(2, "validation.minLength")
-    .max(100, "validation.maxLength"),
+    .max(100, "validation.maxLength100"),
 
   nationalId: z
     .string()
     .trim()
-    .min(6, "validation.minLength")
-    .max(20, "validation.maxLength")
-    .regex(/^[0-9A-Za-z-]+$/, "validation.nationalId"),
+    .min(6, "validation.minLength6")
+    .max(20, "validation.maxLength20")
+    .regex(/^[0-9]+$/, "validation.nationalId"),
 
   dateOfBirth: z
     .string()
@@ -72,26 +72,26 @@ export const personalInfoSchema = z.object({
   address: z
     .string()
     .trim()
-    .min(5, "validation.minLength")
-    .max(200, "validation.maxLength"),
+    .min(5, "validation.minLength5")
+    .max(200, "validation.maxLength200"),
 
   city: z
     .string()
     .trim()
     .min(2, "validation.minLength")
-    .max(50, "validation.maxLength"),
+    .max(50, "validation.maxLength50"),
 
   state: z
     .string()
     .trim()
     .min(2, "validation.minLength")
-    .max(50, "validation.maxLength"),
+    .max(50, "validation.maxLength50"),
 
   country: z
     .string()
     .trim()
     .min(2, "validation.minLength")
-    .max(50, "validation.maxLength"),
+    .max(50, "validation.maxLength50"),
 
   phone: z
     .string()
@@ -102,7 +102,7 @@ export const personalInfoSchema = z.object({
     .string()
     .trim()
     .email("validation.email")
-    .max(255, "validation.maxLength"),
+    .max(255, "validation.maxLength255"),
 });
 
 // Step 2 Schema - Family & Financial Information
@@ -119,7 +119,7 @@ export const familyFinancialSchema = z.object({
     .number()
     .int()
     .min(0, "validation.positive")
-    .max(20, "validation.maxLength"),
+    .max(20, "validation.maxValue20"),
 
   employmentStatus: z.enum([
     EmploymentStatusOptions.EMPLOYED,
@@ -132,8 +132,8 @@ export const familyFinancialSchema = z.object({
 
   monthlyIncome: z.coerce
     .number()
-    .min(0, "validation.positive")
-    .max(1000000, "validation.maxLength"),
+    .min(1, "validation.positive")
+    .max(1000000, "validation.maxValue1000000"),
 
   housingStatus: z.enum([
     HousingStatusOptions.OWN,
@@ -149,20 +149,20 @@ export const situationDescriptionsSchema = z.object({
   financialSituation: z
     .string()
     .trim()
-    .min(50, "validation.minLength")
-    .max(2000, "validation.maxLength"),
+    .min(50, "validation.minLength50")
+    .max(2000, "validation.maxLength2000"),
 
   employmentCircumstances: z
     .string()
     .trim()
-    .min(50, "validation.minLength")
-    .max(2000, "validation.maxLength"),
+    .min(50, "validation.minLength50")
+    .max(2000, "validation.maxLength2000"),
 
   reasonForApplying: z
     .string()
     .trim()
-    .min(50, "validation.minLength")
-    .max(2000, "validation.maxLength"),
+    .min(50, "validation.minLength50")
+    .max(2000, "validation.maxLength2000"),
 });
 
 // Complete Application Schema

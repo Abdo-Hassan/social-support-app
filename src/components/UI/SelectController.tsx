@@ -41,7 +41,8 @@ export const SelectController = <
   required = false,
   fullWidth = true,
 }: SelectControllerProps<T>) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === "ar";
   const theme = useTheme();
 
   return (
@@ -52,11 +53,37 @@ export const SelectController = <
         <TextField
           {...field}
           select
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 1,
+              backgroundColor: "background.default",
+              fontSize: "0.9rem",
+              "& .MuiOutlinedInput-input": {
+                padding: "12px 16px 12px",
+              },
+              "& fieldset": {
+                borderColor: "grey.300",
+              },
+              "&:hover fieldset": {
+                borderColor: "grey.400",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "primary.main",
+                borderWidth: "1.5px",
+              },
+            },
+          }}
           label={
             <>
               {label}
               {required && (
-                <span style={{ color: theme.palette.error.main }}> *</span>
+                <span
+                  style={{
+                    color: theme.palette.error.main,
+                    margin: isRtl ? "0 4px 0 0" : "0 0 0 4px",
+                  }}>
+                  *
+                </span>
               )}
             </>
           }
@@ -64,9 +91,6 @@ export const SelectController = <
           helperText={error?.message ? t(error.message) : helperText}
           fullWidth={fullWidth}
           variant="outlined">
-          <MenuItem value="">
-            <em>{placeholder || t("form.selectOption")}</em>
-          </MenuItem>
           {options.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}

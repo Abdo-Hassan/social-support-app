@@ -194,7 +194,7 @@ export const SituationDescriptionsStep: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, md: 3 } }}>
+    <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, md: 0 } }}>
       <Card elevation={2}>
         <CardContent sx={{ p: { xs: 3, md: 4 } }}>
           <Box sx={{ mb: 2 }}>
@@ -205,7 +205,7 @@ export const SituationDescriptionsStep: React.FC = () => {
                 fontWeight: 600,
                 color: "text.primary",
                 mb: 1,
-                fontSize: { xs: "1.5rem", md: "2rem" },
+                fontSize: { xs: "1rem", md: "1.5rem" },
               }}>
               {t("situation:title")}
             </Typography>

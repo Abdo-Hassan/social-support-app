@@ -42,8 +42,9 @@ export const InputController = <
   endAdornment,
   inputProps,
 }: InputControllerProps<T>) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
+  const isRtl = i18n.language === "ar";
   const fieldId = `input-${String(name)}`;
   const errorId = `error-${String(name)}`;
 
@@ -67,6 +68,32 @@ export const InputController = <
       control={control}
       render={({ field }) => (
         <TextField
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 1,
+              backgroundColor: "background.default",
+              fontSize: "0.9rem",
+              direction: isRtl ? "rtl" : "ltr",
+              "& .MuiOutlinedInput-input": {
+                padding: "12px 5px 12px",
+                textAlign: isRtl ? "right" : "left",
+                "&::placeholder": {
+                  textAlign: isRtl ? "right" : "left",
+                  direction: isRtl ? "rtl" : "ltr",
+                },
+              },
+              "& fieldset": {
+                borderColor: "grey.300",
+              },
+              "&:hover fieldset": {
+                borderColor: "grey.400",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "primary.main",
+                borderWidth: "1.5px",
+              },
+            },
+          }}
           {...field}
           id={fieldId}
           type={type}
@@ -74,7 +101,10 @@ export const InputController = <
             <>
               {label}
               {required && (
-                <span style={{ color: theme.palette.error.main }}> *</span>
+                <span
+                  style={{ color: theme.palette.error.main, margin: "0 4px" }}>
+                  *
+                </span>
               )}
             </>
           }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, CircularProgress } from "@mui/material";
-import { ArrowBack, Send as SendIcon } from "@mui/icons-material";
+import { ArrowBack, ArrowForward, Send as SendIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 interface NavigationButtonsProps {
@@ -28,7 +28,8 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
   showBorder = true,
   previousDisabled = false,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === "ar";
 
   const defaultPreviousText = previousText || t("form.previous");
 
@@ -50,7 +51,9 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
       {onPrevious && (
         <Button
           variant="outlined"
-          startIcon={<ArrowBack />}
+          {...(isRtl
+            ? { startIcon: <ArrowForward /> }
+            : { startIcon: <ArrowBack /> })}
           onClick={onPrevious}
           disabled={previousDisabled || isLoading}
           size="medium"
@@ -81,9 +84,21 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
         variant="contained"
         disabled={isNextDisabled || isLoading}
         onClick={nextType === "button" ? onNext : undefined}
-        startIcon={
-          isLoading ? <CircularProgress size={20} color="inherit" /> : nextIcon
-        }
+        {...(isRtl
+          ? {
+              startIcon: isLoading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                nextIcon
+              ),
+            }
+          : {
+              endIcon: isLoading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                nextIcon
+              ),
+            })}
         size="medium"
         sx={{
           minWidth: { xs: "100%", sm: nextText.length > 8 ? 180 : 140 },

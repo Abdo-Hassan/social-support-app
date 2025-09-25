@@ -64,5 +64,3 @@ declare global {
     };
   }
 }
-
-// Make testing helpers available globally in development

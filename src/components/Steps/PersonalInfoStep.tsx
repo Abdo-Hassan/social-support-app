@@ -60,7 +60,7 @@ export const PersonalInfoStep: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", px: { xs: 2, md: 3 }, py: 0 }}>
+    <Box sx={{ maxWidth: 800, mx: "auto", px: { xs: 2, md: 0 }, py: 0 }}>
       <Card
         elevation={0}
         sx={{

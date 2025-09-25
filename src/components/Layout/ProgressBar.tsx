@@ -158,7 +158,7 @@ export const ProgressBar: React.FC = () => {
                           ? "primary.main"
                           : "text.secondary",
                       textAlign: "center",
-                      maxWidth: 140,
+                      maxWidth: 160,
                       lineHeight: 1.3,
                     }}>
                     {step.label}

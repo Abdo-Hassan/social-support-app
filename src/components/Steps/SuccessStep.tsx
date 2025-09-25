@@ -22,26 +22,25 @@ export const SuccessStep: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const { resetApplication } = useApplication();
+  const { resetApplication, referenceNumber } = useApplication();
 
-  // Generate mock reference number
-  const referenceNumber = `SSP-${
-    Math.floor(Math.random() * 90000000) + 10000000
-  }`;
+  // Fallback reference number (shouldn't be needed if API works correctly)
+  const displayReferenceNumber =
+    referenceNumber || `SSP-${Math.floor(Math.random() * 90000000) + 10000000}`;
 
   const handleNewApplication = () => {
     resetApplication();
   };
 
   const handleCopyReference = () => {
-    navigator.clipboard.writeText(referenceNumber);
+    navigator.clipboard.writeText(displayReferenceNumber);
     // You could add a toast notification here
   };
 
   const nextSteps = [
-    "Your application will be reviewed within 5-7 business days",
-    "You may be contacted for additional information",
-    "You will be notified of the decision by email and mail",
+    t("success:processing"),
+    t("success:contact"),
+    t("success:decision"),
   ];
 
   return (
@@ -73,7 +72,7 @@ export const SuccessStep: React.FC = () => {
             mb: 2,
             fontSize: { xs: "1.75rem", md: "2rem" },
           }}>
-          Application Submitted Successfully
+          {t("success:title")}
         </Typography>
 
         {/* Subtitle */}
@@ -81,7 +80,7 @@ export const SuccessStep: React.FC = () => {
           variant="body1"
           color="text.secondary"
           sx={{ mb: 4, lineHeight: 1.6 }}>
-          Thank you for your application
+          {t("success:subtitle")}
         </Typography>
       </Box>
 
@@ -93,7 +92,7 @@ export const SuccessStep: React.FC = () => {
               variant="subtitle2"
               color="text.secondary"
               sx={{ mb: 2 }}>
-              Reference Number
+              {t("success:referenceNumber")}
             </Typography>
             <Box
               sx={{
@@ -113,7 +112,7 @@ export const SuccessStep: React.FC = () => {
                   color: "primary.main",
                   fontFamily: "monospace",
                 }}>
-                SSP-{referenceNumber}
+                {displayReferenceNumber}
               </Typography>
               <IconButton
                 onClick={handleCopyReference}
@@ -131,8 +130,7 @@ export const SuccessStep: React.FC = () => {
             variant="body1"
             color="text.secondary"
             sx={{ mb: 4, lineHeight: 1.6 }}>
-            Your application has been received and is being processed. You will
-            receive an email confirmation shortly.
+            {t("success:message")}
           </Typography>
 
           {/* What happens next */}
@@ -144,7 +142,7 @@ export const SuccessStep: React.FC = () => {
                 color: "text.primary",
                 mb: 3,
               }}>
-              What happens next?
+              {t("success:nextSteps")}
             </Typography>
 
             <Stack spacing={2}>
@@ -193,7 +191,7 @@ export const SuccessStep: React.FC = () => {
             py: 1.5,
             fontWeight: 600,
           }}>
-          Submit New Application
+          {t("success:newApplication")}
         </Button>
       </Box>
     </Box>

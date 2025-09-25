@@ -4,11 +4,11 @@ import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { enUS, ar } from "date-fns/locale";
-import { ApplicationProvider } from "./contexts/ApplicationContext";
+import { ApplicationProvider } from "./contexts/ApplicationProvider";
 import { Header } from "./components/Layout/Header";
 import { ProgressBar } from "./components/Layout/ProgressBar";
 import { createAppTheme } from "./theme";
-import "./i18n/config";
+import "./i18n/i18n";
 import { useApplication } from "./hooks/use-application";
 import { PersonalInfoStep } from "@/components/Steps/PersonalInfoStep";
 import { FamilyFinancialStep } from "@/components/Steps/FamilyFinancialStep";
@@ -65,10 +65,35 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
-    // Set document direction and language
-    document.documentElement.setAttribute("dir", isRtl ? "rtl" : "ltr");
-    document.documentElement.setAttribute("lang", i18n.language);
+    // Set document direction and language attributes
+    const dir = isRtl ? "rtl" : "ltr";
+    const lang = i18n.language;
+
+    document.documentElement.setAttribute("dir", dir);
+    document.documentElement.setAttribute("lang", lang);
+
+    // Also set the dir attribute on the body for better CSS support
+    document.body.setAttribute("dir", dir);
+
+    if (process.env.NODE_ENV === "development") {
+      console.log(`Document attributes updated: dir=${dir}, lang=${lang}`);
+    }
   }, [i18n.language, isRtl]);
+
+  // Ensure language is loaded on mount
+  useEffect(() => {
+    const storedLang = localStorage.getItem("i18nextLng");
+    if (
+      storedLang &&
+      ["en", "ar"].includes(storedLang) &&
+      storedLang !== i18n.language
+    ) {
+      if (process.env.NODE_ENV === "development") {
+        console.log(`Loading stored language preference: ${storedLang}`);
+      }
+      i18n.changeLanguage(storedLang);
+    }
+  }, [i18n]);
 
   return (
     <ThemeProvider theme={theme}>

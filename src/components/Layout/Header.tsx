@@ -16,15 +16,13 @@ export const Header: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const toggleLanguage = () => {
+  const toggleLanguage = async () => {
     const currentLang = i18n.language;
     const newLang = currentLang === "en" ? "ar" : "en";
-    i18n.changeLanguage(newLang);
-    document.documentElement.setAttribute(
-      "dir",
-      newLang === "ar" ? "rtl" : "ltr"
-    );
-    document.documentElement.setAttribute("lang", newLang);
+
+    // Change language - this will automatically save to localStorage
+    // thanks to i18next-browser-languagedetector configuration
+    await i18n.changeLanguage(newLang);
   };
 
   return (
@@ -63,7 +61,7 @@ export const Header: React.FC = () => {
                   lineHeight: 1.2,
                   fontSize: { xs: "1.1rem", md: "1.25rem" },
                 }}>
-                Social Support Portal
+                {t("navigation.appTitle")}
               </Typography>
               <Typography
                 variant="body2"
@@ -73,7 +71,7 @@ export const Header: React.FC = () => {
                   fontSize: "0.8rem",
                   mt: 0.25,
                 }}>
-                Government Financial Assistance Application
+                {t("navigation.appSubtitle")}
               </Typography>
             </Box>
           </Box>
@@ -99,7 +97,7 @@ export const Header: React.FC = () => {
                   color: "primary.main",
                 },
               }}>
-              {i18n.language === "en" ? "العربية" : "English"}
+              {t("navigation.language")}
             </Button>
           </Box>
         </Toolbar>

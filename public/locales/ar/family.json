@@ -1,0 +1,31 @@
+{
+  "title": "معلومات الأسرة والمالية",
+  "subtitle": "أخبرنا عن وضع أسرتك ووضعك المالي",
+  "maritalStatus": "الحالة الاجتماعية",
+  "dependents": "عدد الأفراد المعالين",
+  "employmentStatus": "حالة التوظيف",
+  "monthlyIncome": "الدخل الشهري",
+  "housingStatus": "وضع السكن",
+  "maritalOptions": {
+    "single": "أعزب",
+    "married": "متزوج",
+    "divorced": "مطلق",
+    "widowed": "أرمل",
+    "separated": "منفصل"
+  },
+  "employmentOptions": {
+    "employed": "موظف بدوام كامل",
+    "partTime": "موظف بدوام جزئي",
+    "unemployed": "عاطل عن العمل",
+    "retired": "متقاعد",
+    "student": "طالب",
+    "disabled": "غير قادر على العمل بسبب الإعاقة"
+  },
+  "housingOptions": {
+    "own": "منزل مملوك",
+    "rent": "إيجار",
+    "family": "العيش مع الأسرة",
+    "homeless": "بلا مأوى",
+    "temporary": "سكن مؤقت"
+  }
+}

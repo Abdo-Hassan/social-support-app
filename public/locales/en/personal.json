@@ -1,0 +1,30 @@
+{
+  "title": "Personal Information",
+  "subtitle": "Please provide your basic personal details",
+  "name": "Full Name",
+  "namePlaceholder": "Enter your full legal name",
+  "nameHelper": "Enter your name as it appears on official documents",
+  "nationalId": "National ID",
+  "nationalIdPlaceholder": "123456789",
+  "nationalIdHelper": "Enter your government-issued National ID number",
+  "dateOfBirth": "Date of Birth",
+  "dateOfBirthHelper": "You must be 18 years or older to apply",
+  "gender": "Gender",
+  "address": "Street Address",
+  "addressPlaceholder": "Street address, apartment, suite, etc.",
+  "city": "City",
+  "state": "State/Province",
+  "country": "Country",
+  "phone": "Phone Number",
+  "phonePlaceholder": "+1 234 567 8900",
+  "phoneHelper": "Include country code if international",
+  "email": "Email Address",
+  "emailPlaceholder": "example@email.com",
+  "emailHelper": "We'll use this to contact you about your application",
+  "genderOptions": {
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "prefer-not-to-say": "Prefer not to say"
+  }
+}

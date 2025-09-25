@@ -1,0 +1,39 @@
+import axios from "axios";
+
+// Create axios instance with base configuration
+const api = axios.create({
+  baseURL: "/api",
+  timeout: 10000, // 10 seconds timeout
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Request interceptor
+api.interceptors.request.use(
+  (config) => {
+    // You can add auth tokens, logging, etc. here
+    console.log(
+      `Making ${config.method?.toUpperCase()} request to ${config.url}`
+    );
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor
+api.interceptors.response.use(
+  (response) => {
+    // You can add global response handling here
+    return response;
+  },
+  (error) => {
+    // Global error handling
+    console.error("API Error:", error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
+
+export default api;

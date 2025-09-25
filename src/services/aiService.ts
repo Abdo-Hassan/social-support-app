@@ -1,5 +1,5 @@
 import { AIAssistanceRequest, AIAssistanceResponse } from "../types/form";
-import i18n from "../i18n/config";
+import i18n from "@/i18n/i18n";
 
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;

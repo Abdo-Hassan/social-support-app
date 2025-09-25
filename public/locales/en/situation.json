@@ -1,0 +1,24 @@
+{
+  "title": "Describe Your Situation",
+  "subtitle": "Help us understand your circumstances with detailed descriptions",
+  "financialSituation": "Current Financial Situation",
+  "employmentCircumstances": "Employment Circumstances",
+  "reasonForApplying": "Reason for Applying",
+  "helpMeWrite": "Help Me Write",
+  "aiAssistance": "AI Writing Assistant",
+  "financialPlaceholder": "Describe your current financial situation, including any debts, expenses, or financial challenges you're facing...",
+  "employmentPlaceholder": "Explain your current employment situation, including any barriers to employment or recent job loss...",
+  "reasonPlaceholder": "Tell us why you're applying for this assistance and how it will help your situation...",
+  "aiModal": {
+    "title": "AI Writing Assistant",
+    "subtitle": "Our AI will help you write a clear and effective description",
+    "generating": "Generating your personalized text...",
+    "suggestion": "AI Suggestion",
+    "accept": "Accept",
+    "edit": "Accept & Edit",
+    "discard": "Discard",
+    "retry": "Try Again",
+    "error": "Failed to generate text. Please try again.",
+    "timeout": "Request timed out. Please try again."
+  }
+}

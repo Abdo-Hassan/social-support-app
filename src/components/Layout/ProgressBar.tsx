@@ -10,17 +10,21 @@ import {
 import { Check } from "@mui/icons-material";
 import { useApplication } from "../../hooks/use-application";
 
-const steps = [
-  { key: "personal", label: "Personal Information" },
-  { key: "family", label: "Family & Financial" },
-  { key: "situation", label: "Situation Descriptions" },
-] as const;
+const useSteps = () => {
+  const { t } = useTranslation();
+  return [
+    { key: "personal", label: t("steps.personal") },
+    { key: "family", label: t("steps.family") },
+    { key: "situation", label: t("steps.situation") },
+  ] as const;
+};
 
 export const ProgressBar: React.FC = () => {
   const { t } = useTranslation();
   const { currentStep } = useApplication();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const steps = useSteps();
 
   const currentStepIndex = steps.findIndex((step) => step.key === currentStep);
   const activeStep = currentStepIndex >= 0 ? currentStepIndex : 0;

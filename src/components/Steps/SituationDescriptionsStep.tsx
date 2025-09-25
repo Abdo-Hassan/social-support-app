@@ -20,6 +20,7 @@ import {
   AutoAwesome as AIIcon,
   Info as InfoIcon,
   Send as SendIcon,
+  Error as ErrorIcon,
 } from "@mui/icons-material";
 import {
   situationDescriptionsSchema,
@@ -29,6 +30,7 @@ import {
 import { useApplication } from "../../hooks/use-application";
 import { AIAssistanceModal } from "../AI/AIAssistanceModal";
 import { NavigationButtons } from "../UI/NavigationButtons";
+import api from "../../services/api";
 
 export const SituationDescriptionsStep: React.FC = () => {
   const { t } = useTranslation();
@@ -40,7 +42,9 @@ export const SituationDescriptionsStep: React.FC = () => {
     setCurrentStep,
     isSubmitting,
     setSubmitting,
+    setReferenceNumber,
     familyFinancial,
+    personalInfo,
   } = useApplication();
 
   const [aiModalOpen, setAiModalOpen] = useState(false);
@@ -49,6 +53,7 @@ export const SituationDescriptionsStep: React.FC = () => {
   const [activeField, setActiveField] = useState<
     keyof SituationDescriptions | null
   >(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     control,
@@ -119,17 +124,39 @@ export const SituationDescriptionsStep: React.FC = () => {
 
   const onSubmit = async (data: SituationDescriptions) => {
     setSubmitting(true);
+    setSubmitError(null);
     updateSituationDescriptions(data);
 
-    // Simulate API submission
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Prepare complete form data for submission
+    const formData = {
+      personalInfo,
+      familyFinancial,
+      situationDescriptions: data,
+    };
 
-      // Navigate to success page
-      setCurrentStep("success");
+    try {
+      // Submit application via API
+      const response = await api.post("/application/submit", formData);
+
+      if (response.data.code === 200) {
+        // Success - set reference number and navigate to success page
+        setReferenceNumber(response.data.referenceNumber);
+        setCurrentStep("success");
+      } else {
+        // Unexpected success response format
+        throw new Error(response.data.message || "Unexpected response format");
+      }
     } catch (error) {
       console.error("Submission error:", error);
-      // Handle error - show toast or error message
+
+      // Handle different types of errors
+      if (error.response?.data?.message) {
+        setSubmitError(error.response.data.message);
+      } else if (error.message) {
+        setSubmitError(error.message);
+      } else {
+        setSubmitError("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -270,6 +297,29 @@ export const SituationDescriptionsStep: React.FC = () => {
                 edit, or discard the suggestions as needed.
               </Typography>
             </Alert>
+
+            {/* Error Alert */}
+            {submitError && (
+              <Alert
+                severity="error"
+                icon={<ErrorIcon />}
+                sx={{ mb: 4 }}
+                action={
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={() => setSubmitError(null)}>
+                    Dismiss
+                  </Button>
+                }>
+                <Typography
+                  variant="subtitle2"
+                  sx={{ fontWeight: 600, mb: 0.5 }}>
+                  Submission Failed
+                </Typography>
+                <Typography variant="body2">{submitError}</Typography>
+              </Alert>
+            )}
 
             {/* Navigation */}
             <NavigationButtons

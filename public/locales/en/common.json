@@ -1,0 +1,40 @@
+{
+  "navigation": {
+    "home": "Home",
+    "application": "Application",
+    "help": "Help",
+    "language": "العربية",
+    "appTitle": "Social Support Portal",
+    "appSubtitle": "Government Financial Assistance Application"
+  },
+  "steps": {
+    "personal": "Personal Information",
+    "family": "Family & Financial",
+    "situation": "Situation Descriptions",
+    "review": "Review & Submit",
+    "success": "Application Submitted"
+  },
+  "form": {
+    "required": "Required",
+    "optional": "Optional",
+    "next": "Next Step",
+    "previous": "Previous",
+    "submit": "Submit Application",
+    "save": "Save Progress",
+    "loading": "Processing...",
+    "saved": "Progress saved",
+    "error": "Please correct the errors below"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "phone": "Please enter a valid phone number",
+    "nationalId": "Please enter a valid National ID",
+    "pastDate": "Date must be in the past",
+    "adult": "You must be 18 or older",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must be no more than {{max}} characters",
+    "numeric": "Please enter a valid number",
+    "positive": "Must be a positive number"
+  }
+}

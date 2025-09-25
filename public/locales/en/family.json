@@ -1,0 +1,31 @@
+{
+  "title": "Family & Financial Information",
+  "subtitle": "Tell us about your family situation and finances",
+  "maritalStatus": "Marital Status",
+  "dependents": "Number of Dependents",
+  "employmentStatus": "Employment Status",
+  "monthlyIncome": "Monthly Income",
+  "housingStatus": "Housing Status",
+  "maritalOptions": {
+    "single": "Single",
+    "married": "Married",
+    "divorced": "Divorced",
+    "widowed": "Widowed",
+    "separated": "Separated"
+  },
+  "employmentOptions": {
+    "employed": "Employed Full-time",
+    "partTime": "Employed Part-time",
+    "unemployed": "Unemployed",
+    "retired": "Retired",
+    "student": "Student",
+    "disabled": "Unable to work due to disability"
+  },
+  "housingOptions": {
+    "own": "Own Home",
+    "rent": "Renting",
+    "family": "Living with Family",
+    "homeless": "Homeless",
+    "temporary": "Temporary Housing"
+  }
+}

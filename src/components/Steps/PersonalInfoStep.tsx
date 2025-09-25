@@ -50,12 +50,12 @@ export const PersonalInfoStep: React.FC = () => {
   };
 
   const genderOptions = [
-    { value: "male", label: t("personal.genderOptions.male") },
-    { value: "female", label: t("personal.genderOptions.female") },
-    { value: "other", label: t("personal.genderOptions.other") },
+    { value: "male", label: t("personal:genderOptions.male") },
+    { value: "female", label: t("personal:genderOptions.female") },
+    { value: "other", label: t("personal:genderOptions.other") },
     {
       value: "prefer-not-to-say",
-      label: t("personal.genderOptions.prefer-not-to-say"),
+      label: t("personal:genderOptions.prefer-not-to-say"),
     },
   ];
 
@@ -80,13 +80,13 @@ export const PersonalInfoStep: React.FC = () => {
                 mb: 1,
                 fontSize: { xs: "1.5rem", md: "1.5rem" },
               }}>
-              Personal Information
+              {t("personal:title")}
             </Typography>
             <Typography
               variant="body1"
               color="text.secondary"
               sx={{ fontSize: "0.95rem" }}>
-              Please provide your basic personal details
+              {t("personal:subtitle")}
             </Typography>
           </Box>
 
@@ -100,9 +100,9 @@ export const PersonalInfoStep: React.FC = () => {
                   <FormField
                     name="name"
                     control={control}
-                    label="Full Name"
-                    placeholder="Enter your full legal name"
-                    helperText="Enter your name as it appears on official documents"
+                    label={t("personal:name")}
+                    placeholder={t("personal:namePlaceholder")}
+                    helperText={t("personal:nameHelper")}
                     error={errors.name}
                     required
                   />
@@ -113,9 +113,9 @@ export const PersonalInfoStep: React.FC = () => {
                   <FormField
                     name="nationalId"
                     control={control}
-                    label="National ID"
-                    placeholder="123456789"
-                    helperText="Enter your government-issued National ID number"
+                    label={t("personal:nationalId")}
+                    placeholder={t("personal:nationalIdPlaceholder")}
+                    helperText={t("personal:nationalIdHelper")}
                     error={errors.nationalId}
                     required
                   />
@@ -126,8 +126,8 @@ export const PersonalInfoStep: React.FC = () => {
                   <DateField
                     name="dateOfBirth"
                     control={control}
-                    label="Date of Birth"
-                    helperText="You must be 18 years or older to apply"
+                    label={t("personal:dateOfBirth")}
+                    helperText={t("personal:dateOfBirthHelper")}
                     error={errors.dateOfBirth}
                     format={isArabic ? "dd/MM/yyyy" : "MM/dd/yyyy"}
                     required
@@ -139,7 +139,7 @@ export const PersonalInfoStep: React.FC = () => {
                   <FormField
                     name="gender"
                     control={control}
-                    label="Gender"
+                    label={t("personal:gender")}
                     type="select"
                     options={genderOptions}
                     error={errors.gender}
@@ -152,8 +152,8 @@ export const PersonalInfoStep: React.FC = () => {
                   <FormField
                     name="address"
                     control={control}
-                    label="Street Address"
-                    placeholder="Street address, apartment, suite, etc."
+                    label={t("personal:address")}
+                    placeholder={t("personal:addressPlaceholder")}
                     error={errors.address}
                     required
                   />
@@ -164,7 +164,7 @@ export const PersonalInfoStep: React.FC = () => {
                   <FormField
                     name="city"
                     control={control}
-                    label="City"
+                    label={t("personal:city")}
                     error={errors.city}
                     required
                   />
@@ -174,7 +174,7 @@ export const PersonalInfoStep: React.FC = () => {
                   <FormField
                     name="state"
                     control={control}
-                    label="State/Province"
+                    label={t("personal:state")}
                     error={errors.state}
                     required
                   />
@@ -184,7 +184,7 @@ export const PersonalInfoStep: React.FC = () => {
                   <FormField
                     name="country"
                     control={control}
-                    label="Country"
+                    label={t("personal:country")}
                     error={errors.country}
                     required
                   />
@@ -195,9 +195,9 @@ export const PersonalInfoStep: React.FC = () => {
                   <FormField
                     name="phone"
                     control={control}
-                    label="Phone Number"
-                    placeholder="+1 234 567 8900"
-                    helperText="Include country code if international"
+                    label={t("personal:phone")}
+                    placeholder={t("personal:phonePlaceholder")}
+                    helperText={t("personal:phoneHelper")}
                     error={errors.phone}
                     required
                   />
@@ -207,10 +207,10 @@ export const PersonalInfoStep: React.FC = () => {
                   <FormField
                     name="email"
                     control={control}
-                    label="Email Address"
+                    label={t("personal:email")}
                     type="email"
-                    placeholder="example@email.com"
-                    helperText="We'll use this to contact you about your application"
+                    placeholder={t("personal:emailPlaceholder")}
+                    helperText={t("personal:emailHelper")}
                     error={errors.email}
                     required
                   />

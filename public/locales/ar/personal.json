@@ -1,0 +1,30 @@
+{
+  "title": "المعلومات الشخصية",
+  "subtitle": "يرجى تقديم تفاصيلك الشخصية الأساسية",
+  "name": "الاسم الكامل",
+  "namePlaceholder": "أدخل اسمك الكامل القانوني",
+  "nameHelper": "أدخل اسمك كما يظهر في الوثائق الرسمية",
+  "nationalId": "رقم الهوية الوطنية",
+  "nationalIdPlaceholder": "123456789",
+  "nationalIdHelper": "أدخل رقم الهوية الوطنية الصادر عن الحكومة",
+  "dateOfBirth": "تاريخ الميلاد",
+  "dateOfBirthHelper": "يجب أن تكون 18 سنة أو أكبر للتقديم",
+  "gender": "الجنس",
+  "address": "عنوان السكن",
+  "addressPlaceholder": "عنوان الشارع، الشقة، الجناح، إلخ.",
+  "city": "المدينة",
+  "state": "المنطقة/المحافظة",
+  "country": "البلد",
+  "phone": "رقم الهاتف",
+  "phonePlaceholder": "+966 50 123 4567",
+  "phoneHelper": "اشمل رمز البلد إذا كان دولياً",
+  "email": "البريد الإلكتروني",
+  "emailPlaceholder": "example@email.com",
+  "emailHelper": "سنستخدم هذا للتواصل معك حول طلبك",
+  "genderOptions": {
+    "male": "ذكر",
+    "female": "أنثى",
+    "other": "آخر",
+    "prefer-not-to-say": "أفضل عدم الإفصاح"
+  }
+}

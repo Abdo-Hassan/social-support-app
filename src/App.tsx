@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -7,6 +7,7 @@ import { enUS, ar } from "date-fns/locale";
 import { ApplicationProvider } from "./contexts/ApplicationProvider";
 import { Header } from "./components/Layout/Header";
 import { ProgressBar } from "./components/Layout/ProgressBar";
+import { LoadingSpinner } from "./components/UI/LoadingSpinner";
 import { createAppTheme } from "./theme";
 import "./i18n/i18n";
 import { useApplication } from "./hooks/use-application";
@@ -101,9 +102,12 @@ const App: React.FC = () => {
         dateAdapter={AdapterDateFns}
         adapterLocale={dateLocale}>
         <CssBaseline />
-        <ApplicationProvider>
-          <AppContent />
-        </ApplicationProvider>
+        <Suspense
+          fallback={<LoadingSpinner message="Loading application..." />}>
+          <ApplicationProvider>
+            <AppContent />
+          </ApplicationProvider>
+        </Suspense>
       </LocalizationProvider>
     </ThemeProvider>
   );

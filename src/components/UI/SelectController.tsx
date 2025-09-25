@@ -37,7 +37,7 @@ export const SelectController = <
   options,
   error,
   helperText,
-  placeholder = "Select an option",
+  placeholder,
   required = false,
   fullWidth = true,
 }: SelectControllerProps<T>) => {
@@ -65,7 +65,7 @@ export const SelectController = <
           fullWidth={fullWidth}
           variant="outlined">
           <MenuItem value="">
-            <em>{placeholder}</em>
+            <em>{placeholder || t("form.selectOption")}</em>
           </MenuItem>
           {options.map((option) => (
             <MenuItem key={option.value} value={option.value}>

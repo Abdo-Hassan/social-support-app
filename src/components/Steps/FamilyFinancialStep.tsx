@@ -55,28 +55,28 @@ export const FamilyFinancialStep: React.FC = () => {
   };
 
   const maritalOptions = [
-    { value: "single", label: t("family.maritalOptions.single") },
-    { value: "married", label: t("family.maritalOptions.married") },
-    { value: "divorced", label: t("family.maritalOptions.divorced") },
-    { value: "widowed", label: t("family.maritalOptions.widowed") },
-    { value: "separated", label: t("family.maritalOptions.separated") },
+    { value: "single", label: t("family:maritalOptions.single") },
+    { value: "married", label: t("family:maritalOptions.married") },
+    { value: "divorced", label: t("family:maritalOptions.divorced") },
+    { value: "widowed", label: t("family:maritalOptions.widowed") },
+    { value: "separated", label: t("family:maritalOptions.separated") },
   ];
 
   const employmentOptions = [
-    { value: "employed", label: t("family.employmentOptions.employed") },
-    { value: "partTime", label: t("family.employmentOptions.partTime") },
-    { value: "unemployed", label: t("family.employmentOptions.unemployed") },
-    { value: "retired", label: t("family.employmentOptions.retired") },
-    { value: "student", label: t("family.employmentOptions.student") },
-    { value: "disabled", label: t("family.employmentOptions.disabled") },
+    { value: "employed", label: t("family:employmentOptions.employed") },
+    { value: "partTime", label: t("family:employmentOptions.partTime") },
+    { value: "unemployed", label: t("family:employmentOptions.unemployed") },
+    { value: "retired", label: t("family:employmentOptions.retired") },
+    { value: "student", label: t("family:employmentOptions.student") },
+    { value: "disabled", label: t("family:employmentOptions.disabled") },
   ];
 
   const housingOptions = [
-    { value: "own", label: t("family.housingOptions.own") },
-    { value: "rent", label: t("family.housingOptions.rent") },
-    { value: "family", label: t("family.housingOptions.family") },
-    { value: "homeless", label: t("family.housingOptions.homeless") },
-    { value: "temporary", label: t("family.housingOptions.temporary") },
+    { value: "own", label: t("family:housingOptions.own") },
+    { value: "rent", label: t("family:housingOptions.rent") },
+    { value: "family", label: t("family:housingOptions.family") },
+    { value: "homeless", label: t("family:housingOptions.homeless") },
+    { value: "temporary", label: t("family:housingOptions.temporary") },
   ];
 
   return (
@@ -93,10 +93,10 @@ export const FamilyFinancialStep: React.FC = () => {
                 mb: 1,
                 fontSize: { xs: "1.25rem", md: "1.5rem" },
               }}>
-              {t("family.title")}
+              {t("family:title")}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              {t("family.subtitle")}
+              {t("family:subtitle")}
             </Typography>
           </Box>
 
@@ -107,10 +107,9 @@ export const FamilyFinancialStep: React.FC = () => {
                 <SelectController<FamilyFinancial>
                   name="maritalStatus"
                   control={control}
-                  label={t("family.maritalStatus")}
+                  label={t("family:maritalStatus")}
                   options={maritalOptions}
                   error={errors.maritalStatus}
-                  placeholder="Select marital status"
                   required
                 />
               </Grid>
@@ -120,11 +119,11 @@ export const FamilyFinancialStep: React.FC = () => {
                 <InputController<FamilyFinancial>
                   name="dependents"
                   control={control}
-                  label={t("family.dependents")}
+                  label={t("family:dependents")}
                   type="number"
                   placeholder="0"
                   error={errors.dependents}
-                  helperText="Include children and other dependents"
+                  helperText={t("family:helperText.dependents")}
                   inputProps={{ min: 0, max: 20 }}
                   required
                 />
@@ -135,10 +134,9 @@ export const FamilyFinancialStep: React.FC = () => {
                 <SelectController<FamilyFinancial>
                   name="employmentStatus"
                   control={control}
-                  label={t("family.employmentStatus")}
+                  label={t("family:employmentStatus")}
                   options={employmentOptions}
                   error={errors.employmentStatus}
-                  placeholder="Select employment status"
                   required
                 />
               </Grid>
@@ -148,11 +146,11 @@ export const FamilyFinancialStep: React.FC = () => {
                 <InputController<FamilyFinancial>
                   name="monthlyIncome"
                   control={control}
-                  label={t("family.monthlyIncome")}
+                  label={t("family:monthlyIncome")}
                   type="number"
                   placeholder="0"
                   error={errors.monthlyIncome}
-                  helperText="Total household monthly income before taxes"
+                  helperText={t("family:helperText.monthlyIncome")}
                   startAdornment="$"
                   inputProps={{ min: 0, step: 1 }}
                   required
@@ -164,11 +162,10 @@ export const FamilyFinancialStep: React.FC = () => {
                 <SelectController<FamilyFinancial>
                   name="housingStatus"
                   control={control}
-                  label={t("family.housingStatus")}
+                  label={t("family:housingStatus")}
                   options={housingOptions}
                   error={errors.housingStatus}
-                  helperText="Your current living situation"
-                  placeholder="Select housing status"
+                  helperText={t("family:helperText.housingStatus")}
                   required
                 />
               </Grid>

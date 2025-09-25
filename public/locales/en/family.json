@@ -27,5 +27,10 @@
     "family": "Living with Family",
     "homeless": "Homeless",
     "temporary": "Temporary Housing"
+  },
+  "helperText": {
+    "dependents": "Include children and other dependents",
+    "monthlyIncome": "Total household monthly income before taxes",
+    "housingStatus": "Your current living situation"
   }
 }

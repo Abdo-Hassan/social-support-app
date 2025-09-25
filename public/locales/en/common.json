@@ -23,7 +23,8 @@
     "save": "Save Progress",
     "loading": "Processing...",
     "saved": "Progress saved",
-    "error": "Please correct the errors below"
+    "error": "Please correct the errors below",
+    "selectOption": "Select an option"
   },
   "validation": {
     "required": "This field is required",

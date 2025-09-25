@@ -144,7 +144,7 @@ export const SituationDescriptionsStep: React.FC = () => {
         setCurrentStep("success");
       } else {
         // Unexpected success response format
-        throw new Error(response.data.message || "Unexpected response format");
+        throw new Error(response.data.message || t("situation:errors.unexpectedResponse"));
       }
     } catch (error) {
       console.error("Submission error:", error);
@@ -155,7 +155,7 @@ export const SituationDescriptionsStep: React.FC = () => {
       } else if (error.message) {
         setSubmitError(error.message);
       } else {
-        setSubmitError("An unexpected error occurred. Please try again.");
+        setSubmitError(t("situation:errors.unexpectedError"));
       }
     } finally {
       setSubmitting(false);
@@ -169,18 +169,18 @@ export const SituationDescriptionsStep: React.FC = () => {
   const fieldConfigs = [
     {
       name: "financialSituation" as const,
-      label: t("situation.financialSituation"),
-      placeholder: t("situation.financialPlaceholder"),
+      label: t("situation:financialSituation"),
+      placeholder: t("situation:financialPlaceholder"),
     },
     {
       name: "employmentCircumstances" as const,
-      label: t("situation.employmentCircumstances"),
-      placeholder: t("situation.employmentPlaceholder"),
+      label: t("situation:employmentCircumstances"),
+      placeholder: t("situation:employmentPlaceholder"),
     },
     {
       name: "reasonForApplying" as const,
-      label: t("situation.reasonForApplying"),
-      placeholder: t("situation.reasonPlaceholder"),
+      label: t("situation:reasonForApplying"),
+      placeholder: t("situation:reasonPlaceholder"),
     },
   ];
 
@@ -198,10 +198,10 @@ export const SituationDescriptionsStep: React.FC = () => {
                 mb: 1,
                 fontSize: { xs: "1.5rem", md: "2rem" },
               }}>
-              {t("situation.title")}
+              {t("situation:title")}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              {t("situation.subtitle")}
+              {t("situation:subtitle")}
             </Typography>
           </Box>
 
@@ -243,7 +243,7 @@ export const SituationDescriptionsStep: React.FC = () => {
                       },
                       alignSelf: { xs: "flex-end", sm: "center" },
                     }}>
-                    {t("situation.helpMeWrite")}
+                    {t("situation:helpMeWrite")}
                   </Button>
                 </Box>
 
@@ -261,7 +261,7 @@ export const SituationDescriptionsStep: React.FC = () => {
                       helperText={
                         errors[config.name]?.message
                           ? t(errors[config.name]?.message as string)
-                          : 'Minimum 50 characters. Use the "Help Me Write" button for AI assistance.'
+                          : t("situation:helperText.minCharacters")
                       }
                       fullWidth
                       variant="outlined"
@@ -289,12 +289,10 @@ export const SituationDescriptionsStep: React.FC = () => {
                 },
               }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-                {t("situation.aiAssistance")}
+                {t("situation:aiAssistance")}
               </Typography>
               <Typography variant="body2">
-                Click "Help Me Write" next to any field to get AI-powered
-                suggestions tailored to your specific situation. You can accept,
-                edit, or discard the suggestions as needed.
+                {t("situation:helperText.aiDescription")}
               </Typography>
             </Alert>
 
@@ -309,13 +307,13 @@ export const SituationDescriptionsStep: React.FC = () => {
                     color="inherit"
                     size="small"
                     onClick={() => setSubmitError(null)}>
-                    Dismiss
+                    {t("situation:helperText.dismiss")}
                   </Button>
                 }>
                 <Typography
                   variant="subtitle2"
                   sx={{ fontWeight: 600, mb: 0.5 }}>
-                  Submission Failed
+                  {t("situation:helperText.submissionFailed")}
                 </Typography>
                 <Typography variant="body2">{submitError}</Typography>
               </Alert>

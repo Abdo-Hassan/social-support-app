@@ -20,5 +20,15 @@
     "retry": "Try Again",
     "error": "Failed to generate text. Please try again.",
     "timeout": "Request timed out. Please try again."
+  },
+  "helperText": {
+    "minCharacters": "Minimum 50 characters. Use the \"Help Me Write\" button for AI assistance.",
+    "aiDescription": "Click \"Help Me Write\" next to any field to get AI-powered suggestions tailored to your specific situation. You can accept, edit, or discard the suggestions as needed.",
+    "submissionFailed": "Submission Failed",
+    "dismiss": "Dismiss"
+  },
+  "errors": {
+    "unexpectedError": "An unexpected error occurred. Please try again.",
+    "unexpectedResponse": "Unexpected response format"
   }
 }

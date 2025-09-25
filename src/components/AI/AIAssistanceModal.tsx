@@ -58,11 +58,11 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
       if (response.success && response.suggestion) {
         setSuggestion(response.suggestion);
       } else {
-        setError(response.error || t("situation.aiModal.error"));
+        setError(response.error || t("situation:aiModal.error"));
       }
     } catch (error) {
       console.error("AI assistance error:", error);
-      setError(t("situation.aiModal.error"));
+      setError(t("situation:aiModal.error"));
     } finally {
       setIsLoading(false);
     }
@@ -109,14 +109,14 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
         }}>
         <Box>
           <Typography variant="h6" component="h2" fontWeight={600}>
-            {t("situation.aiModal.title")}
+            {t("situation:aiModal.title")}
           </Typography>
           <Typography
             id="ai-modal-description"
             variant="body2"
             color="text.secondary"
             sx={{ mt: 0.5 }}>
-            {t("situation.aiModal.subtitle")}
+            {t("situation:aiModal.subtitle")}
           </Typography>
         </Box>
         <IconButton
@@ -137,7 +137,7 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
             py={8}>
             <CircularProgress size={32} sx={{ mb: 2 }} />
             <Typography color="text.secondary">
-              {t("situation.aiModal.generating")}
+              {t("situation:aiModal.generating")}
             </Typography>
           </Box>
         )}
@@ -148,7 +148,7 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
               {error}
             </Alert>
             <Button variant="contained" onClick={handleRetry}>
-              {t("situation.aiModal.retry")}
+              {t("situation:aiModal.retry")}
             </Button>
           </Box>
         )}
@@ -156,7 +156,7 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
         {suggestion && (
           <Box>
             <Typography variant="subtitle1" fontWeight={500} sx={{ mb: 2 }}>
-              {t("situation.aiModal.suggestion")}
+              {t("situation:aiModal.suggestion")}
             </Typography>
             <Paper
               variant="outlined"
@@ -183,13 +183,13 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
       {suggestion && (
         <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
           <Button variant="outlined" onClick={onClose}>
-            {t("situation.aiModal.discard")}
+            {t("situation:aiModal.discard")}
           </Button>
           <Button variant="outlined" onClick={handleEdit}>
-            {t("situation.aiModal.edit")}
+            {t("situation:aiModal.edit")}
           </Button>
           <Button variant="contained" onClick={handleAccept}>
-            {t("situation.aiModal.accept")}
+            {t("situation:aiModal.accept")}
           </Button>
         </DialogActions>
       )}

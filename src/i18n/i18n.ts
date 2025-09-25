@@ -11,7 +11,7 @@ i18n
     fallbackLng: "en",
     supportedLngs: ["en", "ar"],
     react: {
-      useSuspense: false,
+      useSuspense: true,
     },
     ns: ["common", "personal", "family", "situation", "success"],
     defaultNS: "common",

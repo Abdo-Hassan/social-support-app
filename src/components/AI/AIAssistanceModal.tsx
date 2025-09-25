@@ -36,6 +36,7 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [suggestion, setSuggestion] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Define generateAssistance first before using it in useEffect
   const generateAssistance = useCallback(async () => {
@@ -67,6 +68,51 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
     }
   }, [isOpen, suggestion, error, generateAssistance]);
 
+  // Handle keyboard events for accessibility
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      if (event.key === "Escape") {
+        onClose();
+      }
+
+      // Focus trap
+      if (event.key === "Tab") {
+        const modal = modalRef.current;
+        if (!modal) return;
+
+        const focusableElements = modal.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[
+          focusableElements.length - 1
+        ] as HTMLElement;
+
+        if (event.shiftKey) {
+          if (document.activeElement === firstElement) {
+            lastElement?.focus();
+            event.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            firstElement?.focus();
+            event.preventDefault();
+          }
+        }
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   const handleAccept = () => {
     onAccept(suggestion);
     onClose();
@@ -89,8 +135,10 @@ export const AIAssistanceModal: React.FC<AIAssistanceModalProps> = ({
       onClose={onClose}
       maxWidth="md"
       fullWidth
+      role="dialog"
       aria-labelledby="ai-modal-title"
-      aria-describedby="ai-modal-description">
+      aria-describedby="ai-modal-description"
+      ref={modalRef}>
       <DialogTitle
         id="ai-modal-title"
         sx={{

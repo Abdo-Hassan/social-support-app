@@ -30,7 +30,9 @@
     "applyNewRequest": "Apply New Request",
     "goToHome": "Go to Home",
     "copiedToClipboard": "Reference number copied to clipboard!",
-    "noApplicationFound": "No saved application result found."
+    "noApplicationFound": "No saved application result found.",
+    "copied": "Copied!",
+    "copyToClipboard": "Copy to clipboard"
   },
   "validation": {
     "required": "This field is required",

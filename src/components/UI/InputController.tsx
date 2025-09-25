@@ -44,6 +44,8 @@ export const InputController = <
 }: InputControllerProps<T>) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const fieldId = `input-${String(name)}`;
+  const errorId = `error-${String(name)}`;
 
   const InputProps: Record<string, unknown> = {};
 
@@ -66,6 +68,7 @@ export const InputController = <
       render={({ field }) => (
         <TextField
           {...field}
+          id={fieldId}
           type={type}
           label={
             <>
@@ -77,9 +80,19 @@ export const InputController = <
           }
           placeholder={placeholder}
           error={!!error}
-          helperText={error?.message ? t(error.message) : helperText}
+          helperText={
+            error?.message ? (
+              <span id={errorId} role="alert">
+                {t(error.message)}
+              </span>
+            ) : (
+              helperText || ""
+            )
+          }
           fullWidth={fullWidth}
           variant="outlined"
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           InputProps={
             Object.keys(InputProps).length > 0 ? InputProps : undefined
           }

@@ -12,6 +12,7 @@ import {
   IconButton,
   Stack,
   Alert,
+  Tooltip,
 } from "@mui/material";
 import {
   Check as CheckIcon,
@@ -144,16 +145,6 @@ export const SuccessStep: React.FC = () => {
 
   return (
     <Box sx={{ maxWidth: 700, mx: "auto", p: { xs: 2, md: 3 } }}>
-      {/* Copy Success Message */}
-      {copySuccess && (
-        <Alert severity="success" sx={{ mb: 3 }}>
-          {t(
-            "common:actions.copiedToClipboard",
-            "Reference number copied to clipboard!"
-          )}
-        </Alert>
-      )}
-
       <Box sx={{ textAlign: "center", mb: 4 }}>
         {/* Success Icon */}
         <Box
@@ -230,15 +221,25 @@ export const SuccessStep: React.FC = () => {
                 }}>
                 {displayReferenceNumber}
               </Typography>
-              <IconButton
-                onClick={handleCopyReference}
-                size="small"
-                sx={{
-                  color: "primary.main",
-                  "&:hover": { bgcolor: "primary.100" },
-                }}>
-                <CopyIcon fontSize="small" />
-              </IconButton>
+              <Tooltip
+                title={
+                  copySuccess
+                    ? t("common:actions.copied", "Copied!")
+                    : t("common:actions.copyToClipboard", "Copy to clipboard")
+                }
+                open={copySuccess ? true : undefined}
+                placement="top"
+                arrow>
+                <IconButton
+                  onClick={handleCopyReference}
+                  size="small"
+                  sx={{
+                    color: "primary.main",
+                    "&:hover": { bgcolor: "primary.100" },
+                  }}>
+                  <CopyIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
 

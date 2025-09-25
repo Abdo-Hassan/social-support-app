@@ -35,6 +35,7 @@ export const ApplicationPage: React.FC = () => {
       <ProgressBar />
       <Box
         component="main"
+        role="main"
         sx={{
           flex: 1,
           py: { xs: 2, md: 2 },

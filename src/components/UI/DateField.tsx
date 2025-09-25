@@ -23,6 +23,8 @@ export const DateField = <T = Record<string, unknown>,>({
   format = "MM/dd/yyyy",
 }: DateFieldProps<T>) => {
   const { t } = useTranslation();
+  const fieldId = `date-${String(name)}`;
+  const errorId = `error-${String(name)}`;
 
   return (
     <Controller
@@ -46,11 +48,20 @@ export const DateField = <T = Record<string, unknown>,>({
           format={format}
           slotProps={{
             textField: {
+              id: fieldId,
               fullWidth: true,
               variant: "outlined",
               size: "small",
-              helperText: error?.message ? t(error.message) : helperText,
+              helperText: error?.message ? (
+                <span id={errorId} role="alert">
+                  {t(error.message)}
+                </span>
+              ) : (
+                helperText || ""
+              ),
               error: !!error,
+              "aria-invalid": !!error,
+              "aria-describedby": error ? errorId : undefined,
               sx: {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 1.5,

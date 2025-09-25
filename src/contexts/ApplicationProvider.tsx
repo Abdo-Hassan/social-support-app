@@ -59,7 +59,7 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
 
   // Auto-save to localStorage when state changes and we should save
   useEffect(() => {
-    if (shouldSaveRef.current && state.lastSaved !== null) {
+    if (shouldSaveRef.current) {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         shouldSaveRef.current = false;

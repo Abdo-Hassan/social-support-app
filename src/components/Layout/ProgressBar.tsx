@@ -36,6 +36,8 @@ export const ProgressBar: React.FC = () => {
   if (isMobile) {
     return (
       <Box
+        role="navigation"
+        aria-label="Application steps"
         sx={{
           bgcolor: "background.paper",
           borderBottom: 1,
@@ -60,6 +62,7 @@ export const ProgressBar: React.FC = () => {
                         : "#E5E7EB", // Gray for pending
                     mx: 0.5,
                   }}
+                  {...(index === activeStep && { "aria-current": "step" })}
                 />
                 {index < steps.length - 1 && (
                   <Box
@@ -93,6 +96,8 @@ export const ProgressBar: React.FC = () => {
 
   return (
     <Box
+      role="navigation"
+      aria-label="Application steps"
       sx={{
         py: 2,
       }}>
@@ -134,7 +139,8 @@ export const ProgressBar: React.FC = () => {
                       fontWeight: 600,
                       fontSize: "1rem",
                       mb: 1,
-                    }}>
+                    }}
+                    {...(index === activeStep && { "aria-current": "step" })}>
                     {index < activeStep ? (
                       <Check sx={{ fontSize: "1.2rem" }} />
                     ) : (

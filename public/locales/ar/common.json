@@ -30,7 +30,9 @@
     "applyNewRequest": "تقديم طلب جديد",
     "goToHome": "الذهاب للرئيسية",
     "copiedToClipboard": "تم نسخ الرقم المرجعي!",
-    "noApplicationFound": "لم يتم العثور على نتيجة طلب محفوظة."
+    "noApplicationFound": "لم يتم العثور على نتيجة طلب محفوظة.",
+    "copied": "تم النسخ!",
+    "copyToClipboard": "نسخ إلى الحافظة"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

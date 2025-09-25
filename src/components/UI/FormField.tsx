@@ -36,6 +36,8 @@ export const FormField = <T = Record<string, unknown>,>({
   maxRows,
 }: FormFieldProps<T>) => {
   const { t } = useTranslation();
+  const fieldId = `field-${String(name)}`;
+  const errorId = `error-${String(name)}`;
 
   return (
     <Controller
@@ -44,6 +46,7 @@ export const FormField = <T = Record<string, unknown>,>({
       render={({ field }) => (
         <TextField
           {...field}
+          id={fieldId}
           label={
             <>
               {label}
@@ -58,10 +61,20 @@ export const FormField = <T = Record<string, unknown>,>({
           multiline={multiline}
           maxRows={maxRows}
           error={!!error}
-          helperText={error?.message ? t(error.message) : helperText || ""}
+          helperText={
+            error?.message ? (
+              <span id={errorId} role="alert">
+                {t(error.message)}
+              </span>
+            ) : (
+              helperText || ""
+            )
+          }
           fullWidth
           variant="outlined"
           size="small"
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: 1,

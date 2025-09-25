@@ -1,5 +1,6 @@
 import React from "react";
 import { render, act, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import { ApplicationProvider } from "../ApplicationProvider";
 import { useApplication } from "../../hooks/use-application";
 
@@ -60,6 +61,9 @@ describe("ApplicationProvider", () => {
         <TestComponent />
       </ApplicationProvider>
     );
+
+    // Wait for initial loading to complete (100ms timeout in ApplicationProvider)
+    await new Promise((resolve) => setTimeout(resolve, 150));
 
     act(() => {
       getByTestId("update-name").click();

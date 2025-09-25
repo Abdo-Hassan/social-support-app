@@ -5,7 +5,6 @@ import api from "./api";
 const mock = new AxiosMockAdapter(api, { delayResponse: 1500 });
 
 // Mock the application submit endpoint
-// Note: The API has baseURL '/api', so we need to mock '/api/application/submit'
 mock.onPost("/api/application/submit").reply((config) => {
   console.log("Mock API: Processing application submission...");
   console.log("Request data:", JSON.parse(config.data));

@@ -44,7 +44,7 @@ export const personalInfoSchema = z.object({
   nationalId: z
     .string()
     .trim()
-    .min(6, "validation.minLength6")
+    .min(6, "validation.minNumbers6")
     .max(20, "validation.maxLength20")
     .regex(/^[0-9]+$/, "validation.nationalId"),
 

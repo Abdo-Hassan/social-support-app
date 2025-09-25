@@ -21,7 +21,7 @@ import {
   Add as AddIcon,
 } from "@mui/icons-material";
 import { useApplication } from "../../hooks/use-application";
-import noApplication from "../../../public/assets/noApplication.svg";
+import { EmptyState } from "../UI/EmptyState";
 interface SavedApplicationResult {
   referenceNumber: string;
   submissionDate: string;
@@ -101,45 +101,16 @@ export const SuccessStep: React.FC = () => {
   // Show error message if no saved result on result page
   if (isResultPage && !savedResult) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          maxWidth: 700,
-          mx: "auto",
-          my: 3,
-          p: { xs: 2, md: 3 },
-        }}>
-        <Typography variant="h4" sx={{ mb: 3, textAlign: "center" }}>
-          {t(
-            "common:actions.noApplicationFound",
-            "No saved application result found."
-          )}
-        </Typography>
-
-        <img
-          src={noApplication}
-          alt="no application"
-          width={300}
-          height={300}
-        />
-        <Box sx={{ textAlign: "center", mt: 3 }}>
-          <Button
-            variant="contained"
-            onClick={handleNewApplication}
-            startIcon={<AddIcon />}
-            size="large"
-            sx={{
-              minWidth: { xs: "100%", sm: 220 },
-              py: 1.5,
-              fontWeight: 600,
-            }}>
-            {t("common:actions.applyNewRequest", "Apply New Request")}
-          </Button>
-        </Box>
-      </Box>
+      <EmptyState
+        title={t(
+          "common:actions.noApplicationFound",
+          "No saved application result found."
+        )}
+        buttonText={t("common:actions.applyNewRequest", "Apply New Request")}
+        onButtonClick={handleNewApplication}
+        buttonIcon={<AddIcon />}
+        imageAlt="no application"
+      />
     );
   }
 

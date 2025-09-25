@@ -29,6 +29,7 @@
   "actions": {
     "applyNewRequest": "Apply New Request",
     "goToHome": "Go to Home",
+    "goHome": "Go to Home",
     "copiedToClipboard": "Reference number copied to clipboard!",
     "noApplicationFound": "No saved application result found.",
     "copied": "Copied!",
@@ -55,5 +56,9 @@
     "maxValue1000000": "Must be no more than 1,000,000",
     "numeric": "Please enter a valid number",
     "positive": "Must be a positive number"
+  },
+  "errors": {
+    "pageNotFound": "Page Not Found",
+    "pageNotFoundDescription": "The page you are looking for doesn't exist or has been moved."
   }
 }

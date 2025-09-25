@@ -15,6 +15,7 @@ import { createAppTheme } from "./theme";
 import { useApplication } from "./hooks/use-application";
 import { ApplicationPage } from "./pages/ApplicationPage";
 import { ApplicationResultPage } from "./pages/ApplicationResultPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 const App: React.FC = () => {
   const { i18n } = useTranslation();
@@ -65,6 +66,8 @@ const App: React.FC = () => {
                     path="/application-result"
                     element={<ApplicationResultPage />}
                   />
+                  {/* 404 catch-all route */}
+                  <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </ApplicationProvider>
             </I18nProvider>

@@ -1,206 +1,350 @@
-# Social Support Portal - Government Financial Assistance Application
+# Social Support Application Portal
 
-A production-ready, accessible, and multilingual 3-step application wizard for citizens to apply for government financial assistance, featuring AI-powered writing assistance.
+A modern, multilingual React application for government financial assistance applications. Built with TypeScript, Material-UI, and React Hook Form, featuring full RTL (Right-to-Left) support for Arabic language.
 
-## 🚀 Features
+## Features
 
-### Core Functionality
-- **3-Step Application Wizard** with intuitive progress tracking
-- **AI Writing Assistance** powered by OpenAI GPT-3.5 for situation descriptions
-- **Bilingual Support** (English/Arabic) with full RTL layout support
-- **Accessibility First** - WCAG AA compliant with comprehensive keyboard navigation
-- **Auto-save Progress** - Local storage prevents data loss
-- **Responsive Design** - Optimized for mobile, tablet, and desktop
+### 🌐 Multilingual Support
 
-### Technical Highlights
-- **React 18** with TypeScript for type safety
-- **Material-UI + Tailwind CSS** for professional government portal styling
-- **React Hook Form + Zod** for robust form validation
-- **Context API** for predictable state management
-- **react-i18next** for internationalization
-- **Axios** for OpenAI API integration
+- **English** and **Arabic** localization
+- Full RTL layout support for Arabic
+- Seamless language switching
+- Persistent language preference
 
-## 📋 Application Steps
+### 📱 Responsive Design
+
+- Mobile-first approach
+- Tablet and desktop optimization
+- Modern Material-UI components
+- Consistent design system
+
+### 🔐 Form Validation
+
+- Comprehensive form validation with Zod
+- Real-time validation feedback
+- Multilingual error messages
+- Accessibility-compliant form fields
+
+### 💾 Auto-Save Functionality
+
+- Automatic progress saving to localStorage
+- Resume applications from where you left off
+- Data persistence across browser sessions
+- Smart loading states
+
+### 🤖 AI Assistance
+
+- OpenAI integration for application descriptions
+- Context-aware suggestions
+- Multilingual AI responses
+- Editable AI-generated content
+
+### 🧪 Testing & Quality
+
+- Jest unit tests for core functionality
+- React Testing Library for component tests
+- Form validation testing
+- Mock API testing
+
+## Tech Stack
+
+### Frontend
+
+- **React 18** with TypeScript
+- **Material-UI (MUI)** for components
+- **React Hook Form** with Zod validation
+- **React Router** for navigation
+- **i18next** for internationalization
+
+### Development
+
+- **Vite** for fast development and building
+- **ESLint** for code quality
+- **Jest** for testing
+- **TypeScript** for type safety
+
+### Services
+
+- **Axios** for API calls
+- **Axios Mock Adapter** for development
+- **OpenAI API** for AI assistance
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd social-support-app
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Environment Setup**
+   Create a `.env.local` file in the root directory:
+
+   ```env
+   VITE_OPENAI_API_KEY=your_openai_api_key_here
+   VITE_API_BASE_URL=http://localhost:3001/api
+   ```
+
+4. **Start development server**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Open in browser**
+   Navigate to `http://localhost:5173`
+
+## Available Scripts
+
+### Development
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run build:dev    # Build for development
+npm run preview      # Preview production build
+```
+
+### Testing
+
+```bash
+npm run test         # Run tests once
+npm run test:watch   # Run tests in watch mode
+npm run test:coverage # Run tests with coverage report
+```
+
+### Code Quality
+
+```bash
+npm run lint         # Run ESLint
+```
+
+## Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── AI/             # AI assistance components
+│   ├── Layout/         # Layout components (Header, ProgressBar)
+│   ├── Steps/          # Form step components
+│   └── UI/             # Basic UI components
+├── contexts/           # React context providers
+├── hooks/              # Custom React hooks
+├── i18n/               # Internationalization setup
+├── lib/                # Utility functions
+├── pages/              # Page components
+├── services/           # API and external services
+├── theme/              # Material-UI theme configuration
+└── types/              # TypeScript type definitions
+
+public/
+├── locales/           # Translation files
+│   ├── en/           # English translations
+│   └── ar/           # Arabic translations
+└── assets/           # Static assets
+```
+
+## Application Flow
 
 ### Step 1: Personal Information
-- Full name, National ID, Date of Birth, Gender
-- Complete address information
-- Contact details (phone, email)
+
+- Full name, national ID, date of birth
+- Contact information (phone, email)
+- Address details
+- Gender selection
 
 ### Step 2: Family & Financial Information
+
 - Marital status and dependents
 - Employment status and monthly income
 - Housing situation
 
-### Step 3: Situation Descriptions (AI-Assisted)
-- **Current Financial Situation** - Describe financial challenges
-- **Employment Circumstances** - Explain employment status and barriers
-- **Reason for Applying** - Articulate need for assistance
+### Step 3: Situation Descriptions
 
-Each textarea in Step 3 features a "Help Me Write" button that provides personalized AI suggestions based on the applicant's information from previous steps.
+- Financial situation description
+- Employment circumstances
+- Reason for applying
+- AI assistance for writing descriptions
 
-## 🛠️ Setup and Installation
+### Step 4: Success/Confirmation
 
-### Prerequisites
-- Node.js 18+ and npm
-- OpenAI API key (optional - falls back to mock responses)
+- Application reference number
+- Submission confirmation
+- Next steps information
 
-### Installation
+## API Integration
+
+### Mock API
+
+The application includes a mock API adapter for development:
+
+```javascript
+// Force success responses (useful for testing)
+window.mockAPI.forceSuccess();
+
+// Force error responses
+window.mockAPI.forceError();
+
+// Random mode (80% success, 20% error)
+window.mockAPI.randomMode();
+
+// Test the API directly
+window.mockAPI.testSubmit();
+```
+
+### Real API Integration
+
+To integrate with a real backend API:
+
+1. Set `VITE_API_BASE_URL` in your environment variables
+2. Remove or modify the mock service import in `main.tsx`
+3. Update API endpoints in `services/api.ts` as needed
+
+## Internationalization
+
+### Adding New Languages
+
+1. Create translation files in `public/locales/{lang}/`
+2. Update supported languages in `src/i18n/i18n.ts`
+3. Add language option in header component
+
+### Translation Keys Structure
+
+```
+common.json     # Common UI elements, navigation, validation
+personal.json   # Personal information step
+family.json     # Family & financial step
+situation.json  # Situation descriptions step
+success.json    # Success/confirmation step
+```
+
+## Development Guidelines
+
+### Code Style
+
+- Use TypeScript for all new files
+- Follow React functional components pattern
+- Use custom hooks for reusable logic
+- Implement proper error boundaries
+
+### Form Validation
+
+- Define schemas in `types/form.ts` using Zod
+- Use consistent validation patterns
+- Provide meaningful error messages
+- Support multilingual validation
+
+### Testing
+
+- Write tests for new components
+- Test form validation logic
+- Mock external dependencies
+- Maintain good test coverage
+
+## Deployment
+
+### Build for Production
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd social-support-portal
-
-# Install dependencies
-npm install
-
-# Set up environment variables (optional)
-cp .env.example .env
-# Add your OpenAI API key to .env:
-# OPENAI_API_KEY=your_api_key_here
-
-# Start development server
-npm run dev
+npm run build
 ```
 
 ### Environment Variables
 
-```bash
-# .env
-OPENAI_API_KEY=your_openai_api_key_here  # Optional - uses mock data if not provided
-```
+Set these environment variables in your deployment platform:
 
-**Note**: The application gracefully falls back to mock AI responses if no OpenAI API key is provided, making it fully functional for demonstration purposes.
+- `VITE_OPENAI_API_KEY` - Your OpenAI API key
+- `VITE_API_BASE_URL` - Your backend API URL
 
-## 🌐 Usage
+### Static Hosting
 
-1. **Language Selection**: Toggle between English and Arabic in the header
-2. **Form Navigation**: Complete each step sequentially with validation
-3. **AI Assistance**: In Step 3, click "Help Me Write" for AI-generated content suggestions
-4. **Auto-save**: Your progress is automatically saved to local storage
-5. **Submission**: Review and submit your complete application
+The built application can be deployed to any static hosting service:
 
-### AI Writing Assistant
+- Netlify
+- Vercel
+- AWS S3 + CloudFront
+- GitHub Pages
 
-The AI assistant uses contextual information from your application to generate personalized suggestions:
-
-- Considers your employment status, income, and family situation
-- Provides different suggestions for each text field
-- Allows you to accept, edit, or discard suggestions
-- Maintains professional, empathetic tone appropriate for government applications
-
-## 🎨 Design System
-
-The application uses a professional government portal design system featuring:
-
-- **Trustworthy Color Palette**: Professional blues, greens, and neutrals
-- **Accessible Contrast**: WCAG AA compliant color combinations
-- **Semantic Tokens**: HSL-based design system for consistent theming
-- **Component Variants**: Professional form elements and buttons
-- **Responsive Grid**: Mobile-first approach with breakpoints
-- **RTL Support**: Full right-to-left layout for Arabic users
-
-## ♿ Accessibility Features
-
-- **Keyboard Navigation**: Full tab order and focus management
-- **Screen Reader Support**: ARIA labels, roles, and descriptions
-- **Focus Management**: Logical tab order and visible focus indicators
-- **Error Handling**: Clear validation messages and error states
-- **Modal Accessibility**: Focus trapping and escape key handling
-- **Semantic HTML**: Proper landmark roles and heading hierarchy
-
-## 🌍 Internationalization
-
-- **English**: Complete interface and validation messages
-- **Arabic**: Full translation with RTL layout support
-- **Dynamic Direction**: Automatic layout mirroring for RTL languages
-- **Number Formatting**: Locale-appropriate formatting for dates and numbers
-
-## 🔧 Architecture
-
-### State Management
-- **Context API**: Centralized application state management
-- **Local Storage**: Automatic progress persistence
-- **Form State**: React Hook Form for robust form handling
-
-### Validation
-- **Zod Schemas**: Type-safe validation schemas
-- **Real-time Validation**: Immediate feedback on form changes
-- **Step Validation**: Prevents progression with invalid data
-
-### AI Integration
-- **OpenAI GPT-3.5**: Contextual content generation
-- **Fallback System**: Mock responses when API unavailable
-- **Error Handling**: Graceful failure with retry options
-- **Rate Limiting**: Built-in timeout and retry logic
-
-## 📱 Browser Support
+## Browser Support
 
 - Chrome 90+
 - Firefox 88+
 - Safari 14+
 - Edge 90+
-- Mobile browsers (iOS Safari, Chrome Mobile)
 
-## 🔒 Security & Privacy
+## Contributing
 
-- **Input Validation**: Client-side and server-side validation
-- **XSS Protection**: Sanitized user inputs
-- **Local Storage**: Sensitive data handled appropriately
-- **API Security**: Secure OpenAI API integration
-
-## 🚀 Deployment
-
-```bash
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-```
-
-The application can be deployed to any static hosting service (Vercel, Netlify, AWS S3, etc.).
-
-## 🧪 Testing
-
-```bash
-# Run tests (when implemented)
-npm run test
-
-# Run accessibility audit
-npm run test:a11y
-
-# Run linting
-npm run lint
-```
-
-## 📈 Performance Optimization
-
-- **Code Splitting**: Automatic route-based splitting
-- **Lazy Loading**: Components loaded on demand
-- **Bundle Optimization**: Tree shaking and minification
-- **Caching**: Efficient browser caching strategies
-
-## 🤝 Contributing
+### Setting Up for Development
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
 
-## 📄 License
+### Code Review Process
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- All changes require review
+- Tests must pass
+- Code must follow project conventions
+- Documentation should be updated
 
-## 🆘 Support
+## Troubleshooting
 
-For technical support or questions:
-- 📧 Email: support@socialservices.gov
-- 📞 Phone: 1-800-SUPPORT
-- 🌐 Documentation: [Government Services Portal](https://gov.example.com)
+### Common Issues
+
+**Translation flash on page load**
+
+- Ensure all translation files are properly loaded
+- Check browser console for missing translation keys
+
+**Form data not persisting**
+
+- Check localStorage is enabled in browser
+- Verify no localStorage quota exceeded
+- Look for console errors during save operations
+
+**Mock API not working**
+
+- Ensure `services/mock.ts` is imported in `main.tsx`
+- Check browser console for network errors
+- Verify localStorage flags for forced responses
+
+### Debug Mode
+
+Enable debug mode by setting:
+
+```env
+NODE_ENV=development
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support and questions:
+
+- Create an issue in the repository
+- Check existing documentation
+- Review test files for usage examples
 
 ---
 
-**Note**: This application includes AI-powered features that require an OpenAI API key for full functionality. The application will work with mock data if no API key is provided, making it perfect for demonstration and development purposes.
+Built with ❤️ for social support accessibility

@@ -29,6 +29,7 @@
   "actions": {
     "applyNewRequest": "تقديم طلب جديد",
     "goToHome": "الذهاب للرئيسية",
+    "goHome": "الذهاب للرئيسية",
     "copiedToClipboard": "تم نسخ الرقم المرجعي!",
     "noApplicationFound": "لم يتم العثور على نتيجة طلب محفوظة.",
     "copied": "تم النسخ!",
@@ -55,5 +56,9 @@
     "maxValue1000000": "يجب ألا يزيد عن 1,000,000",
     "numeric": "يرجى إدخال رقم صحيح",
     "positive": "يجب أن يكون رقماً موجباً"
+  },
+  "errors": {
+    "pageNotFound": "الصفحة غير موجودة",
+    "pageNotFoundDescription": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها."
   }
 }

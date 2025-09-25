@@ -26,10 +26,14 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
 }) => {
   const [state, dispatch] = useReducer(applicationReducer, initialState);
   const shouldSaveRef = useRef(false);
+  const isLoadingRef = useRef(false);
 
   // Define loadProgress function
   const loadProgress = () => {
     try {
+      isLoadingRef.current = true;
+      shouldSaveRef.current = false; // Prevent saving during load
+
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsedState = JSON.parse(saved);
@@ -49,6 +53,11 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
       }
     } catch (error) {
       console.warn("Failed to load application progress:", error);
+    } finally {
+      // Allow saving again after a brief delay
+      setTimeout(() => {
+        isLoadingRef.current = false;
+      }, 100);
     }
   };
 
@@ -59,8 +68,9 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
 
   // Auto-save to localStorage when state changes and we should save
   useEffect(() => {
-    if (shouldSaveRef.current) {
+    if (shouldSaveRef.current && !isLoadingRef.current) {
       try {
+        console.log("Saving application progress to localStorage");
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         shouldSaveRef.current = false;
       } catch (error) {
@@ -73,14 +83,18 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
   const updatePersonalInfo = (data: Partial<PersonalInfo>) => {
     // Always update and let the reducer handle the merge
     console.log("Updating personal info:", data);
-    shouldSaveRef.current = true;
+    if (!isLoadingRef.current) {
+      shouldSaveRef.current = true;
+    }
     dispatch({ type: "UPDATE_PERSONAL_INFO", payload: data });
     dispatch({ type: "UPDATE_LAST_SAVED" });
   };
 
   const updateFamilyFinancial = (data: Partial<FamilyFinancial>) => {
     console.log("Updating family financial info:", data);
-    shouldSaveRef.current = true;
+    if (!isLoadingRef.current) {
+      shouldSaveRef.current = true;
+    }
     dispatch({ type: "UPDATE_FAMILY_FINANCIAL", payload: data });
     dispatch({ type: "UPDATE_LAST_SAVED" });
   };
@@ -89,7 +103,9 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
     data: Partial<SituationDescriptions>
   ) => {
     console.log("Updating situation descriptions:", data);
-    shouldSaveRef.current = true;
+    if (!isLoadingRef.current) {
+      shouldSaveRef.current = true;
+    }
     dispatch({ type: "UPDATE_SITUATION_DESCRIPTIONS", payload: data });
     dispatch({ type: "UPDATE_LAST_SAVED" });
   };
@@ -137,7 +153,9 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
   };
 
   const saveProgress = () => {
-    shouldSaveRef.current = true;
+    if (!isLoadingRef.current) {
+      shouldSaveRef.current = true;
+    }
     dispatch({ type: "UPDATE_LAST_SAVED" });
   };
 

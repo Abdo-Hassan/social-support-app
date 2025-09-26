@@ -57,7 +57,8 @@
     "maxValue20": "Must be no more than 20",
     "maxValue1000000": "Must be no more than 1,000,000",
     "numeric": "Please enter a valid number",
-    "positive": "Must be a positive number"
+    "positive": "Must be a positive number",
+    "noLeadingZeros": "Number cannot start with zero"
   },
   "errors": {
     "pageNotFound": "Page Not Found",

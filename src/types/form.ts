@@ -130,10 +130,13 @@ export const familyFinancialSchema = z.object({
     EmploymentStatusOptions.DISABLED,
   ]),
 
-  monthlyIncome: z.coerce
-    .number()
-    .min(1, "validation.positive")
-    .max(1000000, "validation.maxValue1000000"),
+  monthlyIncome: z
+    .string()
+    .trim()
+    .regex(/^[1-9]\d*$/, "validation.noLeadingZeros")
+    .transform((val) => parseInt(val, 10))
+    .refine((val) => val >= 1, "validation.positive")
+    .refine((val) => val <= 1000000, "validation.maxValue1000000"),
 
   housingStatus: z.enum([
     HousingStatusOptions.OWN,

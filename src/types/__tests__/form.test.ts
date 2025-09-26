@@ -54,7 +54,7 @@ describe("Form Validation Schemas", () => {
       maritalStatus: "single" as const,
       dependents: 0,
       employmentStatus: "employed" as const,
-      monthlyIncome: 3000,
+      monthlyIncome: "3000",
       housingStatus: "rent" as const,
     };
 
@@ -70,7 +70,17 @@ describe("Form Validation Schemas", () => {
     });
 
     it("should reject zero monthly income", () => {
-      const invalid = { ...validFamilyFinancial, monthlyIncome: 0 };
+      const invalid = { ...validFamilyFinancial, monthlyIncome: "0" };
+      expect(() => familyFinancialSchema.parse(invalid)).toThrow();
+    });
+
+    it("should reject monthly income with leading zeros", () => {
+      const invalid = { ...validFamilyFinancial, monthlyIncome: "01111" };
+      expect(() => familyFinancialSchema.parse(invalid)).toThrow();
+    });
+
+    it("should reject monthly income starting with zero", () => {
+      const invalid = { ...validFamilyFinancial, monthlyIncome: "0123" };
       expect(() => familyFinancialSchema.parse(invalid)).toThrow();
     });
   });

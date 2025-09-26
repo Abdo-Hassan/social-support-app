@@ -93,8 +93,8 @@ export const DateField = <T = Record<string, unknown>,>({
                   fontWeight: 400,
                   color: "text.secondary",
                   // Fix label positioning for RTL
-                  right: isRtl ? 14 : "auto",
-                  left: isRtl ? "auto" : 14,
+                  right: isRtl ? 30 : "auto",
+                  left: isRtl ? "auto" : 0,
                   transformOrigin: isRtl ? "top right" : "top left",
                   "&.Mui-focused": {
                     color: "primary.main",

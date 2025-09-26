@@ -103,6 +103,8 @@ export const SelectController = <
             },
             // Fix select dropdown content positioning for RTL
             "& .MuiSelect-select": {
+              paddingRight: isRtl ? 14 : 32,
+              paddingLeft: isRtl ? 32 : 14,
               textAlign: isRtl ? "right" : "left",
             },
             // Fix MUI date/time picker icons in select fields

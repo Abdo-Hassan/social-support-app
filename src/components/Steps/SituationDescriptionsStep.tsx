@@ -32,6 +32,8 @@ import { NavigationButtons } from "../UI/NavigationButtons";
 
 export const SituationDescriptionsStep: React.FC = () => {
   const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const isRtl = i18n.language === "ar";
   const navigate = useNavigate();
   const theme = useTheme();
   const {
@@ -230,7 +232,9 @@ export const SituationDescriptionsStep: React.FC = () => {
                     variant="contained"
                     size="small"
                     onClick={() => openAIAssistance(config.name)}
-                    startIcon={<AIIcon />}
+                    startIcon={
+                      <AIIcon sx={{ ml: isRtl ? 1 : 0, mr: isRtl ? 0 : 1 }} />
+                    }
                     sx={{
                       borderColor: "success.main",
                       color: "primary.contrastText",

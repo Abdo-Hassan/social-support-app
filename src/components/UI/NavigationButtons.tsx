@@ -37,7 +37,11 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
     <Button
       variant="outlined"
       {...(isRtl
-        ? { startIcon: <ArrowForward /> }
+        ? {
+            startIcon: (
+              <ArrowForward sx={{ ml: isRtl ? 1 : 0, mr: isRtl ? 0 : 1 }} />
+            ),
+          }
         : { startIcon: <ArrowBack /> })}
       onClick={onPrevious}
       disabled={previousDisabled || isLoading}
@@ -74,7 +78,7 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
             startIcon: isLoading ? (
               <CircularProgress size={20} color="inherit" />
             ) : isRtl ? (
-              <ArrowBack />
+              <ArrowBack sx={{ ml: isRtl ? 1 : 0, mr: isRtl ? 0 : 1 }} />
             ) : (
               <ArrowForward />
             ),

@@ -36,13 +36,15 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
   const PreviousButton = onPrevious && (
     <Button
       variant="outlined"
-      {...(isRtl
-        ? {
-            startIcon: (
-              <ArrowForward sx={{ ml: isRtl ? 1 : 0, mr: isRtl ? 0 : 1 }} />
-            ),
-          }
-        : { startIcon: <ArrowBack /> })}
+      startIcon={
+        <ArrowBack
+          sx={{
+            transform: isRtl ? "scaleX(-1)" : "none",
+            ml: isRtl ? 1 : 0,
+            mr: isRtl ? 0 : 1,
+          }}
+        />
+      }
       onClick={onPrevious}
       disabled={previousDisabled || isLoading}
       size="medium"
@@ -77,10 +79,15 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
         ? {
             startIcon: isLoading ? (
               <CircularProgress size={20} color="inherit" />
-            ) : isRtl ? (
-              <ArrowBack sx={{ ml: isRtl ? 1 : 0, mr: isRtl ? 0 : 1 }} />
             ) : (
-              <ArrowForward />
+              React.cloneElement(nextIcon as React.ReactElement, {
+                sx: {
+                  transform: "scaleX(-1)",
+                  ml: 1,
+                  mr: 0,
+                  ...(nextIcon as React.ReactElement)?.props?.sx,
+                },
+              })
             ),
           }
         : {

@@ -21,7 +21,7 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
   onNext,
   previousText,
   nextText,
-  nextIcon = <SendIcon />,
+  nextIcon = <ArrowForward />,
   isLoading = false,
   isNextDisabled = false,
   nextType = "submit",
@@ -33,7 +33,6 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
 
   const defaultPreviousText = previousText || t("form.previous");
 
-  // Create button elements
   const PreviousButton = onPrevious && (
     <Button
       variant="outlined"
@@ -74,8 +73,10 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
         ? {
             startIcon: isLoading ? (
               <CircularProgress size={20} color="inherit" />
+            ) : isRtl ? (
+              <ArrowBack />
             ) : (
-              nextIcon
+              <ArrowForward />
             ),
           }
         : {
@@ -128,7 +129,6 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           borderColor: "divider",
         }),
       }}>
-      {/* In RTL, show Next button first, then Previous */}
       {isRtl ? (
         <>
           {NextButton}

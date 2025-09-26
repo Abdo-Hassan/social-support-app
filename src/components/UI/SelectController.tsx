@@ -60,7 +60,7 @@ export const SelectController = <
               fontSize: "0.9rem",
               direction: isRtl ? "rtl" : "ltr",
               "& .MuiOutlinedInput-input": {
-                padding: "12px 16px",
+                padding: isRtl ? "16px 10px" : "16px",
                 textAlign: isRtl ? "right" : "left",
               },
               "& fieldset": {
@@ -83,9 +83,8 @@ export const SelectController = <
               fontSize: "0.9rem",
               fontWeight: 400,
               color: "text.secondary",
-              // Fix label positioning for RTL
-              right: isRtl ? 14 : "auto",
-              left: isRtl ? "auto" : 14,
+              right: isRtl ? 30 : "auto",
+              left: isRtl ? "auto" : 0,
               transformOrigin: isRtl ? "top right" : "top left",
               "&.Mui-focused": {
                 color: "primary.main",
@@ -105,8 +104,6 @@ export const SelectController = <
             // Fix select dropdown content positioning for RTL
             "& .MuiSelect-select": {
               textAlign: isRtl ? "right" : "left",
-              paddingRight: isRtl ? 14 : 32,
-              paddingLeft: isRtl ? 32 : 14,
             },
             // Fix MUI date/time picker icons in select fields
             "& .MuiInputAdornment-root": {

@@ -136,7 +136,7 @@ export const FormField = <T = Record<string, unknown>,>({
               // Fix label positioning for RTL
               right: isRtl ? 30 : "auto",
               left: isRtl ? "auto" : 0,
-              top: isRtl ? "auto" : 0,
+              top: 3,
               transformOrigin: isRtl ? "top right" : "top left",
               "&.Mui-focused": {
                 color: "primary.main",

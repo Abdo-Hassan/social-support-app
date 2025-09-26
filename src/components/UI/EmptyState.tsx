@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
-import noApplication from "../../../public/assets/noApplication.svg";
+import noApplication from "/assets/noApplication.svg";
 
 interface EmptyStateProps {
   /**
@@ -112,7 +112,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
               py: 1.5,
               fontWeight: 600,
             }}>
-            {buttonText}
+            <span style={{ marginRight: 10 }}>{buttonText}</span>
           </Button>
         </Box>
       )}

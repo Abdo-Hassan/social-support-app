@@ -78,7 +78,11 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
       {...(isRtl
         ? {
             startIcon: isLoading ? (
-              <CircularProgress size={20} color="inherit" />
+              <CircularProgress
+                size={20}
+                color="inherit"
+                sx={{ ml: isRtl ? 2 : 0, mr: isRtl ? 0 : 2 }}
+              />
             ) : (
               React.cloneElement(nextIcon as React.ReactElement, {
                 sx: {

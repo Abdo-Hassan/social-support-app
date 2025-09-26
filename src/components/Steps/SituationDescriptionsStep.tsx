@@ -260,9 +260,15 @@ export const SituationDescriptionsStep: React.FC = () => {
                       placeholder={config.placeholder}
                       error={!!errors[config.name]}
                       helperText={
-                        errors[config.name]?.message
-                          ? t(errors[config.name]?.message as string)
-                          : t("situation:helperText.minCharacters")
+                        <span
+                          style={{
+                            textAlign: isRtl ? "right" : "left",
+                            display: "block",
+                          }}>
+                          {errors[config.name]?.message
+                            ? t(errors[config.name]?.message as string)
+                            : t("situation:helperText.minCharacters")}
+                        </span>
                       }
                       fullWidth
                       variant="outlined"

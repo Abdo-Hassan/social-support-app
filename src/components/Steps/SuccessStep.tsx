@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
 import {
-  Box,
-  Typography,
-  Button,
-  Card,
-  CardContent,
-  useTheme,
-  useMediaQuery,
-  IconButton,
-  Stack,
-  Alert,
-  Tooltip,
-} from "@mui/material";
-import {
+  Add as AddIcon,
   Check as CheckIcon,
   ContentCopy as CopyIcon,
   Refresh as RefreshIcon,
-  Add as AddIcon,
 } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useApplication } from "../../hooks/use-application";
 import { EmptyState } from "../UI/EmptyState";
 interface SavedApplicationResult {
@@ -33,7 +31,8 @@ interface SavedApplicationResult {
 export const SuccessStep: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { i18n } = useTranslation();
+  const isRtl = i18n.language === "ar";
   const location = useLocation();
   const navigate = useNavigate();
   const {
@@ -272,7 +271,13 @@ export const SuccessStep: React.FC = () => {
         <Button
           variant="contained"
           onClick={handleNewApplication}
-          startIcon={isResultPage ? <AddIcon /> : <RefreshIcon />}
+          startIcon={
+            isResultPage ? (
+              <AddIcon sx={{ ml: isRtl ? 1 : 0 }} />
+            ) : (
+              <RefreshIcon sx={{ ml: isRtl ? 1 : 0 }} />
+            )
+          }
           size="large"
           sx={{
             minWidth: { xs: "100%", sm: 220 },

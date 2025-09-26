@@ -5,23 +5,20 @@ import {
   Container,
   Toolbar,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
+  const navigate = useNavigate();
   const toggleLanguage = async () => {
     const currentLang = i18n.language;
     const newLang = currentLang === "en" ? "ar" : "en";
-
     // Change language - this will automatically save to localStorage
-    // thanks to i18next-browser-languagedetector configuration
     await i18n.changeLanguage(newLang);
   };
 
@@ -37,6 +34,7 @@ export const Header: React.FC = () => {
         <Toolbar sx={{ justifyContent: "space-between", py: 2, minHeight: 56 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Box
+              onClick={() => navigate("/")}
               sx={{
                 bgcolor: "primary.main",
                 color: "white",
@@ -45,6 +43,7 @@ export const Header: React.FC = () => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                cursor: "pointer",
                 borderRadius: 1.5,
                 fontSize: "0.875rem",
                 fontWeight: "bold",

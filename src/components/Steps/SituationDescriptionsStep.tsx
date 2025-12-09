@@ -187,6 +187,23 @@ export const SituationDescriptionsStep: React.FC = () => {
     <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, md: 0 } }}>
       <Card elevation={2}>
         <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+          <Alert
+            severity="info"
+            icon={<InfoIcon />}
+            sx={{
+              mb: 4,
+              "& .MuiAlert-message": {
+                width: "100%",
+              },
+            }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+              {t("situation:aiAssistance")}
+            </Typography>
+            <Typography variant="body2">
+              {t("situation:helperText.aiDescription")}
+            </Typography>
+          </Alert>
+
           <Box sx={{ mb: 2 }}>
             <Typography
               variant="h4"
@@ -290,23 +307,6 @@ export const SituationDescriptionsStep: React.FC = () => {
                 {index < fieldConfigs.length - 1 && <Divider sx={{ mt: 4 }} />}
               </Box>
             ))}
-
-            <Alert
-              severity="info"
-              icon={<InfoIcon />}
-              sx={{
-                mb: 4,
-                "& .MuiAlert-message": {
-                  width: "100%",
-                },
-              }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-                {t("situation:aiAssistance")}
-              </Typography>
-              <Typography variant="body2">
-                {t("situation:helperText.aiDescription")}
-              </Typography>
-            </Alert>
 
             {/* Error Alert */}
             {submitError && (

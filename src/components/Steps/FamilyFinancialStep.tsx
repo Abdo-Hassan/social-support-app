@@ -22,6 +22,18 @@ export const FamilyFinancialStep: React.FC = () => {
     useApplication();
   const theme = useTheme();
 
+  // Convert transformed values back to their schema-expected types
+  const normalizedDefaultValues = React.useMemo(() => {
+    return {
+      ...familyFinancial,
+      // monthlyIncome schema expects string, but context may have number after transform
+      monthlyIncome:
+        familyFinancial.monthlyIncome !== undefined
+          ? String(familyFinancial.monthlyIncome)
+          : undefined,
+    } as unknown as Partial<FamilyFinancial>;
+  }, [familyFinancial]);
+
   const {
     control,
     handleSubmit,
@@ -30,7 +42,7 @@ export const FamilyFinancialStep: React.FC = () => {
   } = useForm<FamilyFinancial>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(familyFinancialSchema) as any,
-    defaultValues: familyFinancial,
+    defaultValues: normalizedDefaultValues,
     mode: "onChange",
   });
 

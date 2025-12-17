@@ -28,12 +28,19 @@ export const PersonalInfoStep: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors, isValid },
-    watch,
   } = useForm<PersonalInfo>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: personalInfo as PersonalInfo,
     mode: "onChange",
   });
+  console.log("🚀 ~ isValid:", isValid);
+
+  const handleChange = (name: string, value: string) => {
+    completePersonalInfoStep(
+      { [name as keyof PersonalInfo]: value } as PersonalInfo,
+      true
+    );
+  };
 
   const onSubmit = (data: PersonalInfo) => {
     completePersonalInfoStep(data);
@@ -88,6 +95,8 @@ export const PersonalInfoStep: React.FC = () => {
                 {/* Full Name */}
                 <Grid size={{ xs: 12 }}>
                   <FormField
+                    onChange={handleChange}
+                    value={personalInfo.name}
                     name="name"
                     control={control}
                     label={t("personal:name")}
@@ -101,6 +110,8 @@ export const PersonalInfoStep: React.FC = () => {
                 {/* National ID */}
                 <Grid size={{ xs: 12, md: 6 }}>
                   <FormField
+                    onChange={handleChange}
+                    value={personalInfo.nationalId}
                     name="nationalId"
                     control={control}
                     label={t("personal:nationalId")}
@@ -115,6 +126,8 @@ export const PersonalInfoStep: React.FC = () => {
                 <Grid size={{ xs: 12, md: 6 }}>
                   <DateField
                     name="dateOfBirth"
+                    value={personalInfo.dateOfBirth}
+                    onChange={handleChange}
                     control={control}
                     label={t("personal:dateOfBirth")}
                     helperText={t("personal:dateOfBirthHelper")}
@@ -128,6 +141,8 @@ export const PersonalInfoStep: React.FC = () => {
                 <Grid size={{ xs: 12, md: 6 }}>
                   <FormField
                     name="gender"
+                    value={personalInfo.gender}
+                    onChange={handleChange}
                     control={control}
                     label={t("personal:gender")}
                     type="select"
@@ -141,6 +156,8 @@ export const PersonalInfoStep: React.FC = () => {
                 <Grid size={{ xs: 12 }}>
                   <FormField
                     name="address"
+                    value={personalInfo.address}
+                    onChange={handleChange}
                     control={control}
                     label={t("personal:address")}
                     placeholder={t("personal:addressPlaceholder")}
@@ -153,6 +170,8 @@ export const PersonalInfoStep: React.FC = () => {
                 <Grid size={{ xs: 12, md: 4 }}>
                   <FormField
                     name="city"
+                    value={personalInfo.city}
+                    onChange={handleChange}
                     control={control}
                     label={t("personal:city")}
                     error={errors.city}
@@ -163,6 +182,8 @@ export const PersonalInfoStep: React.FC = () => {
                 <Grid size={{ xs: 12, md: 4 }}>
                   <FormField
                     name="state"
+                    value={personalInfo.state}
+                    onChange={handleChange}
                     control={control}
                     label={t("personal:state")}
                     error={errors.state}
@@ -173,6 +194,8 @@ export const PersonalInfoStep: React.FC = () => {
                 <Grid size={{ xs: 12, md: 4 }}>
                   <FormField
                     name="country"
+                    value={personalInfo.country}
+                    onChange={handleChange}
                     control={control}
                     label={t("personal:country")}
                     error={errors.country}
@@ -184,6 +207,8 @@ export const PersonalInfoStep: React.FC = () => {
                 <Grid size={{ xs: 12, md: 6 }}>
                   <FormField
                     name="phone"
+                    value={personalInfo.phone}
+                    onChange={handleChange}
                     control={control}
                     label={t("personal:phone")}
                     placeholder={t("personal:phonePlaceholder")}
@@ -196,6 +221,8 @@ export const PersonalInfoStep: React.FC = () => {
                 <Grid size={{ xs: 12, md: 6 }}>
                   <FormField
                     name="email"
+                    value={personalInfo.email}
+                    onChange={handleChange}
                     control={control}
                     label={t("personal:email")}
                     type="email"

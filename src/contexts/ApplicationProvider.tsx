@@ -103,16 +103,21 @@ export const ApplicationProvider: React.FC<ApplicationProviderProps> = ({
   };
 
   // Actions - Save and proceed to next step
-  const completePersonalInfoStep = (data: PersonalInfo) => {
+  const completePersonalInfoStep = (
+    data: PersonalInfo,
+    saveOnChange?: boolean
+  ) => {
     const updatedState = {
       ...state,
       personalInfo: { ...state.personalInfo, ...data },
-      currentStep: "family" as FormStep,
+      currentStep: !saveOnChange ? ("family" as FormStep) : state.currentStep,
       lastSaved: new Date(),
     };
 
     updatePersonalInfo(data);
-    setCurrentStep("family");
+    if (!saveOnChange) {
+      setCurrentStep("family");
+    }
     saveToLocalStorage(updatedState);
   };
 

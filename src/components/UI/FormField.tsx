@@ -127,6 +127,13 @@ export const FormField = <T = Record<string, unknown>,>({
                 },
                 "& fieldset": {
                   borderColor: "grey.300",
+                  textAlign: isRtl ? "right" : "left",
+                },
+                // FIXES the border in arabic language
+                "& legend": {
+                  textAlign: isRtl ? "right" : "left",
+                  marginRight: isRtl ? 0 : 0,
+                  marginLeft: isRtl ? 0 : 0,
                 },
                 "&:hover fieldset": {
                   borderColor: "grey.400",
@@ -146,7 +153,7 @@ export const FormField = <T = Record<string, unknown>,>({
                 fontWeight: 400,
                 color: "text.secondary",
                 // Fix label positioning for RTL
-                right: isRtl ? 30 : "auto",
+                right: isRtl ? 30 : 0,
                 left: isRtl ? "auto" : 0,
                 top: 3,
                 transformOrigin: isRtl ? "top right" : "top left",

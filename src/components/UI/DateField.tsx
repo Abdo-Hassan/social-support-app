@@ -26,7 +26,6 @@ export const DateField = <T = Record<string, unknown>,>({
   onChange,
   value,
 }: DateFieldProps<T>) => {
-  console.log("🚀 ~ value:", value);
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === "ar";
   const fieldId = `date-${String(name)}`;
@@ -45,8 +44,9 @@ export const DateField = <T = Record<string, unknown>,>({
               dateValue ? new Date(dateValue as string | number | Date) : null
             }
             onChange={(date) => {
-              field.onChange(date?.toISOString());
-              onChange?.(name, date?.toISOString() || "");
+              const isoString = date?.toISOString() || "";
+              field.onChange(isoString);
+              onChange?.(name, isoString);
             }}
             label={
               <>

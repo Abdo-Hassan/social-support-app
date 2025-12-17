@@ -28,14 +28,20 @@ export const PersonalInfoStep: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors, isValid },
+    setValue,
   } = useForm<PersonalInfo>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: personalInfo as PersonalInfo,
     mode: "onChange",
   });
-  console.log("🚀 ~ isValid:", isValid);
 
   const handleChange = (name: string, value: string) => {
+    // Sync context update back to react-hook-form
+    setValue(name as keyof PersonalInfo, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
     completePersonalInfoStep(
       { [name as keyof PersonalInfo]: value } as PersonalInfo,
       true

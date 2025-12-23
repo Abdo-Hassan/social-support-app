@@ -25,18 +25,21 @@ A modern, AI-powered multilingual React application for government financial ass
    ```
 
 3. **Environment Setup**
-   Create a `.env.local` file in the root directory:
+   Create a `.env` file in the root directory for the serverless function:
 
    ```env
-   VITE_OPENAI_API_KEY=your_openai_api_key_here
-   VITE_API_BASE_URL=http://localhost:3001/api
+   OPENAI_API_KEY=your_openai_api_key_here
    ```
+
+   **Important:** The API key is now used by the Netlify serverless function (not exposed to the frontend).
 
 4. **Start development server**
 
    ```bash
-   npm run dev
+   npm run dev:netlify
    ```
+
+   This will start both the Vite dev server and Netlify Functions locally.
 
 5. **Open in browser**
    Navigate to `http://localhost:8080`
@@ -46,10 +49,12 @@ A modern, AI-powered multilingual React application for government financial ass
 ### Development
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run build:dev    # Build for development
-npm run preview      # Preview production build
+npm run dev             # Start Vite dev server only
+npm run dev:netlify     # Start with Netlify Functions (recommended)
+npm run build           # Build for production
+npm run build:dev       # Build for development
+npm run preview         # Preview production build
+npm run deploy          # Deploy to Netlify
 ```
 
 ### Testing
@@ -92,7 +97,8 @@ npm run test:coverage # Run tests with coverage report
 
 ### 🤖 AI Assistance
 
-- OpenAI integration for application descriptions
+- **Secure** OpenAI integration via serverless proxy
+- API key never exposed to the frontend
 - Context-aware suggestions
 - Multilingual AI responses
 - Editable AI-generated content
@@ -125,7 +131,8 @@ npm run test:coverage # Run tests with coverage report
 
 - **Axios** for API calls
 - **Axios Mock Adapter** for development
-- **OpenAI API** for AI assistance
+- **Netlify Functions** for secure API proxy
+- **OpenAI API** for AI assistance (via secure proxy)
 
 ### Code Quality
 
@@ -232,18 +239,32 @@ success.json    # Success/confirmation step
 
 ## Deployment
 
-### Build for Production
+### 🚀 Secure Deployment with Netlify
+
+This application uses **Netlify Functions** as a secure proxy to protect your OpenAI API key.
+
+**For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)**
+
+### Quick Deploy
 
 ```bash
-npm run build
+# Install dependencies
+npm install
+
+# Login to Netlify
+npx netlify login
+
+# Deploy to production
+npm run deploy
 ```
 
 ### Environment Variables
 
-Set these environment variables in your deployment platform:
+Set this environment variable in your **Netlify dashboard** (not in your code):
 
-- `VITE_OPENAI_API_KEY` - Your OpenAI API key
-- `VITE_API_BASE_URL` - Your backend API URL
+- `OPENAI_API_KEY` - Your OpenAI API key (server-side only)
+
+**Security Note:** The API key is now stored server-side in Netlify Functions and is NEVER exposed to the frontend. This prevents API key theft and unauthorized usage.
 
 ## Browser Support
 

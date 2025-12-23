@@ -1,108 +1,13 @@
 import { AIAssistanceRequest, AIAssistanceResponse } from "../types/form";
 import i18n from "@/i18n/i18n";
 
-const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+// Use Netlify function endpoint (works both locally and in production)
+const AI_PROXY_URL = "/.netlify/functions/ai-proxy";
 
 // Configuration constants
 const REQUEST_TIMEOUT = 30000; // 30 seconds
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000; // 1 second base delay
-
-// System prompts for different fields with language support
-const getSystemPrompt = (
-  field: AIAssistanceRequest["field"],
-  context: AIAssistanceRequest["context"]
-): string => {
-  const currentLanguage = i18n.language;
-  const isArabic = currentLanguage === "ar";
-
-  const basePromptEN = `You are an AI assistant helping citizens write clear, empathetic, and professional descriptions for their government assistance application. 
-
-Guidelines:
-- Write in first person
-- Be honest and direct but respectful
-- Use simple, clear language
-- Focus on facts and specific circumstances
-- Keep responses between 100-300 words
-- Be empathetic but not overly emotional
-- Include relevant details that demonstrate need
-- Respond in English
-
-Context about the applicant:
-- Employment Status: ${context.employmentStatus || "Not provided"}
-- Monthly Income: ${
-    context.monthlyIncome ? `$${context.monthlyIncome}` : "Not provided"
-  }
-- Marital Status: ${context.maritalStatus || "Not provided"}
-- Number of Dependents: ${context.dependents || "Not provided"}
-- Existing Text: ${context.existingText || "None"}`;
-
-  const basePromptAR = `أنت مساعد ذكي يساعد المواطنين في كتابة أوصاف واضحة ومهنية لطلب المساعدة الحكومية.
-
-الإرشادات:
-- اكتب بصيغة المتكلم فقط
-- لا تبدأ بردك بمقدمات مثل "سأكون سعيداً" أو "بالطبع"
-- أعطني النص النهائي مباشرة بدون أي تحية أو شرح
-- اجعل النص من 100 إلى 300 كلمة
-- ركز على الحقائق والظروف المحددة
-- كن متعاطفاً لكن ليس مفرط العاطفة
-- أجب باللغة العربية فقط
-- اجعل الرد صالح للنسخ مباشرة في خانة الطلب
-
-السياق حول المتقدم:
-- حالة التوظيف: ${context.employmentStatus || "غير محدد"}
-- الدخل الشهري: ${
-    context.monthlyIncome ? `$${context.monthlyIncome}` : "غير محدد"
-  }
-- الحالة الاجتماعية: ${context.maritalStatus || "غير محدد"}
-- عدد المعالين: ${context.dependents || "غير محدد"}
-- النص الموجود: ${context.existingText || "لا يوجد"}`;
-
-  const basePrompt = isArabic ? basePromptAR : basePromptEN;
-
-  if (isArabic) {
-    switch (field) {
-      case "financialSituation":
-        return `${basePrompt}
-
-اكتب وصفاً واضحاً للوضع المالي الحالي للمتقدم، بما في ذلك أي ديون أو نفقات أو تحديات مالية يواجهها. ركز على الصعوبات المالية المحددة وتأثيرها.`;
-
-      case "employmentCircumstances":
-        return `${basePrompt}
-
-اكتب وصفاً واضحاً لوضع توظيف المتقدم، بما في ذلك أي عقبات للتوظيف أو فقدان وظيفة مؤخراً أو تحديات في العثور على عمل. كن محدداً حول الظروف.`;
-
-      case "reasonForApplying":
-        return `${basePrompt}
-
-اكتب شرحاً واضحاً لسبب طلب المتقدم لهذه المساعدة وكيف ستساعد في وضعه. ركز على الحاجة المحددة والنتائج المتوقعة.`;
-
-      default:
-        return basePrompt;
-    }
-  } else {
-    switch (field) {
-      case "financialSituation":
-        return `${basePrompt}
-
-Write a clear description of the applicant's current financial situation, including any debts, expenses, or financial challenges they're facing. Focus on specific financial difficulties and their impact.`;
-
-      case "employmentCircumstances":
-        return `${basePrompt}
-
-Write a clear description of the applicant's employment situation, including any barriers to employment, recent job loss, or challenges in finding work. Be specific about circumstances.`;
-
-      case "reasonForApplying":
-        return `${basePrompt}
-
-Write a clear explanation of why the applicant is seeking this assistance and how it will help their situation. Focus on the specific need and expected outcomes.`;
-
-      default:
-        return basePrompt;
-    }
-  }
-};
 
 // Helper function to create timeout promise
 const createTimeoutPromise = (timeout: number): Promise<never> => {
@@ -167,50 +72,20 @@ export const generateAIAssistance = async (
   const currentLanguage = i18n.language;
   const isArabic = currentLanguage === "ar";
 
-  if (!OPENAI_API_KEY) {
-    return {
-      success: false,
-      error: isArabic
-        ? "لم يتم تكوين مفتاح OpenAI API. يرجى التحقق من الإعدادات."
-        : "OpenAI API key not configured. Please check your configuration.",
-    };
-  }
-
   let lastError: Error = new Error("Unknown error");
 
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
-      const systemPrompt = getSystemPrompt(request.field, request.context);
-
-      const userPrompt = isArabic
-        ? `يرجى مساعدتي في كتابة وصف ${request.field} لطلب المساعدة الاجتماعية الخاص بي.`
-        : `Please help me write a ${request.field
-            .replace(/([A-Z])/g, " $1")
-            .toLowerCase()} description for my social support application.`;
-
-      // Create the fetch request with timeout
-      const fetchPromise = fetch(OPENAI_API_URL, {
+      // Create the fetch request with timeout to our secure proxy
+      const fetchPromise = fetch(AI_PROXY_URL, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: systemPrompt,
-            },
-            {
-              role: "user",
-              content: userPrompt,
-            },
-          ],
-          max_tokens: 500,
-          temperature: 0.7,
-          presence_penalty: 0.1,
-          frequency_penalty: 0.1,
+          field: request.field,
+          context: request.context,
+          language: currentLanguage,
         }),
       });
 
@@ -226,18 +101,20 @@ export const generateAIAssistance = async (
 
       const data = await response.json();
 
-      if (data?.choices?.[0]?.message?.content) {
+      if (data?.success && data?.suggestion) {
         return {
           success: true,
-          suggestion: data.choices[0].message.content.trim(),
+          suggestion: data.suggestion,
         };
+      } else if (data?.error) {
+        throw new Error(data.error);
       } else {
         throw new Error("Invalid response structure");
       }
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
       console.error(
-        `OpenAI API attempt ${attempt}/${MAX_RETRIES} failed:`,
+        `AI Proxy attempt ${attempt}/${MAX_RETRIES} failed:`,
         lastError.message
       );
 
